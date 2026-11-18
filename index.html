@@ -732,6 +732,23 @@
             <label for="rate">Dollar kursi (1 $ necha so'm)</label>
             <input class="money-in" id="rate" inputmode="numeric" placeholder="Kursni o'zingiz kiriting">
           </div>
+          <div class="row">
+            <button class="ghost" id="rateFetch" type="button">Markaziy bank kursini olish</button>
+          </div>
+          <div class="status" id="rateStatus" role="status"></div>
+          <label class="check"><input type="checkbox" id="rateAuto"> Kursni har kuni avtomatik yangilash</label>
+          <p>Har bir dollarli amal kiritilgan paytdagi kursda saqlanadi. Keyin kurs o'zgarsa, oldingi amallar summasi o'zgarmaydi.</p>
+          <div>
+            <div class="label">Valyuta kalkulyatori</div>
+            <div class="fields" style="margin-top:8px">
+              <div class="field"><label for="cvUsd">Dollar</label><input id="cvUsd" inputmode="decimal" placeholder="0"></div>
+              <div class="field"><label for="cvUzs">So'm</label><input class="money-in" id="cvUzs" inputmode="numeric" placeholder="0"></div>
+            </div>
+          </div>
+          <div id="rateHistBox" hidden>
+            <div class="label">Kurs tarixi</div>
+            <div id="rateHist"></div>
+          </div>
           <div>
             <div class="label">Tez tugmalar</div>
             <div id="quickList"></div>
@@ -927,7 +944,7 @@
 
   /* ---------- Ma'lumot modeli ---------- */
   const validTx = (x) => x && (x.type === "inc" || x.type === "exp") && typeof x.amount === "number" && isFinite(x.amount) && x.amount > 0 && typeof x.cat === "string" && isoRe.test(x.date || "");
-  const cleanTx = (x) => { const o = { id: x.id || uid(), type: x.type, amount: x.amount, cur: x.cur === "USD" ? "USD" : "UZS", cat: x.cat.slice(0, 40), note: String(x.note || "").slice(0, 60), date: x.date }; if (x.rid) o.rid = String(x.rid); return o; };
+  const cleanTx = (x) => { const o = { id: x.id || uid(), type: x.type, amount: x.amount, cur: x.cur === "USD" ? "USD" : "UZS", cat: x.cat.slice(0, 40), note: String(x.note || "").slice(0, 60), date: x.date }; if (x.rid) o.rid = String(x.rid); if (o.cur === "USD" && typeof x.rate === "number" && x.rate > 0) o.rate = x.rate; return o; };
 
   const validDebt = (x) => x && (x.kind === "debt" || x.kind === "loan") && typeof x.name === "string" && typeof x.amount === "number" && x.amount > 0 &&
     (x.kind === "loan" ? typeof x.day === "number" && x.day >= 1 && x.day <= 31 : isoRe.test(x.due || ""));
@@ -993,7 +1010,7 @@
     schedulePush();
   }
 
-  const toUZS = (amount, cur) => (cur === "USD" ? amount * S.rate : amount);
+  const toUZS = (amount, cur, rate) => (cur === "USD" ? amount * (rate > 0 ? rate : S.rate) : amount);
 
   /* ---------- Holat ---------- */
   let view = new Date(); view = new Date(view.getFullYear(), view.getMonth(), 1);
@@ -1001,7 +1018,15 @@
   let armedKey = null, armTimer = null, payOpen = null;
   const monthKey = () => view.getFullYear() + "-" + pad(view.getMonth() + 1);
   const monthItems = (key) => S.tx.filter((x) => x.date.slice(0, 7) === key);
-  const sumUZS = (items, t) => items.filter((x) => x.type === t).reduce((s, x) => s + toUZS(x.amount, x.cur), 0);
+  const withRate = (x) => { if (x.cur === "USD" && S.rate > 0) x.rate = S.rate; return x; };
+  function freezeRates() {
+    if (!(S.rate > 0)) return false;
+    let ch = false;
+    S.tx.forEach((x) => { if (x.cur === "USD" && !(x.rate > 0)) { x.rate = S.rate; ch = true; } });
+    return ch;
+  }
+  function setRate(r) { freezeRates(); S.rate = r > 0 ? r : 0; freezeRates(); save(); }
+  const sumUZS = (items, t) => items.filter((x) => x.type === t).reduce((s, x) => s + toUZS(x.amount, x.cur, x.rate), 0);
 
   function arm(key, rerender) {
     armedKey = key; clearTimeout(armTimer);
@@ -1032,7 +1057,7 @@
         const dim = new Date(y, m + 1, 0).getDate();
         const due = new Date(y, m, Math.min(r.day, dim));
         if (due > t) break;
-        S.tx.push({ id: uid(), type: r.type, amount: r.amount, cur: r.cur, cat: r.cat, note: r.note, date: iso(due), rid: r.id });
+        S.tx.push(withRate({ id: uid(), type: r.type, amount: r.amount, cur: r.cur, cat: r.cat, note: r.note, date: iso(due), rid: r.id }));
         r.last = y + "-" + pad(m + 1); changed = true;
       }
     });
@@ -1048,7 +1073,7 @@
     $("sumInc").textContent = "+" + fmt(inc);
     $("sumExp").textContent = "−" + fmt(exp);
     const usd = S.tx.some((x) => x.cur === "USD") || S.debts.some((d) => d.cur === "USD");
-    $("rateNote").hidden = !(usd && !(S.rate > 0));
+    $("rateNote").hidden = !(usd && !(S.rate > 0) && S.tx.some((x) => x.cur === "USD" && !(x.rate > 0)));
 
     const isCur = t.getFullYear() === view.getFullYear() && t.getMonth() === view.getMonth();
     const pd = new Date(view.getFullYear(), view.getMonth() - 1, 1);
@@ -1068,7 +1093,7 @@
     const sp = $("spark");
     if (!items.length) { sp.setAttribute("hidden", ""); sp.innerHTML = ""; return; }
     const net = new Array(endDay).fill(0);
-    items.forEach((x) => { const d = +x.date.slice(8, 10); if (d >= 1 && d <= endDay) net[d - 1] += (x.type === "inc" ? 1 : -1) * toUZS(x.amount, x.cur); });
+    items.forEach((x) => { const d = +x.date.slice(8, 10); if (d >= 1 && d <= endDay) net[d - 1] += (x.type === "inc" ? 1 : -1) * toUZS(x.amount, x.cur, x.rate); });
     const pts = []; let acc = 0;
     net.forEach((v) => { acc += v; pts.push(acc); });
     const W = 320, H = 48, P = 5;
@@ -1087,7 +1112,7 @@
   function renderCats() {
     const items = monthItems(monthKey()).filter((x) => x.type === "exp");
     const by = {};
-    items.forEach((x) => { by[x.cat] = (by[x.cat] || 0) + toUZS(x.amount, x.cur); });
+    items.forEach((x) => { by[x.cat] = (by[x.cat] || 0) + toUZS(x.amount, x.cur, x.rate); });
     const total = Object.keys(by).reduce((s, k) => s + by[k], 0);
     const names = Array.from(new Set(Object.keys(by).concat(Object.keys(S.limits)))).sort((a, b) => (by[b] || 0) - (by[a] || 0));
     $("catEmpty").hidden = names.length > 0;
@@ -1158,6 +1183,7 @@
     if (withDate) parts.push(dlabel(parseISO(x.date), false));
     if (x.note) parts.push(esc(x.note));
     if (x.rid) parts.push("takroriy");
+    if (x.cur === "USD" && x.rate > 0) parts.push("kurs " + fmt(x.rate));
     return '<div class="tx">' + cico(x.cat) + '<div class="mid"><b>' + esc(x.cat) + "</b>" + (parts.length ? "<small>" + parts.join(" · ") + "</small>" : "") + "</div>" +
       '<span class="amt ' + x.type + '">' + (x.type === "inc" ? "+" : "−") + money(x.amount, x.cur) + "</span>" +
       (del ? '<button class="del' + (on ? " arm" : "") + '" data-id="' + x.id + '">' + (on ? "Aniq o'chirilsinmi?" : "O'chirish") + "</button>" : "") + "</div>";
@@ -1264,7 +1290,7 @@
       rows.push('<div class="rem"><div class="mid"><b>' + esc(d.name) + "</b><small>" + role(d) + " · " + dlabel(e.due, false) + '</small></div><span class="amt">' + money(amt, d.cur) + '</span><span class="chip ' + chipClass(e.diff) + '">' + when(e.diff) + "</span></div>");
     });
     const nowKey = iso(today0()).slice(0, 7), cur = monthItems(nowKey), spent = {};
-    cur.filter((x) => x.type === "exp").forEach((x) => { spent[x.cat] = (spent[x.cat] || 0) + toUZS(x.amount, x.cur); });
+    cur.filter((x) => x.type === "exp").forEach((x) => { spent[x.cat] = (spent[x.cat] || 0) + toUZS(x.amount, x.cur, x.rate); });
     Object.keys(S.limits).forEach((k) => {
       const p = Math.round((spent[k] || 0) / S.limits[k] * 100);
       if (p >= 80) rows.push('<div class="rem"><div class="mid"><b>' + esc(k) + "</b><small>Shu oydagi limit: " + fmt(spent[k] || 0) + " / " + fmt(S.limits[k]) + '</small></div><span class="chip ' + (p > 100 ? "late" : "soon") + '">' + (p > 100 ? "Limit oshdi" : p + "%") + "</span></div>");
@@ -1346,6 +1372,7 @@
 
   function renderSettings() {
     $("rate").value = S.rate ? fmt(S.rate) : "";
+    renderRateInfo();
     $("themeSel").value = lsGet(THEME_KEY) || "";
   }
   const TABS = ["home", "ledger", "debts", "goals", "settings"];
@@ -1454,7 +1481,7 @@
     const amount = parseMoney($("amount").value), date = $("date").value;
     if (!amount) { $("err").textContent = "Summani kiriting."; return; }
     if (!date) { $("err").textContent = "Sanani tanlang."; return; }
-    const x = { id: uid(), type: type, amount: amount, cur: $("cur").value, cat: $("cat").value, note: $("note").value.trim(), date: date };
+    const x = withRate({ id: uid(), type: type, amount: amount, cur: $("cur").value, cat: $("cat").value, note: $("note").value.trim(), date: date });
     if ($("recur").checked) {
       const r = { id: uid(), type: x.type, amount: x.amount, cur: x.cur, cat: x.cat, note: x.note, day: parseISO(date).getDate(), last: date.slice(0, 7) };
       S.recurring.push(r); x.rid = r.id;
@@ -1473,7 +1500,7 @@
     if (!b) return;
     const q = S.quick.filter((z) => z.id === b.getAttribute("data-q"))[0];
     if (!q) return;
-    const x = { id: uid(), type: q.type, amount: q.amount, cur: q.cur, cat: q.cat, note: q.note, date: iso(today0()) };
+    const x = withRate({ id: uid(), type: q.type, amount: q.amount, cur: q.cur, cat: q.cat, note: q.note, date: iso(today0()) });
     S.tx.push(x); save();
     const n = today0(); view = new Date(n.getFullYear(), n.getMonth(), 1);
     renderAll();
@@ -1614,7 +1641,66 @@
   });
 
   /* ---------- Sozlamalar ---------- */
-  $("rate").addEventListener("change", () => { S.rate = parseMoney($("rate").value); save(); renderAll(); });
+  $("rate").addEventListener("change", () => { lsSet(RSRC_KEY, "manual"); setRate(parseMoney($("rate").value)); renderAll(); });
+
+  /* ---------- Dollar kursi: Markaziy bank ---------- */
+  const CBU_URL = "https://cbu.uz/uz/arkhiv-kursov-valyut/json/USD/";
+  const RHIST_KEY = "hisobchi_rates_v1", RSRC_KEY = "hisobchi_ratesrc_v1", RAUTO_KEY = "hisobchi_autorate_v1";
+  const fmtRate = (n) => { const f = (Math.round(n * 100) / 100).toFixed(2).split("."); return f[0].replace(/\B(?=(\d{3})+(?!\d))/g, " ") + "," + f[1]; };
+  const rateHist = () => { try { const a = JSON.parse(lsGet(RHIST_KEY)); return Array.isArray(a) ? a.filter((x) => x && x.r > 0 && x.d) : []; } catch (e) { return []; } };
+  const sameDay = (ts) => ts && new Date(ts).toDateString() === new Date().toDateString();
+  async function fetchCbu() {
+    const ctrl = typeof AbortController === "function" ? new AbortController() : null;
+    const t = setTimeout(() => { if (ctrl) ctrl.abort(); }, 12000);
+    try {
+      const res = await fetch(CBU_URL, ctrl ? { signal: ctrl.signal } : undefined);
+      if (!res.ok) throw new Error("http");
+      const j = await res.json();
+      const u = Array.isArray(j) ? (j.filter((x) => x && x.Ccy === "USD")[0] || j[0]) : j;
+      const r = parseFloat(String((u && u.Rate) || "").replace(",", "."));
+      if (!(r > 1000 && r < 100000)) throw new Error("data");
+      return { r: r, d: String(u.Date || "") };
+    } finally { clearTimeout(t); }
+  }
+  function applyCbu(x) {
+    const h = rateHist().filter((z) => z.d !== x.d);
+    h.unshift({ d: x.d, r: x.r, t: Date.now() });
+    lsSet(RHIST_KEY, JSON.stringify(h.slice(0, 14)));
+    lsSet(RSRC_KEY, "cbu");
+    setRate(x.r);
+  }
+  let rateBusy = false;
+  async function refreshRate(manual) {
+    if (rateBusy) return;
+    rateBusy = true;
+    if (manual) { $("rateStatus").textContent = "Markaziy bankdan olinmoqda..."; $("rateFetch").disabled = true; }
+    try { applyCbu(await fetchCbu()); renderAll(); if (manual) $("rateStatus").textContent = "Yangilandi. "; renderRateInfo(manual ? "Yangilandi. " : ""); }
+    catch (e) { if (manual) $("rateStatus").textContent = "Markaziy bankdan kursni olib bo'lmadi. Internetni tekshiring yoki kursni qo'lda kiriting."; }
+    rateBusy = false; $("rateFetch").disabled = false;
+  }
+  function renderRateInfo(prefix) {
+    const h = rateHist(), src = lsGet(RSRC_KEY);
+    if (!(S.rate > 0)) $("rateStatus").textContent = "Kurs kiritilmagan.";
+    else if (src === "cbu" && h[0]) $("rateStatus").textContent = (prefix || "") + "Markaziy bank kursi: " + fmtRate(h[0].r) + " · " + h[0].d;
+    else $("rateStatus").textContent = (prefix || "") + "Kurs qo'lda kiritilgan.";
+    $("rateAuto").checked = lsGet(RAUTO_KEY) === "1";
+    $("rateHistBox").hidden = !h.length;
+    $("rateHist").innerHTML = h.slice(0, 5).map((x) => '<div class="kv"><span>' + esc(x.d) + '</span><b class="num">' + fmtRate(x.r) + "</b></div>").join("");
+    setVal("vCalc", S.rate > 0 ? "1 $ = " + fmt(S.rate) : "Kurs yo'q");
+  }
+  $("rateFetch").onclick = () => refreshRate(true);
+  $("rateAuto").onchange = () => { if ($("rateAuto").checked) { lsSet(RAUTO_KEY, "1"); refreshRate(true); } else lsDel(RAUTO_KEY); };
+  function autoRate() { if (lsGet(RAUTO_KEY) !== "1") return; const h = rateHist(); if (lsGet(RSRC_KEY) === "cbu" && h[0] && sameDay(h[0].t)) return; refreshRate(false); }
+  $("cvUsd").addEventListener("input", () => {
+    if (!(S.rate > 0)) { $("cvUzs").value = ""; return; }
+    const v = parseFloat($("cvUsd").value.replace(/\s/g, "").replace(",", "."));
+    $("cvUzs").value = v > 0 ? fmt(v * S.rate) : "";
+  });
+  $("cvUzs").addEventListener("input", () => {
+    if (!(S.rate > 0)) { $("cvUsd").value = ""; return; }
+    const v = parseMoney($("cvUzs").value);
+    $("cvUsd").value = v > 0 ? (Math.round(v / S.rate * 100) / 100).toString().replace(".", ",") : "";
+  });
   function applyTheme(v) { if (v) document.documentElement.setAttribute("data-theme", v); else document.documentElement.removeAttribute("data-theme"); }
   $("themeSel").addEventListener("change", () => { const v = $("themeSel").value; if (v) lsSet(THEME_KEY, v); else lsDel(THEME_KEY); applyTheme(v); });
   applyTheme(lsGet(THEME_KEY) || "");
@@ -1754,6 +1840,7 @@
   }
   function applyRemote(rs) {
     S = normalize(Object.assign({}, rs.s, { u: rs.u }));
+    freezeRates();
     lsSet(SKEY, JSON.stringify(S));
     lastPushed = rs.u;
     runRecurring();
@@ -2077,6 +2164,7 @@
   /* ---------- Ishga tushirish ---------- */
   setType("exp");
   setDK("owe");
+  if (freezeRates()) save();
   runRecurring();
   renderAll();
   renderSyncUI();
@@ -2089,6 +2177,8 @@
   $("acctPanel").hidden = !FB_CONFIG;
   renderAccount();
   if (syncOn) startSync(false);
+  autoRate();
+  document.addEventListener("visibilitychange", () => { if (!document.hidden) autoRate(); });
 })();
 </script>
 <script>
