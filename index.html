@@ -229,10 +229,30 @@
   textarea { min-height: 84px; font: 12px/1.4 var(--font-num); resize: vertical; }
   .row { display: flex; gap: 10px; flex-wrap: wrap; }
 
-  .lockcard { text-align: center; padding: 28px 18px; }
-  .lockcard svg { margin: 0 auto 12px; color: var(--accent); }
-  .lockcard h2 { color: var(--ink); font-size: 15px; letter-spacing: 0; text-transform: none; margin-bottom: 6px; }
-  .lockcard .lockp { margin-bottom: 16px; }
+  .lockcard { text-align: center; border: 0; background: transparent; box-shadow: none; padding: 8px 4px 24px;
+    min-height: calc(100vh - 170px); min-height: calc(100dvh - 170px);
+    display: flex; flex-direction: column; align-items: center; justify-content: center; }
+  .lockmark { width: 76px; height: 76px; border-radius: 22px; background: var(--hero-bg); display: grid; place-items: center;
+    box-shadow: 0 0 0 1px var(--line), 0 12px 28px -14px rgba(10, 51, 64, .55); margin-bottom: 20px; }
+  .lockmark svg { width: 46px; height: 46px; margin: 0; color: inherit; }
+  .lockcard h2 { color: var(--ink); font-size: 20px; font-weight: 600; letter-spacing: 0; text-transform: none; margin: 0 0 6px; }
+  .lockcard .lockp { margin-bottom: 22px; max-width: 280px; }
+  .lockcard #unlockForm { width: 100%; max-width: 320px; align-items: stretch; gap: 12px; }
+  .pwwrap { position: relative; }
+  .pwwrap input { width: 100%; padding-right: 46px; text-align: center; font-size: 17px; letter-spacing: .08em; min-height: 48px; }
+  .pwwrap .eye { position: absolute; right: 4px; top: 50%; transform: translateY(-50%); width: 40px; height: 40px; border: 0; background: transparent; color: var(--muted); display: grid; place-items: center; border-radius: 8px; }
+  .pwwrap .eye svg { width: 20px; height: 20px; margin: 0; color: inherit; }
+  .lockcard .primary { min-height: 48px; font-size: 15px; }
+  .bioBtn { display: inline-flex; flex-direction: column; align-items: center; gap: 8px; border: 0; background: transparent; color: var(--accent); margin-top: 18px; font-size: 13px; font-weight: 500; }
+  .bioBtn .ring { width: 64px; height: 64px; border-radius: 50%; border: 1.5px solid var(--accent); display: grid; place-items: center; background: color-mix(in srgb, var(--accent) 9%, transparent); }
+  .bioBtn svg { width: 30px; height: 30px; margin: 0; color: inherit; }
+  .bioBtn:active .ring { transform: scale(.94); }
+  .lockcard .err:empty { display: none; }
+  .lockcard #forgot { border: 0; color: var(--muted); font-size: 13px; padding: 8px; }
+  .pwwrap input::placeholder { letter-spacing: 0; font-size: 15px; }
+  @keyframes shake { 0%,100% { transform: translateX(0); } 20% { transform: translateX(-8px); } 40% { transform: translateX(7px); } 60% { transform: translateX(-5px); } 80% { transform: translateX(3px); } }
+  .shake { animation: shake .38s; }
+  @media (prefers-reduced-motion: reduce) { .shake { animation: none; } .bioBtn:active .ring { transform: none; } }
 
   /* Bottom nav and floating button */
   .nav {
@@ -307,18 +327,24 @@
   </header>
 
   <section class="panel lockcard" id="lockCard">
-    <svg viewBox="0 0 24 24" width="30" height="30" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 11V8a5 5 0 0110 0v3M5 11h14v9H5zM12 15v2"/></svg>
-    <h2>Ma'lumotlar yashirilgan</h2>
-    <p class="lockp">Balans, xarajatlar, qarzlar va kreditlar ko'rinmaydi.</p>
+    <div class="lockmark"><svg viewBox="0 0 64 64" aria-hidden="true"><path d="M20 15v34M44 15v34" fill="none" stroke="#f1f7f8" stroke-width="6" stroke-linecap="round"/><path d="M20 41l9-8 6 4 9-12" fill="none" stroke="#7fd9a4" stroke-width="4.5" stroke-linecap="round" stroke-linejoin="round"/><circle cx="44" cy="25" r="4" fill="#7fd9a4"/></svg></div>
+    <h2 id="lockTitle">Ma'lumotlar yashirilgan</h2>
+    <p class="lockp" id="lockSub">Balans, xarajatlar, qarzlar va kreditlar ko'rinmaydi.</p>
     <form class="dform" id="unlockForm" autocomplete="off">
-      <div class="field" id="pwRow" hidden>
-        <label for="lockPw">Parol</label>
-        <input id="lockPw" type="password" autocomplete="off">
+      <div class="pwwrap" id="pwRow" hidden>
+        <input id="lockPw" type="password" autocomplete="off" placeholder="Parolni kiriting" aria-label="Parol" enterkeyhint="go">
+        <button class="eye" type="button" id="pwEye" aria-label="Parolni ko'rsatish">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2 12s3.6-7 10-7 10 7 10 7-3.6 7-10 7S2 12 2 12z"/><circle cx="12" cy="12" r="3"/></svg>
+        </button>
       </div>
       <div class="err" id="lockErr" role="alert"></div>
       <button class="primary" type="submit" id="unlockBtn">Ko'rsatish</button>
       <button class="ghost" type="button" id="forgot" hidden>Parolni unutdim</button>
     </form>
+    <button class="bioBtn" type="button" id="bioBtn" hidden>
+      <span class="ring"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 10a2 2 0 0 0-2 2c0 1.02-.1 2.51-.26 4"/><path d="M14 13.12c0 2.38 0 6.38-1 8.88"/><path d="M17.29 21.02c.12-.6.43-2.3.5-3.02"/><path d="M2 12a10 10 0 0 1 18-6"/><path d="M2 16h.01"/><path d="M21.8 16c.2-2 .131-5.354 0-6"/><path d="M5 19.5C5.5 18 6 15 6 12a6 6 0 0 1 .34-2"/><path d="M8.65 22c.21-.66.45-1.32.57-2"/><path d="M9 6.8a6 6 0 0 1 9 5.2v2"/></svg></span>
+      Barmoq izi bilan ochish
+    </button>
   </section>
 
   <div id="secret" hidden>
@@ -563,6 +589,9 @@
           <div class="row">
             <button class="ghost" id="savePw" type="button">Parolni saqlash</button>
             <button class="ghost" id="removePw" type="button">Parolni olib tashlash</button>
+          </div>
+          <div class="row">
+            <button class="ghost" id="bioToggle" type="button" hidden>Barmoq izi bilan ochishni yoqish</button>
           </div>
           <div class="status" id="pwStatus" role="status"></div>
           <p>Bu himoya begonalar ekranni tasodifan ko'rib qolishidan saqlaydi. Ma'lumotlar brauzerda shifrlanmagan holda turadi. Parolni unutsangiz, uni faqat barcha ma'lumotlarni o'chirib tiklash mumkin.</p>
@@ -1581,6 +1610,51 @@
     return Promise.resolve("f" + (h >>> 0).toString(16));
   }
 
+  /* ---------- Barmoq izi / yuz bilan ochish (WebAuthn, faqat shu qurilmada tekshiriladi) ---------- */
+  const BIO_KEY = "hisobchi_bio_v1";
+  let bioId = lsGet(BIO_KEY) || null, bioBusy = false;
+  const b64 = (buf) => btoa(String.fromCharCode.apply(null, new Uint8Array(buf))).replace(/\+/g, "-").replace(/\//g, "_").replace(/=+$/, "");
+  const unb64 = (s) => { s = s.replace(/-/g, "+").replace(/_/g, "/"); while (s.length % 4) s += "="; return Uint8Array.from(atob(s), (c) => c.charCodeAt(0)); };
+  const rnd = (n) => crypto.getRandomValues(new Uint8Array(n));
+  const bioSupported = () => window.PublicKeyCredential && navigator.credentials && PublicKeyCredential.isUserVerifyingPlatformAuthenticatorAvailable
+    ? PublicKeyCredential.isUserVerifyingPlatformAuthenticatorAvailable().catch(() => false) : Promise.resolve(false);
+  function renderBioUI() {
+    bioSupported().then((ok) => {
+      $("bioToggle").hidden = !ok || !lockInfo;
+      $("bioToggle").textContent = bioId ? "Barmoq izi bilan ochishni o'chirish" : "Barmoq izi bilan ochishni yoqish";
+    });
+  }
+  async function bioUnlock(auto) {
+    if (!bioId || bioBusy) return;
+    bioBusy = true;
+    try {
+      await navigator.credentials.get({ publicKey: { challenge: rnd(32), allowCredentials: [{ type: "public-key", id: unb64(bioId), transports: ["internal"] }], userVerification: "required", timeout: 60000 } });
+      setLocked(false);
+    } catch (e) {
+      if (!auto) $("lockErr").textContent = "Barmoq izi tasdiqlanmadi. Parolni kiriting.";
+    }
+    setTimeout(() => { bioBusy = false; }, 600);
+  }
+  async function bioEnable() {
+    try {
+      const cred = await navigator.credentials.create({ publicKey: {
+        challenge: rnd(32), rp: { name: "Hisobchi" }, user: { id: rnd(16), name: "hisobchi", displayName: "Hisobchi" },
+        pubKeyCredParams: [{ type: "public-key", alg: -7 }, { type: "public-key", alg: -257 }],
+        authenticatorSelection: { authenticatorAttachment: "platform", userVerification: "required", residentKey: "discouraged" }, timeout: 60000 } });
+      bioId = b64(cred.rawId); lsSet(BIO_KEY, bioId);
+      $("pwStatus").textContent = "Yoqildi. Endi qulf ekranida barmoq izi tugmasi chiqadi.";
+    } catch (e) { $("pwStatus").textContent = "Yoqib bo'lmadi. Telefoningizda ekran qulfi va barmoq izi sozlanganini tekshiring."; }
+    renderBioUI();
+  }
+  function bioDisable(msg) { bioId = null; lsDel(BIO_KEY); if (msg) $("pwStatus").textContent = msg; renderBioUI(); }
+  $("bioToggle").onclick = () => { if (!lockInfo) { $("pwStatus").textContent = "Avval parol qo'ying."; return; } bioId ? bioDisable("O'chirildi.") : bioEnable(); };
+  $("bioBtn").onclick = () => bioUnlock(false);
+  $("pwEye").onclick = () => {
+    const i = $("lockPw"), show = i.type === "password";
+    i.type = show ? "text" : "password";
+    $("pwEye").setAttribute("aria-label", show ? "Parolni yashirish" : "Parolni ko'rsatish");
+  };
+
   let idleT = null, forgotArmed = false;
   function bump() { clearTimeout(idleT); if (!$("secret").hidden) idleT = setTimeout(() => setLocked(true), 120000); }
   function closeAllForms() { closeForm(); closeDForm(); closeGForm(); $("limForm").hidden = true; $("limOpen").hidden = false; payOpen = null; $("toast").hidden = true; }
@@ -1595,6 +1669,10 @@
       $("lockPw").value = ""; $("lockErr").textContent = "";
       $("pwRow").hidden = !lockInfo;
       $("forgot").hidden = !lockInfo;
+      $("bioBtn").hidden = !(lockInfo && bioId);
+      $("lockTitle").textContent = lockInfo ? "Hisobchi qulflangan" : "Ma'lumotlar yashirilgan";
+      $("lockSub").textContent = lockInfo ? "Davom etish uchun parolni kiriting." : "Balans, xarajatlar, qarzlar va kreditlar ko'rinmaydi.";
+      $("lockPw").type = "password"; $("pwEye").setAttribute("aria-label", "Parolni ko'rsatish");
       $("forgot").textContent = "Parolni unutdim";
       forgotArmed = false;
       $("unlockBtn").textContent = lockInfo ? "Ochish" : "Ko'rsatish";
@@ -1605,14 +1683,18 @@
     if (!lockInfo) { setLocked(false); return; }
     hashPw($("lockPw").value, lockInfo.salt).then((h) => {
       if (h === lockInfo.hash) setLocked(false);
-      else { $("lockErr").textContent = "Parol noto'g'ri."; $("lockPw").value = ""; $("lockPw").focus(); }
+      else {
+        $("lockErr").textContent = "Parol noto'g'ri."; $("lockPw").value = ""; $("lockPw").focus();
+        const f = $("lockPw").parentNode; f.classList.remove("shake"); void f.offsetWidth; f.classList.add("shake");
+        try { if (navigator.vibrate) navigator.vibrate(60); } catch (e) {}
+      }
     });
   });
   $("lockBtn").onclick = () => setLocked(true);
   $("forgot").onclick = () => {
     if (!forgotArmed) { forgotArmed = true; $("forgot").textContent = "Parol va barcha ma'lumotlar o'chadi. Davom etilsinmi?"; return; }
     S = emptyState(); save();
-    lsDel(LOCK_KEY); lockInfo = null;
+    lsDel(LOCK_KEY); lockInfo = null; bioDisable();
     renderAll(); setLocked(true);
   };
   $("savePw").onclick = () => {
@@ -1624,13 +1706,17 @@
       lsSet(LOCK_KEY, JSON.stringify(lockInfo));
       $("newPw").value = "";
       $("pwStatus").textContent = "Parol saqlandi. Keyingi safar ma'lumotlarni ochish uchun so'raladi.";
+      renderBioUI();
     });
   };
   $("removePw").onclick = () => {
-    lockInfo = null; lsDel(LOCK_KEY);
+    lockInfo = null; lsDel(LOCK_KEY); bioDisable();
     $("pwStatus").textContent = "Parol olib tashlandi. Endi ma'lumotlar tugma bilan ochiladi.";
   };
-  document.addEventListener("visibilitychange", () => { if (document.hidden) setLocked(true); });
+  document.addEventListener("visibilitychange", () => {
+    if (document.hidden) setLocked(true);
+    else if (lockInfo && bioId && !$("lockCard").hidden) setTimeout(() => bioUnlock(true), 350);
+  });
   ["pointerdown", "keydown", "scroll"].forEach((n) => document.addEventListener(n, bump, true));
 
   /* ---------- Ishga tushirish ---------- */
@@ -1640,6 +1726,8 @@
   renderAll();
   renderSyncUI();
   setLocked(true);
+  renderBioUI();
+  if (lockInfo && bioId) setTimeout(() => bioUnlock(true), 350);
   if (FB_CONFIG || (window.claude && window.claude.use)) $("syncDetails").hidden = false;
   if (syncOn) startSync(false);
 })();
