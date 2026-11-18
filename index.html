@@ -5,6 +5,7 @@
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <title>Hisobchi</title>
 <script src="firebase-config.js"></script>
+<script src="i18n.js"></script>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@500;600&family=IBM+Plex+Sans:wght@400;500;600&display=swap">
 <style>
   /* Layout: ledger-style. Sticky wordmark header, month bar, five tabs (bottom nav),
@@ -389,6 +390,25 @@
   .subhead .ghost { display: inline-flex; align-items: center; }
   .status:empty { display: none; }
   .body > .row:empty { display: none; }
+
+  /* O'ngdan chapga yozuv (arab tili) */
+  [dir="rtl"] .balance, [dir="rtl"] .hsplit b, [dir="rtl"] .amt, [dir="rtl"] .num, [dir="rtl"] .split3 b, [dir="rtl"] .cat-row .sum, [dir="rtl"] .chipbtn b, [dir="rtl"] .money-in, [dir="rtl"] input.amount { direction: ltr; unicode-bidi: isolate; }
+  [dir="rtl"] .hsplit > div + div { border-left: 0; padding-left: 0; border-right: 1px solid var(--hero-line); padding-right: 16px; }
+  [dir="rtl"] .chipbtn b { margin-left: 0; margin-right: 6px; }
+  [dir="rtl"] #unlockForm, [dir="rtl"] .mrow { text-align: right; }
+  [dir="rtl"] .legend i { margin-right: 0; margin-left: 6px; }
+  [dir="rtl"] .cat-row .pct, [dir="rtl"] .cat-row .sum, [dir="rtl"] .kv b { text-align: left; }
+  [dir="rtl"] .debt { padding: 12px 12px 12px 0; border-left: 0; border-right: 3px solid transparent; }
+  [dir="rtl"] .debt.s-late { border-right-color: var(--exp); }
+  [dir="rtl"] .debt.s-soon { border-right-color: var(--warn); }
+  [dir="rtl"] .debt.s-ok { border-right-color: var(--accent); }
+  [dir="rtl"] .debt.s-done { border-right-color: var(--line); }
+  [dir="rtl"] .pwwrap input { padding-right: 0; padding-left: 46px; }
+  [dir="rtl"] .pwwrap .eye { right: auto; left: 4px; }
+  [dir="rtl"] .chev, [dir="rtl"] .icon-btn { transform: scaleX(-1); }
+  [dir="rtl"] .nav .badge { left: auto; right: calc(50% + 6px); }
+  [dir="rtl"] * { letter-spacing: 0 !important; }
+  [dir="rtl"] .nkeys, [dir="rtl"] .keys, [dir="rtl"] .pindots { direction: ltr; }
 </style>
 </head>
 <body>
@@ -692,7 +712,7 @@
         <div class="body">
           <div class="field">
             <label for="langSel">Ilova tili</label>
-            <select id="langSel"><option value="uz">O'zbekcha</option><option value="ru" disabled>Русский (tez orada)</option><option value="en" disabled>English (tez orada)</option></select>
+            <select id="langSel"><option value="uz">O'zbekcha</option><option value="ru">Русский</option><option value="en">English</option><option value="ar">العربية</option><option value="tr">Türkçe</option></select>
           </div>
           <div class="field">
             <label for="themeSel">Mavzu</label>
@@ -890,6 +910,36 @@
   const WEEKDAYS = ["Yakshanba","Dushanba","Seshanba","Chorshanba","Payshanba","Juma","Shanba"];
   const isoRe = /^\d{4}-\d{2}-\d{2}$/;
 
+  /* ---------- Til tizimi (kalit = o'zbekcha matn; tarjimalar i18n.js faylida) ---------- */
+  const LANG_KEY = "hisobchi_lang_v1";
+  const LANGS = { uz: "O'zbekcha", ru: "Русский", en: "English", ar: "العربية", tr: "Türkçe" };
+  const I18N = window.HISOBCHI_I18N || {};
+  let LANG = "uz";
+  try {
+    const sv = localStorage.getItem(LANG_KEY), nl = String(navigator.language || "").slice(0, 2).toLowerCase();
+    if (sv && LANGS[sv]) LANG = sv;
+    else if (!localStorage.getItem("hisobchi_state_v3") && LANGS[nl]) { LANG = nl; localStorage.setItem(LANG_KEY, nl); } // yangi o'rnatishda telefon tili; mavjud foydalanuvchilarda o'zbekcha qoladi
+  } catch (e) {}
+  const MISS = (window.HISOBCHI_MISS = []);
+  function pluralIdx(n) {
+    if (LANG === "ru") { const a = n % 10, b = n % 100; return a === 1 && b !== 11 ? 0 : a >= 2 && a <= 4 && (b < 12 || b > 14) ? 1 : 2; }
+    return n === 1 ? 0 : 1;
+  }
+  function _t(s, p) {
+    let r = s;
+    if (LANG !== "uz") {
+      const d = I18N[LANG];
+      if (d && Object.prototype.hasOwnProperty.call(d, s)) r = d[s]; else if (MISS.indexOf(s) === -1) MISS.push(s);
+    }
+    if (p && typeof p.n === "number" && r.indexOf("|") > -1) { const f = r.split("|"); r = f[Math.min(pluralIdx(p.n), f.length - 1)]; }
+    return p ? r.replace(/\{(\w+)\}/g, (m, k) => (k in p ? p[k] : m)) : r;
+  }
+  const lname = (k, i, base) => { const d = LANG !== "uz" && I18N[LANG]; return (d && d[k] && d[k][i]) || base[i]; };
+  const mName = (i) => lname("months", i, MONTHS);
+  const mNameG = (i) => { const d = LANG !== "uz" && I18N[LANG]; return (d && ((d.monthsg && d.monthsg[i]) || (d.months && d.months[i]))) || MONTHS[i]; };
+  const mShort = (i) => lname("mshort", i, MSHORT);
+  const wName = (i) => lname("weekdays", i, WEEKDAYS);
+
   const pad = (n) => (n < 10 ? "0" : "") + n;
   const iso = (d) => d.getFullYear() + "-" + pad(d.getMonth() + 1) + "-" + pad(d.getDate());
   const parseISO = (s) => { const p = s.split("-"); return new Date(+p[0], +p[1] - 1, +p[2]); };
@@ -902,7 +952,7 @@
   const hue = (name) => { let h = 0; for (let i = 0; i < name.length; i++) h = (h * 31 + name.charCodeAt(i)) % 360; return h; };
   const CCOL = { "Oziq-ovqat": "#a5527f", "Transport": "#b5566e", "Uy-joy": "#b86a3f", "Aloqa": "#2f8a80", "Xaridlar": "#7a8f3a", "Salomatlik": "#b8504a", "Ta'lim": "#4f69b5", "Ko'ngilochar": "#7b5ab0", "Maosh": "#3d8f62", "Qo'shimcha daromad": "#2f857f", "Sovg'a": "#b9822c", "Boshqa": "#66788a" };
   const color = (name) => CCOL[name] || "hsl(" + hue(name) + " 36% 46%)";
-  const dlabel = (d, withYear) => d.getDate() + " " + MONTHS[d.getMonth()] + (withYear === false ? "" : " " + d.getFullYear());
+  const dlabel = (d, withYear) => d.getDate() + " " + mNameG(d.getMonth()) + (withYear === false ? "" : " " + d.getFullYear());
   const dayDiff = (a, b) => Math.round((a - b) / 86400000);
   const hhmm = () => { const t = new Date(); return pad(t.getHours()) + ":" + pad(t.getMinutes()); };
 
@@ -1068,8 +1118,8 @@
   function renderBalance() {
     const key = monthKey(), items = monthItems(key), t = today0();
     const inc = sumUZS(items, "inc"), exp = sumUZS(items, "exp"), bal = inc - exp;
-    $("monthLabel").textContent = MONTHS[view.getMonth()] + " " + view.getFullYear();
-    $("balance").innerHTML = (bal < 0 ? "−" : "") + fmt(Math.abs(bal)) + " <small>so'm</small>";
+    $("monthLabel").textContent = mName(view.getMonth()) + " " + view.getFullYear();
+    $("balance").innerHTML = (bal < 0 ? "−" : "") + fmt(Math.abs(bal)) + " <small>" + _t("so'm") + "</small>";
     $("sumInc").textContent = "+" + fmt(inc);
     $("sumExp").textContent = "−" + fmt(exp);
     const usd = S.tx.some((x) => x.cur === "USD") || S.debts.some((d) => d.cur === "USD");
@@ -1085,7 +1135,7 @@
       const sign = pc > 0 ? "+" : pc < 0 ? "−" : "";
       cmp.className = "cmp " + (pc > 0 ? "up" : pc < 0 ? "down" : "");
       const shown = Math.abs(pc) > 500 ? "500%+" : Math.abs(pc) + "%";
-      cmp.innerHTML = (isCur ? "O'tgan oyning shu kunlariga nisbatan" : "O'tgan oyga nisbatan") + " xarajat " + (pc === 0 ? "o'zgarmagan" : "<b>" + sign + shown + "</b>");
+      cmp.innerHTML = _t(isCur ? "O'tgan oyning shu kunlariga nisbatan xarajat {v}" : "O'tgan oyga nisbatan xarajat {v}", { v: pc === 0 ? _t("o'zgarmagan") : "<b>" + sign + shown + "</b>" });
     } else { cmp.className = "cmp"; cmp.textContent = ""; }
 
     const dim = new Date(view.getFullYear(), view.getMonth() + 1, 0).getDate();
@@ -1117,26 +1167,26 @@
     const names = Array.from(new Set(Object.keys(by).concat(Object.keys(S.limits)))).sort((a, b) => (by[b] || 0) - (by[a] || 0));
     $("catEmpty").hidden = names.length > 0;
     $("stack").hidden = !total;
-    $("stack").innerHTML = names.filter((n) => by[n] > 0).map((n) => '<i style="flex:' + by[n] + ' 1 0;background:' + color(n) + '" title="' + esc(n) + '"></i>').join("");
+    $("stack").innerHTML = names.filter((n) => by[n] > 0).map((n) => '<i style="flex:' + by[n] + ' 1 0;background:' + color(n) + '" title="' + esc(_t(n)) + '"></i>').join("");
     $("cats").innerHTML = names.map((n) => {
       const spent = by[n] || 0, lim = S.limits[n];
-      let row = '<div class="cat-row">' + cico(n, true) + '<span class="name">' + esc(n) + '</span>' +
+      let row = '<div class="cat-row">' + cico(n, true) + '<span class="name">' + esc(_t(n)) + '</span>' +
         '<span class="pct num">' + (total ? Math.round(spent / total * 100) + "%" : "") + '</span><span class="sum num">' + fmt(spent) + '</span></div>';
       if (lim) {
         const p = Math.round(spent / lim * 100);
-        row += '<div class="lim"><div class="bar"><i class="' + limitClass(p) + '" style="width:' + Math.min(100, p) + '%"></i></div><small>Limit: ' + fmt(spent) + " / " + fmt(lim) + " · " + p + "%" + (p > 100 ? " (oshib ketdi)" : "") + "</small></div>";
+        row += '<div class="lim"><div class="bar"><i class="' + limitClass(p) + '" style="width:' + Math.min(100, p) + '%"></i></div><small>' + _t("Limit:") + " " + fmt(spent) + " / " + fmt(lim) + " · " + p + "%" + (p > 100 ? " (" + _t("oshib ketdi") + ")" : "") + "</small></div>";
       }
       return row;
     }).join("");
-    $("limCat").innerHTML = CATS.exp.map((c) => '<option value="' + esc(c) + '">' + esc(c) + "</option>").join("");
+    $("limCat").innerHTML = CATS.exp.map((c) => '<option value="' + esc(c) + '">' + esc(_t(c)) + "</option>").join("");
     const lk = Object.keys(S.limits);
-    $("limList").innerHTML = lk.map((k) => '<div class="kv"><span>' + esc(k) + '</span><b>' + fmt(S.limits[k]) + ' <button type="button" class="del" data-lim="' + esc(k) + '">O\'chirish</button></b></div>').join("");
+    $("limList").innerHTML = lk.map((k) => '<div class="kv"><span>' + esc(_t(k)) + '</span><b>' + fmt(S.limits[k]) + ' <button type="button" class="del" data-lim="' + esc(k) + '">' + _t("O'chirish") + '</button></b></div>').join("");
   }
 
   function niceMax(v) { if (v <= 0) return 1; const p = Math.pow(10, Math.floor(Math.log10(v))); const n = v / p; return (n <= 1 ? 1 : n <= 2 ? 2 : n <= 5 ? 5 : 10) * p; }
   function short(n) {
-    if (n >= 1e6) return (n / 1e6).toFixed(n % 1e6 === 0 ? 0 : 1).replace(".", ",") + " mln";
-    if (n >= 1e3) return Math.round(n / 1e3) + " ming";
+    if (n >= 1e6) return (n / 1e6).toFixed(n % 1e6 === 0 ? 0 : 1).replace(".", ",") + " " + _t("mln");
+    if (n >= 1e3) return Math.round(n / 1e3) + " " + _t("ming");
     return String(Math.round(n));
   }
   function renderChart() {
@@ -1144,7 +1194,7 @@
     for (let i = 5; i >= 0; i--) {
       const d = new Date(view.getFullYear(), view.getMonth() - i, 1);
       const it = monthItems(d.getFullYear() + "-" + pad(d.getMonth() + 1));
-      months.push({ label: MSHORT[d.getMonth()], inc: sumUZS(it, "inc"), exp: sumUZS(it, "exp") });
+      months.push({ label: mShort(d.getMonth()), inc: sumUZS(it, "inc"), exp: sumUZS(it, "exp") });
     }
     const max = Math.max.apply(null, months.map((m) => Math.max(m.inc, m.exp)));
     $("chartEmpty").hidden = !!max;
@@ -1173,7 +1223,7 @@
       if (scope === "month" && x.date.slice(0, 7) !== monthKey()) return false;
       if (scope === "year" && x.date.slice(0, 4) !== String(view.getFullYear())) return false;
       if (ft && x.type !== ft) return false;
-      if (q && (x.cat + " " + (x.note || "")).toLowerCase().indexOf(q) === -1) return false;
+      if (q && (x.cat + " " + _t(x.cat) + " " + (x.note || "")).toLowerCase().indexOf(q) === -1) return false;
       return true;
     }).sort((a, b) => (a.date < b.date ? 1 : a.date > b.date ? -1 : 0));
   }
@@ -1182,35 +1232,35 @@
     const parts = [];
     if (withDate) parts.push(dlabel(parseISO(x.date), false));
     if (x.note) parts.push(esc(x.note));
-    if (x.rid) parts.push("takroriy");
-    if (x.cur === "USD" && x.rate > 0) parts.push("kurs " + fmt(x.rate));
-    return '<div class="tx">' + cico(x.cat) + '<div class="mid"><b>' + esc(x.cat) + "</b>" + (parts.length ? "<small>" + parts.join(" · ") + "</small>" : "") + "</div>" +
+    if (x.rid) parts.push(_t("takroriy"));
+    if (x.cur === "USD" && x.rate > 0) parts.push(_t("kurs") + " " + fmt(x.rate));
+    return '<div class="tx">' + cico(x.cat) + '<div class="mid"><b>' + esc(_t(x.cat)) + "</b>" + (parts.length ? "<small>" + parts.join(" · ") + "</small>" : "") + "</div>" +
       '<span class="amt ' + x.type + '">' + (x.type === "inc" ? "+" : "−") + money(x.amount, x.cur) + "</span>" +
-      (del ? '<button class="del' + (on ? " arm" : "") + '" data-id="' + x.id + '">' + (on ? "Aniq o'chirilsinmi?" : "O'chirish") + "</button>" : "") + "</div>";
+      (del ? '<button class="del' + (on ? " arm" : "") + '" data-id="' + x.id + '">' + (on ? _t("Aniq o'chirilsinmi?") : _t("O'chirish")) + "</button>" : "") + "</div>";
   }
   function renderLedger() {
     const items = ledgerItems(), scope = $("fScope").value;
     const inc = sumUZS(items, "inc"), exp = sumUZS(items, "exp");
-    $("ledgerInfo").textContent = items.length ? items.length + " ta amal · daromad +" + fmt(inc) + " · xarajat −" + fmt(exp) : "";
+    $("ledgerInfo").textContent = items.length ? _t("{n} ta amal · daromad +{i} · xarajat −{e}", { n: items.length, i: fmt(inc), e: fmt(exp) }) : "";
     if (!items.length) {
-      $("list").innerHTML = '<div class="empty">' + (S.tx.length ? "Mos amal topilmadi." : 'Hali amal yo\'q. “+” tugmasini bosing.') + "</div>";
+      $("list").innerHTML = '<div class="empty">' + _t(S.tx.length ? "Mos amal topilmadi." : "Hali amal yo'q. “+” tugmasini bosing.") + "</div>";
       return;
     }
     let html = "", last = "";
     items.slice(0, 300).forEach((x) => {
       if (x.date !== last) {
         const dt = parseISO(x.date);
-        html += '<div class="day"><span>' + dlabel(dt, scope !== "month") + "</span><span>" + WEEKDAYS[dt.getDay()] + "</span></div>";
+        html += '<div class="day"><span>' + dlabel(dt, scope !== "month") + "</span><span>" + wName(dt.getDay()) + "</span></div>";
         last = x.date;
       }
       html += txRow(x, true, false);
     });
-    if (items.length > 300) html += '<div class="info">Birinchi 300 ta amal ko\'rsatildi. Qidiruvni toraytiring.</div>';
+    if (items.length > 300) html += '<div class="info">' + _t("Birinchi 300 ta amal ko'rsatildi. Qidiruvni toraytiring.") + '</div>';
     $("list").innerHTML = html;
   }
   function renderRecent() {
     const rows = S.tx.slice().reverse().sort((a, b) => (a.date < b.date ? 1 : a.date > b.date ? -1 : 0)).slice(0, 5);
-    $("recent").innerHTML = rows.length ? rows.map((x) => txRow(x, false, true)).join("") : '<div class="empty">Hali amal yo\'q. “+” tugmasini bosing.</div>';
+    $("recent").innerHTML = rows.length ? rows.map((x) => txRow(x, false, true)).join("") : '<div class="empty">' + _t("Hali amal yo'q. “+” tugmasini bosing.") + '</div>';
     $("recentAll").hidden = !rows.length;
   }
 
@@ -1218,18 +1268,18 @@
     $("recPanel").hidden = !S.recurring.length;
     $("recList").innerHTML = S.recurring.map((r) => {
       const on = isArmed("rec:" + r.id);
-      return '<div class="tx">' + cico(r.cat) + '<div class="mid"><b>' + esc(r.cat) + "</b><small>Har oy " + r.day + "-kuni" + (r.note ? " · " + esc(r.note) : "") + "</small></div>" +
+      return '<div class="tx">' + cico(r.cat) + '<div class="mid"><b>' + esc(_t(r.cat)) + "</b><small>" + _t("Har oy {d}-kuni", { d: r.day }) + (r.note ? " · " + esc(r.note) : "") + "</small></div>" +
         '<span class="amt ' + r.type + '">' + (r.type === "inc" ? "+" : "−") + money(r.amount, r.cur) + "</span>" +
-        '<button class="del' + (on ? " arm" : "") + '" data-rec="' + r.id + '">' + (on ? "Aniq o'chirilsinmi?" : "To'xtatish") + "</button></div>";
+        '<button class="del' + (on ? " arm" : "") + '" data-rec="' + r.id + '">' + (on ? _t("Aniq o'chirilsinmi?") : _t("To'xtatish")) + "</button></div>";
     }).join("");
   }
 
   function renderQuick() {
     $("quick").hidden = !S.quick.length;
-    $("quick").innerHTML = S.quick.map((q) => '<button type="button" class="chipbtn" data-q="' + q.id + '">' + esc(q.note || q.cat) + " <b class=\"num\">" + money(q.amount, q.cur) + "</b></button>").join("");
+    $("quick").innerHTML = S.quick.map((q) => '<button type="button" class="chipbtn" data-q="' + q.id + '">' + esc(q.note || _t(q.cat)) + " <b class=\"num\">" + money(q.amount, q.cur) + "</b></button>").join("");
     $("quickList").innerHTML = S.quick.length
-      ? S.quick.map((q) => '<div class="kv"><span>' + esc(q.note || q.cat) + " · " + money(q.amount, q.cur) + '</span><b><button type="button" class="del" data-qdel="' + q.id + '">O\'chirish</button></b></div>').join("")
-      : '<p>Hali tez tugma yo\'q. Amal qo\'shayotganda "Tez tugma sifatida saqlash"ni belgilang.</p>';
+      ? S.quick.map((q) => '<div class="kv"><span>' + esc(q.note || _t(q.cat)) + " · " + money(q.amount, q.cur) + '</span><b><button type="button" class="del" data-qdel="' + q.id + '">' + _t("O'chirish") + '</button></b></div>').join("")
+      : '<p>' + _t('Hali tez tugma yo\'q. Amal qo\'shayotganda "Tez tugma sifatida saqlash"ni belgilang.') + '</p>';
   }
 
   /* ---------- Qarzlar va kreditlar ---------- */
@@ -1274,9 +1324,9 @@
       return { d: d, due: due, diff: due ? dayDiff(due, t) : null };
     }).sort((a, b) => (a.due && b.due ? a.due - b.due : a.due ? -1 : b.due ? 1 : 0));
   }
-  const when = (diff) => (diff < 0 ? Math.abs(diff) + " kun kechikdi" : diff === 0 ? "Bugun" : diff === 1 ? "Ertaga" : diff + " kun qoldi");
+  const when = (diff) => (diff < 0 ? _t("{n} kun kechikdi", { n: Math.abs(diff) }) : diff === 0 ? _t("Bugun") : diff === 1 ? _t("Ertaga") : _t("{n} kun qoldi", { n: diff }));
   const chipClass = (diff) => (diff < 0 ? "late" : diff <= 7 ? "soon" : "ok");
-  const role = (d) => (d.kind === "loan" ? "Kredit to'lovi" : d.dir === "owe" ? "Qarzni qaytarish" : "Sizga qaytarishi kerak");
+  const role = (d) => _t(d.kind === "loan" ? "Kredit to'lovi" : d.dir === "owe" ? "Qarzni qaytarish" : "Sizga qaytarishi kerak");
 
   function abtn(act, id, label, armLabel, extra) {
     const on = isArmed(id + ":" + act);
@@ -1293,11 +1343,11 @@
     cur.filter((x) => x.type === "exp").forEach((x) => { spent[x.cat] = (spent[x.cat] || 0) + toUZS(x.amount, x.cur, x.rate); });
     Object.keys(S.limits).forEach((k) => {
       const p = Math.round((spent[k] || 0) / S.limits[k] * 100);
-      if (p >= 80) rows.push('<div class="rem"><div class="mid"><b>' + esc(k) + "</b><small>Shu oydagi limit: " + fmt(spent[k] || 0) + " / " + fmt(S.limits[k]) + '</small></div><span class="chip ' + (p > 100 ? "late" : "soon") + '">' + (p > 100 ? "Limit oshdi" : p + "%") + "</span></div>");
+      if (p >= 80) rows.push('<div class="rem"><div class="mid"><b>' + esc(_t(k)) + "</b><small>" + _t("Shu oydagi limit:") + " " + fmt(spent[k] || 0) + " / " + fmt(S.limits[k]) + '</small></div><span class="chip ' + (p > 100 ? "late" : "soon") + '">' + (p > 100 ? _t("Limit oshdi") : p + "%") + "</span></div>");
     });
     const days = Math.floor((Date.now() - (+lsGet(BACKUP_KEY) || Date.now())) / 864e5);
     if (days >= 30 && hasData(S) && !syncOn) {
-      rows.push('<div class="rem"><div class="mid"><b>Zaxira nusxa</b><small>Oxirgi nusxadan beri ' + days + ' kun o\'tdi</small></div><button type="button" class="dbtn pay" data-rem="backup">Nusxa olish</button></div>');
+      rows.push('<div class="rem"><div class="mid"><b>' + _t("Zaxira nusxa") + '</b><small>' + _t("Oxirgi nusxadan beri {n} kun o'tdi", { n: days }) + '</small></div><button type="button" class="dbtn pay" data-rem="backup">' + _t("Nusxa olish") + '</button></div>');
     }
     $("remPanel").hidden = !rows.length;
     $("remList").innerHTML = rows.join("");
@@ -1316,40 +1366,40 @@
     $("dOwe").textContent = fmt(owe); $("dOwed").textContent = fmt(owed);
     $("dMonthly").textContent = fmt(monthly); $("dLoanLeft").textContent = left ? fmt(left) : "—";
 
-    if (!es.length) { $("dlist").innerHTML = '<div class="empty">Hali qarz yoki kredit kiritilmagan. "Qo\'shish" tugmasini bosing.</div>'; return; }
+    if (!es.length) { $("dlist").innerHTML = '<div class="empty">' + _t('Hali qarz yoki kredit kiritilmagan. "Qo\'shish" tugmasini bosing.') + '</div>'; return; }
     $("dlist").innerHTML = es.map((e) => {
       const d = e.d, loan = d.kind === "loan";
       let chip = e.due
         ? '<span class="chip ' + chipClass(e.diff) + '">' + (loan ? dlabel(e.due) + " · " : "") + when(e.diff) + "</span>"
-        : '<span class="chip ok">' + (loan ? "Yopilgan" : "Qaytarilgan") + "</span>";
+        : '<span class="chip ok">' + _t(loan ? "Yopilgan" : "Qaytarilgan") + "</span>";
       let detail, amtHtml, extra = "", acts = "";
       if (loan) {
         const sc = loanSched(d);
-        detail = "Har oy " + d.day + "-kuni" + (d.end ? " · " + dlabel(parseISO(d.end)) + "gacha" : "");
-        amtHtml = '<span class="amt exp">' + money(d.amount, d.cur) + "/oy</span>";
+        detail = _t("Har oy {d}-kuni", { d: d.day }) + (d.end ? " · " + _t("{d}gacha", { d: dlabel(parseISO(d.end)) }) : "");
+        amtHtml = '<span class="amt exp">' + money(d.amount, d.cur) + _t("/oy") + "</span>";
         if (sc) {
           const pct = Math.round(sc.paid / sc.total * 100), totalPay = sc.total * d.amount;
           extra = '<div class="progress"><i style="width:' + pct + '%"></i></div>' +
-            '<div class="kv"><span>To\'langan</span><b>' + sc.paid + " / " + sc.total + " oy (" + pct + "%)</b></div>" +
-            '<div class="kv"><span>Qolgan</span><b>' + sc.remaining + " oy · " + money(sc.remaining * d.amount, d.cur) + "</b></div>" +
-            '<div class="kv"><span>Jami to\'lov</span><b>' + money(totalPay, d.cur) + "</b></div>" +
-            (d.principal ? '<div class="kv"><span>Ustama</span><b>' + (totalPay >= d.principal ? money(totalPay - d.principal, d.cur) : "—") + "</b></div>" : "");
+            '<div class="kv"><span>' + _t("To'langan") + '</span><b>' + _t("{a} / {b} oy ({c}%)", { a: sc.paid, b: sc.total, c: pct }) + '</b></div>' +
+            '<div class="kv"><span>' + _t("Qolgan") + '</span><b>' + _t("{a} oy · {m}", { a: sc.remaining, m: money(sc.remaining * d.amount, d.cur) }) + '</b></div>' +
+            '<div class="kv"><span>' + _t("Jami to'lov") + '</span><b>' + money(totalPay, d.cur) + "</b></div>" +
+            (d.principal ? '<div class="kv"><span>' + _t("Ustama") + '</span><b>' + (totalPay >= d.principal ? money(totalPay - d.principal, d.cur) : "—") + "</b></div>" : "");
         }
-        if (e.due) acts += abtn("pay", d.id, "To'landi", "Tasdiqlash", "pay");
+        if (e.due) acts += abtn("pay", d.id, _t("To'landi"), _t("Tasdiqlash"), "pay");
       } else {
         const rem = remainingOf(d), paid = sumPaid(d), pct = Math.min(100, Math.round(paid / d.amount * 100));
-        detail = "Qaytarish: " + dlabel(parseISO(d.due));
-        amtHtml = '<span class="amt ' + (d.dir === "owe" ? "exp" : "inc") + '">' + (isDone(d) ? money(d.amount, d.cur) : "Qoldi " + money(rem, d.cur)) + "</span>";
-        if (paid > 0) extra = '<div class="progress"><i style="width:' + pct + '%"></i></div><div class="kv"><span>To\'langan</span><b>' + money(paid, d.cur) + " / " + money(d.amount, d.cur) + " (" + pct + "%)</b></div>";
+        detail = _t("Qaytarish:") + " " + dlabel(parseISO(d.due));
+        amtHtml = '<span class="amt ' + (d.dir === "owe" ? "exp" : "inc") + '">' + (isDone(d) ? money(d.amount, d.cur) : _t("Qoldi {m}", { m: money(rem, d.cur) })) + "</span>";
+        if (paid > 0) extra = '<div class="progress"><i style="width:' + pct + '%"></i></div><div class="kv"><span>' + _t("To'langan") + '</span><b>' + money(paid, d.cur) + " / " + money(d.amount, d.cur) + " (" + pct + "%)</b></div>";
         if (!isDone(d)) {
-          acts += '<button type="button" class="dbtn pay" data-act="payopen" data-id="' + d.id + '">To\'lov kiritish</button>';
-          acts += abtn("close", d.id, "To'liq yopish", "Tasdiqlash", "");
+          acts += '<button type="button" class="dbtn pay" data-act="payopen" data-id="' + d.id + '">' + _t("To'lov kiritish") + '</button>';
+          acts += abtn("close", d.id, _t("To'liq yopish"), _t("Tasdiqlash"), "");
         }
-        if (d.payments.length) acts += '<button type="button" class="dbtn" data-act="undo" data-id="' + d.id + '" title="Oxirgi to\'lovni bekor qilish">' + (isDone(d) ? "Qayta ochish" : "Bekor qilish") + "</button>";
-        if (payOpen === d.id) extra += '<div class="payrow"><input class="money-in" id="payAmt" inputmode="numeric" placeholder="Summa" aria-label="To\'lov summasi"><button type="button" class="dbtn pay" data-act="paysave" data-id="' + d.id + '">Saqlash</button><button type="button" class="dbtn" data-act="paycancel" data-id="' + d.id + '">Yopish</button></div>';
+        if (d.payments.length) acts += '<button type="button" class="dbtn" data-act="undo" data-id="' + d.id + '" title="' + _t("Oxirgi to'lovni bekor qilish") + '">' + (isDone(d) ? _t("Qayta ochish") : _t("Bekor qilish")) + "</button>";
+        if (payOpen === d.id) extra += '<div class="payrow"><input class="money-in" id="payAmt" inputmode="numeric" placeholder="' + _t("Summa") + '" aria-label="' + _t("To'lov summasi") + '"><button type="button" class="dbtn pay" data-act="paysave" data-id="' + d.id + '">' + _t("Saqlash") + '</button><button type="button" class="dbtn" data-act="paycancel" data-id="' + d.id + '">' + _t("Yopish") + '</button></div>';
       }
       if (d.note) detail += " · " + d.note;
-      acts += abtn("del", d.id, "O'chirish", "Aniq o'chirilsinmi?", "");
+      acts += abtn("del", d.id, _t("O'chirish"), _t("Aniq o'chirilsinmi?"), "");
       return '<div class="debt s-' + (!e.due ? "done" : e.diff < 0 ? "late" : e.diff <= 7 ? "soon" : "ok") + '"><div class="dtop"><div class="mid"><b>' + esc(d.name) + "</b><small>" + esc(detail) + "</small></div>" + amtHtml + "</div>" + extra +
         '<div class="dbot">' + chip + '<span class="grow"></span>' + acts + "</div></div>";
     }).join("");
@@ -1357,16 +1407,16 @@
 
   /* ---------- Maqsadlar ---------- */
   function renderGoals() {
-    if (!S.goals.length) { $("glist").innerHTML = '<div class="empty">Hali maqsad yo\'q. "Qo\'shish" tugmasini bosing.</div>'; return; }
+    if (!S.goals.length) { $("glist").innerHTML = '<div class="empty">' + _t('Hali maqsad yo\'q. "Qo\'shish" tugmasini bosing.') + '</div>'; return; }
     $("glist").innerHTML = S.goals.map((g) => {
       const pct = Math.min(100, Math.round(g.saved / g.target * 100)), done = g.saved >= g.target, on = isArmed("g:" + g.id);
-      return '<div class="debt"><div class="dtop"><div class="mid"><b>' + esc(g.name) + "</b><small>" + fmt(g.saved) + " / " + fmt(g.target) + " so'm · " + pct + '%</small></div>' +
-        '<span class="chip ' + (done ? "soon" : "ok") + '">' + (done ? "Erishildi" : fmt(g.target - g.saved) + " qoldi") + "</span></div>" +
+      return '<div class="debt"><div class="dtop"><div class="mid"><b>' + esc(g.name) + "</b><small>" + fmt(g.saved) + " / " + fmt(g.target) + " " + _t("so'm") + " · " + pct + '%</small></div>' +
+        '<span class="chip ' + (done ? "soon" : "ok") + '">' + (done ? _t("Erishildi") : _t("{m} qoldi", { m: fmt(g.target - g.saved) })) + "</span></div>" +
         '<div class="progress"><i style="width:' + pct + '%"></i></div>' +
-        '<div class="dbot"><input class="money-in" id="g_' + g.id + '" inputmode="numeric" placeholder="Summa" aria-label="Summa">' +
-        '<button type="button" class="dbtn pay" data-gact="add" data-id="' + g.id + '">Qo\'shish</button>' +
-        '<button type="button" class="dbtn" data-gact="sub" data-id="' + g.id + '">Ayirish</button><span class="grow"></span>' +
-        '<button type="button" class="dbtn' + (on ? " arm" : "") + '" data-gact="del" data-id="' + g.id + '">' + (on ? "Aniq o'chirilsinmi?" : "O'chirish") + "</button></div></div>";
+        '<div class="dbot"><input class="money-in" id="g_' + g.id + '" inputmode="numeric" placeholder="' + _t("Summa") + '" aria-label="' + _t("Summa") + '">' +
+        '<button type="button" class="dbtn pay" data-gact="add" data-id="' + g.id + '">' + _t("Qo'shish") + '</button>' +
+        '<button type="button" class="dbtn" data-gact="sub" data-id="' + g.id + '">' + _t("Ayirish") + '</button><span class="grow"></span>' +
+        '<button type="button" class="dbtn' + (on ? " arm" : "") + '" data-gact="del" data-id="' + g.id + '">' + (on ? _t("Aniq o'chirilsinmi?") : _t("O'chirish")) + "</button></div></div>";
     }).join("");
   }
 
@@ -1414,9 +1464,9 @@
 
   /* ---------- Amal qo'shish ---------- */
   function fillCats() {
-    $("cat").innerHTML = CATS[type].map((c) => '<option value="' + esc(c) + '">' + esc(c) + "</option>").join("");
+    $("cat").innerHTML = CATS[type].map((c) => '<option value="' + esc(c) + '">' + esc(_t(c)) + "</option>").join("");
     pickCat(CATS[type][0]);
-    $("catRow").innerHTML = CATS[type].map((c) => '<button type="button" class="catbtn" data-cat="' + esc(c) + '" aria-pressed="' + (c === $("cat").value) + '">' + cico(c) + '<span class="t">' + esc(c) + "</span></button>").join("");
+    $("catRow").innerHTML = CATS[type].map((c) => '<button type="button" class="catbtn" data-cat="' + esc(c) + '" aria-pressed="' + (c === $("cat").value) + '">' + cico(c) + '<span class="t">' + esc(_t(c)) + "</span></button>").join("");
     $("catRow").scrollLeft = 0;
   }
   function pickCat(c) {
@@ -1479,8 +1529,8 @@
   $("form").addEventListener("submit", (e) => {
     e.preventDefault();
     const amount = parseMoney($("amount").value), date = $("date").value;
-    if (!amount) { $("err").textContent = "Summani kiriting."; return; }
-    if (!date) { $("err").textContent = "Sanani tanlang."; return; }
+    if (!amount) { $("err").textContent = _t("Summani kiriting."); return; }
+    if (!date) { $("err").textContent = _t("Sanani tanlang."); return; }
     const x = withRate({ id: uid(), type: type, amount: amount, cur: $("cur").value, cat: $("cat").value, note: $("note").value.trim(), date: date });
     if ($("recur").checked) {
       const r = { id: uid(), type: x.type, amount: x.amount, cur: x.cur, cat: x.cat, note: x.note, day: parseISO(date).getDate(), last: date.slice(0, 7) };
@@ -1504,7 +1554,7 @@
     S.tx.push(x); save();
     const n = today0(); view = new Date(n.getFullYear(), n.getMonth(), 1);
     renderAll();
-    toast("Qo'shildi: " + (q.note || q.cat), () => { S.tx = S.tx.filter((z) => z.id !== x.id); save(); renderAll(); });
+    toast(_t("Qo'shildi:") + " " + (q.note || _t(q.cat)), () => { S.tx = S.tx.filter((z) => z.id !== x.id); save(); renderAll(); });
   });
 
   $("list").addEventListener("click", (e) => {
@@ -1536,7 +1586,7 @@
   $("limForm").addEventListener("submit", (e) => {
     e.preventDefault();
     const a = parseMoney($("limAmt").value);
-    if (!a) { $("limErr").textContent = "Limit summasini kiriting."; return; }
+    if (!a) { $("limErr").textContent = _t("Limit summasini kiriting."); return; }
     S.limits[$("limCat").value] = a; save();
     $("limAmt").value = ""; $("limErr").textContent = "";
     renderAll();
@@ -1553,7 +1603,7 @@
   function setDK(k) {
     dk = k;
     ["owe", "owed", "loan"].forEach((x) => $("k_" + x).setAttribute("aria-pressed", x === k));
-    $("lblName").textContent = DK[k][0]; $("lblAmt").textContent = DK[k][1];
+    $("lblName").textContent = _t(DK[k][0]); $("lblAmt").textContent = _t(DK[k][1]);
     const loan = k === "loan";
     $("fDue").hidden = loan;
     ["fDay", "fEnd", "fStart", "fPrincipal", "loanHint"].forEach((id) => { $(id).hidden = !loan; });
@@ -1572,11 +1622,11 @@
     const name = $("dname").value.trim(), amount = parseMoney($("damount").value), day = parseInt($("dday").value, 10);
     const end = $("dend").value, start = $("dstart").value;
     let err = "";
-    if (!name) err = "Nomini yozing.";
-    else if (!amount) err = "Summani kiriting.";
-    else if (dk !== "loan" && !$("ddue").value) err = "Qaytarish sanasini tanlang.";
-    else if (dk === "loan" && !(day >= 1 && day <= 31)) err = "To'lov kunini 1 dan 31 gacha kiriting.";
-    else if (dk === "loan" && end && start && end < start) err = "Tugash sanasi boshlanish sanasidan oldin bo'lmasin.";
+    if (!name) err = _t("Nomini yozing.");
+    else if (!amount) err = _t("Summani kiriting.");
+    else if (dk !== "loan" && !$("ddue").value) err = _t("Qaytarish sanasini tanlang.");
+    else if (dk === "loan" && !(day >= 1 && day <= 31)) err = _t("To'lov kunini 1 dan 31 gacha kiriting.");
+    else if (dk === "loan" && end && start && end < start) err = _t("Tugash sanasi boshlanish sanasidan oldin bo'lmasin.");
     if (err) { $("derr").textContent = err; return; }
     const item = { id: uid(), kind: dk === "loan" ? "loan" : "debt", name: name, amount: amount, cur: $("dcur").value, note: $("dnote").value.trim() };
     if (dk === "loan") {
@@ -1598,7 +1648,7 @@
     if (act === "paycancel") { payOpen = null; renderDebts(); return; }
     if (act === "paysave") {
       const a = parseMoney($("payAmt").value);
-      if (!a) { toast("To'lov summasini kiriting."); return; }
+      if (!a) { toast(_t("To'lov summasini kiriting.")); return; }
       d.payments.push({ id: uid(), amount: Math.min(a, remainingOf(d)), date: iso(today0()) });
       payOpen = null; save(); renderAll(); return;
     }
@@ -1619,8 +1669,8 @@
   $("gform").addEventListener("submit", (e) => {
     e.preventDefault();
     const name = $("gname").value.trim(), target = parseMoney($("gtarget").value);
-    if (!name) { $("gerr").textContent = "Maqsad nomini yozing."; return; }
-    if (!target) { $("gerr").textContent = "Kerakli summani kiriting."; return; }
+    if (!name) { $("gerr").textContent = _t("Maqsad nomini yozing."); return; }
+    if (!target) { $("gerr").textContent = _t("Kerakli summani kiriting."); return; }
     S.goals.push({ id: uid(), name: name, target: target, saved: 0 }); save();
     closeGForm(); renderGoals();
   });
@@ -1635,7 +1685,7 @@
       disarm(); S.goals = S.goals.filter((x) => x.id !== id); save(); renderGoals(); return;
     }
     const a = parseMoney($("g_" + id).value);
-    if (!a) { toast("Summani kiriting."); return; }
+    if (!a) { toast(_t("Summani kiriting.")); return; }
     g.saved = Math.max(0, g.saved + (act === "add" ? a : -a));
     save(); renderGoals();
   });
@@ -1673,20 +1723,20 @@
   async function refreshRate(manual) {
     if (rateBusy) return;
     rateBusy = true;
-    if (manual) { $("rateStatus").textContent = "Markaziy bankdan olinmoqda..."; $("rateFetch").disabled = true; }
-    try { applyCbu(await fetchCbu()); renderAll(); if (manual) $("rateStatus").textContent = "Yangilandi. "; renderRateInfo(manual ? "Yangilandi. " : ""); }
-    catch (e) { if (manual) $("rateStatus").textContent = "Markaziy bankdan kursni olib bo'lmadi. Internetni tekshiring yoki kursni qo'lda kiriting."; }
+    if (manual) { $("rateStatus").textContent = _t("Markaziy bankdan olinmoqda..."); $("rateFetch").disabled = true; }
+    try { applyCbu(await fetchCbu()); renderAll(); if (manual) $("rateStatus").textContent = _t("Yangilandi.") + " "; renderRateInfo(manual ? _t("Yangilandi.") + " " : ""); }
+    catch (e) { if (manual) $("rateStatus").textContent = _t("Markaziy bankdan kursni olib bo'lmadi. Internetni tekshiring yoki kursni qo'lda kiriting."); }
     rateBusy = false; $("rateFetch").disabled = false;
   }
   function renderRateInfo(prefix) {
     const h = rateHist(), src = lsGet(RSRC_KEY);
-    if (!(S.rate > 0)) $("rateStatus").textContent = "Kurs kiritilmagan.";
-    else if (src === "cbu" && h[0]) $("rateStatus").textContent = (prefix || "") + "Markaziy bank kursi: " + fmtRate(h[0].r) + " · " + h[0].d;
-    else $("rateStatus").textContent = (prefix || "") + "Kurs qo'lda kiritilgan.";
+    if (!(S.rate > 0)) $("rateStatus").textContent = _t("Kurs kiritilmagan.");
+    else if (src === "cbu" && h[0]) $("rateStatus").textContent = (prefix || "") + _t("Markaziy bank kursi:") + " " + fmtRate(h[0].r) + " · " + h[0].d;
+    else $("rateStatus").textContent = (prefix || "") + _t("Kurs qo'lda kiritilgan.");
     $("rateAuto").checked = lsGet(RAUTO_KEY) === "1";
     $("rateHistBox").hidden = !h.length;
     $("rateHist").innerHTML = h.slice(0, 5).map((x) => '<div class="kv"><span>' + esc(x.d) + '</span><b class="num">' + fmtRate(x.r) + "</b></div>").join("");
-    setVal("vCalc", S.rate > 0 ? "1 $ = " + fmt(S.rate) : "Kurs yo'q");
+    setVal("vCalc", S.rate > 0 ? "1 $ = " + fmt(S.rate) : _t("Kurs yo'q"));
   }
   $("rateFetch").onclick = () => refreshRate(true);
   $("rateAuto").onchange = () => { if ($("rateAuto").checked) { lsSet(RAUTO_KEY, "1"); refreshRate(true); } else lsDel(RAUTO_KEY); };
@@ -1711,8 +1761,8 @@
     const text = JSON.stringify(stateForSync());
     $("backup").value = text;
     lsSet(BACKUP_KEY, String(Date.now()));
-    const done = () => say("Nusxa olindi.");
-    const fallback = () => { $("backup").select(); say("Matn belgilandi. Nusxa olish uchun qurilmangizning nusxa buyrug'idan foydalaning."); };
+    const done = () => say(_t("Nusxa olindi."));
+    const fallback = () => { $("backup").select(); say(_t("Matn belgilandi. Nusxa olish uchun qurilmangizning nusxa buyrug'idan foydalaning.")); };
     try { navigator.clipboard.writeText(text).then(done, fallback); } catch (err) { fallback(); }
     renderReminders();
   };
@@ -1731,16 +1781,16 @@
     const text = JSON.stringify(stateForSync());
     $("backup").value = text;
     if (download("hisobchi-zaxira-" + stamp() + ".json", text, "application/json")) {
-      lsSet(BACKUP_KEY, String(Date.now())); say("Zaxira fayli saqlandi. Tiklash uchun fayl ichidagi matnni yuqoridagi maydonga qo'ying."); renderReminders();
-    } else say("Fayl saqlanmadi. 'Nusxa olish' tugmasidan foydalaning.");
+      lsSet(BACKUP_KEY, String(Date.now())); say(_t("Zaxira fayli saqlandi. Tiklash uchun fayl ichidagi matnni yuqoridagi maydonga qo'ying.")); renderReminders();
+    } else say(_t("Fayl saqlanmadi. 'Nusxa olish' tugmasidan foydalaning."));
   };
   $("saveCsv").onclick = () => {
     const q = (v) => '"' + String(v == null ? "" : v).replace(/"/g, '""') + '"';
-    const rows = [["Sana", "Turi", "Kategoriya", "Summa", "Valyuta", "Izoh"]];
+    const rows = [[_t("Sana"), _t("Turi"), _t("Kategoriya"), _t("Summa"), _t("Valyuta"), _t("Izoh")]];
     S.tx.slice().sort((a, b) => (a.date < b.date ? 1 : -1)).forEach((x) =>
-      rows.push([x.date, x.type === "inc" ? "Daromad" : "Xarajat", x.cat, x.amount, x.cur || "UZS", x.note || ""]));
+      rows.push([x.date, x.type === "inc" ? _t("Daromad") : _t("Xarajat"), _t(x.cat), x.amount, x.cur || "UZS", x.note || ""]));
     const csv = "﻿" + rows.map((r) => r.map(q).join(";")).join("\r\n");
-    say(download("hisobchi-amallar-" + stamp() + ".csv", csv, "text/csv;charset=utf-8") ? "CSV saqlandi: " + S.tx.length + " ta amal." : "CSV saqlanmadi.");
+    say(download("hisobchi-amallar-" + stamp() + ".csv", csv, "text/csv;charset=utf-8") ? _t("CSV saqlandi: {n} ta amal.", { n: S.tx.length }) : _t("CSV saqlanmadi."));
   };
   $("restore").onclick = () => {
     try {
@@ -1753,8 +1803,8 @@
       const n = normalize(obj);
       ["tx", "debts", "goals", "recurring", "limits", "quick", "rate"].forEach((k) => { if (k in obj) S[k] = n[k]; });
       save(); runRecurring(); renderAll();
-      say("Tiklandi: " + S.tx.length + " ta amal, " + S.debts.length + " ta qarz/kredit.");
-    } catch (err) { say("Matn noto'g'ri. Zaxira nusxadan olingan matnni to'liq qo'ying."); }
+      say(_t("Tiklandi: {a} ta amal, {b} ta qarz/kredit.", { a: S.tx.length, b: S.debts.length }));
+    } catch (err) { say(_t("Matn noto'g'ri. Zaxira nusxadan olingan matnni to'liq qo'ying.")); }
   };
   $("remList").addEventListener("click", (e) => {
     const b = e.target.closest ? e.target.closest("button[data-rem]") : null;
@@ -1771,8 +1821,8 @@
     const full = (prof.first + " " + prof.last).trim();
     const ini = ((prof.first.charAt(0) || "") + (prof.last.charAt(0) || "")).toUpperCase();
     $("avatar").innerHTML = ini ? esc(ini) : '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><circle cx="12" cy="8" r="4"/><path d="M4 21c0-4.4 3.6-7 8-7s8 2.6 8 7"/></svg>';
-    $("profName").textContent = full || "Ismingizni kiriting";
-    $("profSub").textContent = acctEmail || "Ma'lumotlar faqat shu qurilmada";
+    $("profName").textContent = full || _t("Ismingizni kiriting");
+    $("profSub").textContent = acctEmail || _t("Ma'lumotlar faqat shu qurilmada");
   }
   $("profEdit").onclick = () => { $("pFirst").value = prof.first; $("pLast").value = prof.last; $("profForm").hidden = false; $("profEdit").hidden = true; $("pFirst").focus(); };
   $("profCancel").onclick = () => { $("profForm").hidden = true; $("profEdit").hidden = false; };
@@ -1795,12 +1845,12 @@
   function setVal(id, text, pill) { const e = $(id); e.textContent = text; e.classList.toggle("pill", !!pill); }
   function renderMenu() {
     const th = lsGet(THEME_KEY) || "";
-    setVal("vLook", th === "light" ? "Yorug'" : th === "dark" ? "Qorong'i" : "Avtomatik");
-    lockInfo ? setVal("vSec", "PIN yoqilgan", true) : setVal("vSec", "O'chiq");
-    setVal("vCalc", S.rate > 0 ? "1 $ = " + fmt(S.rate) : "Kurs yo'q");
-    syncOn && acctEmail ? setVal("vSync", "Ulangan", true) : setVal("vSync", syncOn ? "Ulanmoqda" : "O'chiq");
+    setVal("vLook", _t(th === "light" ? "Yorug'" : th === "dark" ? "Qorong'i" : "Avtomatik"));
+    lockInfo ? setVal("vSec", _t("PIN yoqilgan"), true) : setVal("vSec", _t("O'chiq"));
+    setVal("vCalc", S.rate > 0 ? "1 $ = " + fmt(S.rate) : _t("Kurs yo'q"));
+    syncOn && acctEmail ? setVal("vSync", _t("Ulangan"), true) : setVal("vSync", _t(syncOn ? "Ulanmoqda" : "O'chiq"));
     const bt = +lsGet(BACKUP_KEY) || 0, days = bt ? Math.floor((Date.now() - bt) / 86400000) : -1;
-    setVal("vBack", days >= 1 ? days + " kun oldin" : "");
+    setVal("vBack", days >= 1 ? _t("{n} kun oldin", { n: days }) : "");
     setVal("vAbout", "");
     $("row_sync").hidden = $("syncDetails").hidden;
   }
@@ -1808,7 +1858,7 @@
     if (!PAGES[name]) return;
     curPg = name;
     $("profCard").hidden = true; $("menuGroup").hidden = true; $("subHead").hidden = false;
-    $("subTitle").textContent = PAGES[name];
+    $("subTitle").textContent = _t(PAGES[name]);
     Array.prototype.forEach.call(document.querySelectorAll(".subpg"), (s) => s.classList.toggle("on", s.getAttribute("data-pg") === name));
     try { window.scrollTo(0, 0); } catch (e) {}
   }
@@ -1829,14 +1879,14 @@
   function renderAccount() {
     $("acctIn").hidden = !!acctEmail || syncOn;
     $("acctOut").hidden = !(acctEmail || syncOn);
-    $("acctInfo").textContent = acctEmail ? "Google hisobi: " + acctEmail : (syncOn ? "Ulanmoqda..." : "");
+    $("acctInfo").textContent = acctEmail ? _t("Google hisobi:") + " " + acctEmail : (syncOn ? _t("Ulanmoqda...") : "");
     renderProfile(); renderMenu();
   }
   function renderSyncUI() {
     renderAccount();
-    $("syncToggle").textContent = syncOn ? "Sinxronlashni o'chirish" : "Sinxronlashni yoqish";
+    $("syncToggle").textContent = _t(syncOn ? "Sinxronlashni o'chirish" : "Sinxronlashni yoqish");
     $("syncWipe").hidden = !syncOn;
-    if (!syncOn) { $("syncChoice").hidden = true; setSync("O'chirilgan. Ma'lumotlar faqat shu qurilmada."); }
+    if (!syncOn) { $("syncChoice").hidden = true; setSync(_t("O'chirilgan. Ma'lumotlar faqat shu qurilmada.")); }
   }
   function applyRemote(rs) {
     S = normalize(Object.assign({}, rs.s, { u: rs.u }));
@@ -1845,16 +1895,16 @@
     lastPushed = rs.u;
     runRecurring();
     renderAll();
-    setSync("Yangilandi: " + hhmm());
+    setSync(_t("Yangilandi:") + " " + hhmm());
   }
   async function pushNow() {
     if (!syncRef) return;
     if (pushing) { pushAgain = true; return; }
     const body = { u: S.u, s: stateForSync() };
-    if (JSON.stringify(body).length > 250000) { setSync("Ma'lumot hajmi katta, sinxronlash to'xtatildi. Zaxira nusxa oling."); return; }
+    if (JSON.stringify(body).length > 250000) { setSync(_t("Ma'lumot hajmi katta, sinxronlash to'xtatildi. Zaxira nusxa oling.")); return; }
     pushing = true;
-    try { await syncRef.set(body); lastPushed = body.u; setSync("Saqlandi: " + hhmm()); }
-    catch (e) { setSync("Serverga saqlab bo'lmadi (" + ((e && e.code) || "xato") + "). Ma'lumotlar shu qurilmada saqlangan."); }
+    try { await syncRef.set(body); lastPushed = body.u; setSync(_t("Saqlandi:") + " " + hhmm()); }
+    catch (e) { setSync(_t("Serverga saqlab bo'lmadi ({c}). Ma'lumotlar shu qurilmada saqlangan.", { c: (e && e.code) || _t("xato") })); }
     pushing = false;
     if (pushAgain) { pushAgain = false; if (S.u > lastPushed) pushNow(); }
   }
@@ -1871,19 +1921,19 @@
       reconciled = true;
       const linked = lsGet(LINK_KEY) === "1";
       const done = () => { lsSet(LINK_KEY, "1"); };
-      if (!rs) { done(); if (hasData(S)) { S.u = S.u || Date.now(); pushNow(); } else setSync("Yoqilgan. Serverda hali ma'lumot yo'q."); return; }
+      if (!rs) { done(); if (hasData(S)) { S.u = S.u || Date.now(); pushNow(); } else setSync(_t("Yoqilgan. Serverda hali ma'lumot yo'q.")); return; }
       if (!hasData(S)) { done(); applyRemote(rs); return; }
       const same = JSON.stringify(normalize(Object.assign({}, rs.s, { u: 0 }))) === JSON.stringify(normalize(Object.assign({}, stateForSync(), { u: 0 })));
-      if (same) { done(); setSync("Yoqilgan. Ma'lumotlar bir xil."); return; }
+      if (same) { done(); setSync(_t("Yoqilgan. Ma'lumotlar bir xil.")); return; }
       if (linked) {
         done();
-        if (rs.u > S.u) applyRemote(rs); else if (rs.u < S.u) pushNow(); else setSync("Yoqilgan.");
+        if (rs.u > S.u) applyRemote(rs); else if (rs.u < S.u) pushNow(); else setSync(_t("Yoqilgan."));
         return;
       }
       choicePending = rs; renderBadges();
       $("syncChoice").hidden = false;
       showTab("settings"); openPg("sync");
-      setSync("Tanlov kerak.");
+      setSync(_t("Tanlov kerak."));
       return;
     }
     if (rs && rs.u > S.u) applyRemote(rs);
@@ -1920,7 +1970,7 @@
   }
   async function startSync(interactive) {
     if (unsub || !syncOn) return;
-    setSync("Ulanmoqda...");
+    setSync(_t("Ulanmoqda..."));
     const cl = window.claude;
     let db = null, user = null;
     try { if (cl && cl.use) { db = await cl.use("db"); user = await cl.use("user"); } } catch (e) {}
@@ -1928,23 +1978,23 @@
     if (db && user) {
       let id = null;
       try { id = await user.id(); } catch (e) {}
-      if (!id) { setSync("Sinxronlash uchun hisobingizga kirgan bo'lishingiz kerak."); return; }
-      try { syncRef = db.doc("data/users/" + id + "/main"); } catch (e) { setSync("Sinxronlash sozlanmadi."); return; }
+      if (!id) { setSync(_t("Sinxronlash uchun hisobingizga kirgan bo'lishingiz kerak.")); return; }
+      try { syncRef = db.doc("data/users/" + id + "/main"); } catch (e) { setSync(_t("Sinxronlash sozlanmadi.")); return; }
     } else if (FB_CONFIG) {
       try { syncRef = await fbRef(!!interactive); }
       catch (e) {
         syncOn = false; lsSet(SYNC_KEY, "0"); renderSyncUI();
-        setSync(e && e.code === "auth/popup-closed-by-user" ? "Kirish bekor qilindi." : "Ulanib bo'lmadi (" + ((e && (e.code || e.message)) || "xato") + "). Internetni tekshiring.");
+        setSync(e && e.code === "auth/popup-closed-by-user" ? _t("Kirish bekor qilindi.") : _t("Ulanib bo'lmadi ({c}). Internetni tekshiring.", { c: (e && (e.code || e.message)) || _t("xato") }));
         return;
       }
-      if (!syncRef) { setSync("Sinxronlash uchun Google bilan kiring. Tugmani bosing."); syncOn = false; lsSet(SYNC_KEY, "0"); renderSyncUI(); return; }
+      if (!syncRef) { setSync(_t("Sinxronlash uchun Google bilan kiring. Tugmani bosing.")); syncOn = false; lsSet(SYNC_KEY, "0"); renderSyncUI(); return; }
       email = syncRef.email; acctEmail = email; adoptName(syncRef.name); renderAccount();
-    } else { setSync("Sinxronlash bu ko'rinishda mavjud emas."); return; }
-    const timer = setTimeout(() => setSync("Serverga hali ulanib bo'lmadi. Ma'lumotlar shu qurilmada saqlanmoqda."), 10000);
+    } else { setSync(_t("Sinxronlash bu ko'rinishda mavjud emas.")); return; }
+    const timer = setTimeout(() => setSync(_t("Serverga hali ulanib bo'lmadi. Ma'lumotlar shu qurilmada saqlanmoqda.")), 10000);
     reconciled = false;
-    if (email) setSync("Ulandi: " + email);
+    if (email) setSync(_t("Ulandi:") + " " + email);
     unsub = syncRef.onSnapshot((snap) => { if (!snap.metadata.fromCache) clearTimeout(timer); onRemote(snap); },
-      (err) => { clearTimeout(timer); unsub = null; setSync("Sinxronlash to'xtadi (" + ((err && err.code) || "xato") + ")."); });
+      (err) => { clearTimeout(timer); unsub = null; setSync(_t("Sinxronlash to'xtadi ({c}).", { c: (err && err.code) || _t("xato") })); });
   }
   function stopSync() {
     if (unsub) { try { unsub(); } catch (e) {} }
@@ -1957,8 +2007,8 @@
   }
   let outArmed = false;
   $("acctOut").onclick = () => {
-    if (!outArmed) { outArmed = true; $("acctOutT").textContent = "Chiqilsinmi? Ma'lumotlar telefonda qoladi."; setTimeout(() => { outArmed = false; $("acctOutT").textContent = "Akkauntdan chiqish"; }, 4000); return; }
-    outArmed = false; $("acctOutT").textContent = "Akkauntdan chiqish"; signOutSync(); setSync("Akkauntdan chiqildi. Ma'lumotlar shu qurilmada qoldi.");
+    if (!outArmed) { outArmed = true; $("acctOutT").textContent = _t("Chiqilsinmi? Ma'lumotlar telefonda qoladi."); setTimeout(() => { outArmed = false; $("acctOutT").textContent = _t("Akkauntdan chiqish"); }, 4000); return; }
+    outArmed = false; $("acctOutT").textContent = _t("Akkauntdan chiqish"); signOutSync(); setSync(_t("Akkauntdan chiqildi. Ma'lumotlar shu qurilmada qoldi."));
   };
   $("acctIn").onclick = () => { syncOn = true; lsSet(SYNC_KEY, "1"); renderSyncUI(); startSync(true); renderReminders(); };
   $("syncToggle").onclick = () => {
@@ -1971,13 +2021,13 @@
   $("syncSend").onclick = () => { choicePending = null; $("syncChoice").hidden = true; renderBadges(); lsSet(LINK_KEY, "1"); S.u = Date.now(); lsSet(SKEY, JSON.stringify(S)); pushNow(); };
   let wipeArmed = false;
   $("syncWipe").onclick = async () => {
-    if (!wipeArmed) { wipeArmed = true; $("syncWipe").textContent = "Aniq o'chirilsinmi? Sinxronlash ham o'chadi."; setTimeout(() => { wipeArmed = false; $("syncWipe").textContent = "Serverdagi nusxani o'chirish"; }, 4000); return; }
-    wipeArmed = false; $("syncWipe").textContent = "Serverdagi nusxani o'chirish";
+    if (!wipeArmed) { wipeArmed = true; $("syncWipe").textContent = _t("Aniq o'chirilsinmi? Sinxronlash ham o'chadi."); setTimeout(() => { wipeArmed = false; $("syncWipe").textContent = _t("Serverdagi nusxani o'chirish"); }, 4000); return; }
+    wipeArmed = false; $("syncWipe").textContent = _t("Serverdagi nusxani o'chirish");
     const ref = syncRef;
-    try { if (ref) await ref.delete(); } catch (e) { setSync("Serverdagi nusxani o'chirib bo'lmadi."); return; }
+    try { if (ref) await ref.delete(); } catch (e) { setSync(_t("Serverdagi nusxani o'chirib bo'lmadi.")); return; }
     stopSync(); syncOn = false; lsSet(SYNC_KEY, "0"); lsDel(LINK_KEY); acctEmail = "";
     try { if (window.firebase && firebase.apps.length) firebase.auth().signOut(); } catch (e) {}
-    renderSyncUI(); setSync("Serverdagi nusxa o'chirildi. Ma'lumotlar shu qurilmada qoldi.");
+    renderSyncUI(); setSync(_t("Serverdagi nusxa o'chirildi. Ma'lumotlar shu qurilmada qoldi."));
     renderReminders();
   };
 
@@ -2016,7 +2066,7 @@
     pinBusy = true;
     hashPw(pinBuf, lockInfo.salt).then((hh) => {
       if (hh === lockInfo.hash) { pinBuf = ""; pinBusy = false; setLocked(false); return; }
-      $("lockErr").textContent = "PIN kod noto'g'ri.";
+      $("lockErr").textContent = _t("PIN kod noto'g'ri.");
       const d = $("pinDots"); d.classList.remove("shake"); void d.offsetWidth; d.classList.add("shake");
       try { if (navigator.vibrate) navigator.vibrate(60); } catch (e) {}
       setTimeout(() => { pinBuf = ""; renderDots(); pinBusy = false; }, 420);
@@ -2039,7 +2089,7 @@
   function renderBioUI() {
     bioSupported().then((ok) => {
       $("bioToggle").hidden = !ok || !lockInfo;
-      $("bioToggle").textContent = bioId ? "Barmoq izi bilan ochishni o'chirish" : "Barmoq izi bilan ochishni yoqish";
+      $("bioToggle").textContent = _t(bioId ? "Barmoq izi bilan ochishni o'chirish" : "Barmoq izi bilan ochishni yoqish");
     });
   }
   async function bioUnlock(auto) {
@@ -2049,7 +2099,7 @@
       await navigator.credentials.get({ publicKey: { challenge: rnd(32), allowCredentials: [{ type: "public-key", id: unb64(bioId), transports: ["internal"] }], userVerification: "required", timeout: 60000 } });
       setLocked(false);
     } catch (e) {
-      if (!auto) $("lockErr").textContent = (pinMode() ? "Barmoq izi tasdiqlanmadi. PIN kodni kiriting." : "Barmoq izi tasdiqlanmadi. Parolni kiriting.");
+      if (!auto) $("lockErr").textContent = _t(pinMode() ? "Barmoq izi tasdiqlanmadi. PIN kodni kiriting." : "Barmoq izi tasdiqlanmadi. Parolni kiriting.");
     }
     setTimeout(() => { bioBusy = false; }, 600);
   }
@@ -2060,17 +2110,17 @@
         pubKeyCredParams: [{ type: "public-key", alg: -7 }, { type: "public-key", alg: -257 }],
         authenticatorSelection: { authenticatorAttachment: "platform", userVerification: "required", residentKey: "discouraged" }, timeout: 60000 } });
       bioId = b64(cred.rawId); lsSet(BIO_KEY, bioId);
-      $("pwStatus").textContent = "Yoqildi. Endi qulf ekranida barmoq izi tugmasi chiqadi.";
-    } catch (e) { $("pwStatus").textContent = "Yoqib bo'lmadi. Telefoningizda ekran qulfi va barmoq izi sozlanganini tekshiring."; }
+      $("pwStatus").textContent = _t("Yoqildi. Endi qulf ekranida barmoq izi tugmasi chiqadi.");
+    } catch (e) { $("pwStatus").textContent = _t("Yoqib bo'lmadi. Telefoningizda ekran qulfi va barmoq izi sozlanganini tekshiring."); }
     renderBioUI();
   }
   function bioDisable(msg) { bioId = null; lsDel(BIO_KEY); if (msg) $("pwStatus").textContent = msg; renderBioUI(); }
-  $("bioToggle").onclick = () => { if (!lockInfo) { $("pwStatus").textContent = "Avval PIN kod qo'ying."; return; } bioId ? bioDisable("O'chirildi.") : bioEnable(); };
+  $("bioToggle").onclick = () => { if (!lockInfo) { $("pwStatus").textContent = _t("Avval PIN kod qo'ying."); return; } bioId ? bioDisable(_t("O'chirildi.")) : bioEnable(); };
   $("bioBtn").onclick = () => bioUnlock(false);
   $("pwEye").onclick = () => {
     const i = $("lockPw"), show = i.type === "password";
     i.type = show ? "text" : "password";
-    $("pwEye").setAttribute("aria-label", show ? "Parolni yashirish" : "Parolni ko'rsatish");
+    $("pwEye").setAttribute("aria-label", _t(show ? "Parolni yashirish" : "Parolni ko'rsatish"));
   };
 
   let idleT = null, forgotArmed = false;
@@ -2086,6 +2136,14 @@
   }
   function bump() { clearTimeout(idleT); if (!$("secret").hidden) { markActive(false); idleT = setTimeout(() => setLocked(true), Math.max(lockDelay, 2) * 60000); } }
   function closeAllForms() { closeForm(); closeDForm(); closeGForm(); $("limForm").hidden = true; $("limOpen").hidden = false; payOpen = null; $("toast").hidden = true; }
+  function lockTexts() {
+    const pad = pinMode();
+    $("lockTitle").textContent = _t(lockInfo ? "Hisobchi qulflangan" : "Ma'lumotlar yashirilgan");
+    $("lockSub").textContent = _t(lockInfo ? (pad ? "PIN kodni kiriting" : "Davom etish uchun parolni kiriting.") : "Balans, xarajatlar, qarzlar va kreditlar ko'rinmaydi.");
+    $("pwEye").setAttribute("aria-label", _t($("lockPw").type === "password" ? "Parolni ko'rsatish" : "Parolni yashirish"));
+    if (!forgotArmed) $("forgot").textContent = _t(pad ? "PIN kodni unutdim" : "Parolni unutdim");
+    $("unlockBtn").textContent = _t(lockInfo ? "Ochish" : "Ko'rsatish");
+  }
   function setLocked(on) {
     if (on) lsDel(LAST_KEY);
     $("secret").hidden = on;
@@ -2105,12 +2163,9 @@
       $("forgot").hidden = !lockInfo;
       $("bioBtn").hidden = !(lockInfo && bioId && !pad);
       $("bioKey").hidden = !(pad && bioId);
-      $("lockTitle").textContent = lockInfo ? "Hisobchi qulflangan" : "Ma'lumotlar yashirilgan";
-      $("lockSub").textContent = lockInfo ? (pad ? "PIN kodni kiriting" : "Davom etish uchun parolni kiriting.") : "Balans, xarajatlar, qarzlar va kreditlar ko'rinmaydi.";
-      $("lockPw").type = "password"; $("pwEye").setAttribute("aria-label", "Parolni ko'rsatish");
-      $("forgot").textContent = pad ? "PIN kodni unutdim" : "Parolni unutdim";
+      $("lockPw").type = "password";
       forgotArmed = false;
-      $("unlockBtn").textContent = lockInfo ? "Ochish" : "Ko'rsatish";
+      lockTexts();
     } else { markActive(true); bump(); }
   }
   $("unlockForm").addEventListener("submit", (e) => {
@@ -2119,7 +2174,7 @@
     hashPw($("lockPw").value, lockInfo.salt).then((h) => {
       if (h === lockInfo.hash) setLocked(false);
       else {
-        $("lockErr").textContent = "Parol noto'g'ri."; $("lockPw").value = ""; $("lockPw").focus();
+        $("lockErr").textContent = _t("Parol noto'g'ri."); $("lockPw").value = ""; $("lockPw").focus();
         const f = $("lockPw").parentNode; f.classList.remove("shake"); void f.offsetWidth; f.classList.add("shake");
         try { if (navigator.vibrate) navigator.vibrate(60); } catch (e) {}
       }
@@ -2127,26 +2182,26 @@
   });
   $("lockBtn").onclick = () => setLocked(true);
   $("forgot").onclick = () => {
-    if (!forgotArmed) { forgotArmed = true; $("forgot").textContent = "PIN kod va barcha ma'lumotlar o'chadi. Davom etilsinmi?"; return; }
+    if (!forgotArmed) { forgotArmed = true; $("forgot").textContent = _t("PIN kod va barcha ma'lumotlar o'chadi. Davom etilsinmi?"); return; }
     S = emptyState(); save();
     lsDel(LOCK_KEY); lockInfo = null; bioDisable();
     renderAll(); setLocked(true);
   };
   $("savePw").onclick = () => {
     const pw = $("newPw").value;
-    if (!/^[0-9]{4,6}$/.test(pw)) { $("pwStatus").textContent = "PIN kod 4 dan 6 gacha raqamdan iborat bo'lsin."; return; }
+    if (!/^[0-9]{4,6}$/.test(pw)) { $("pwStatus").textContent = _t("PIN kod 4 dan 6 gacha raqamdan iborat bo'lsin."); return; }
     const salt = uid();
     hashPw(pw, salt).then((h) => {
       lockInfo = { salt: salt, hash: h, len: pw.length };
       lsSet(LOCK_KEY, JSON.stringify(lockInfo));
       $("newPw").value = "";
-      $("pwStatus").textContent = "PIN kod saqlandi. Keyingi safar ma'lumotlarni ochish uchun so'raladi.";
+      $("pwStatus").textContent = _t("PIN kod saqlandi. Keyingi safar ma'lumotlarni ochish uchun so'raladi.");
       renderBioUI();
     });
   };
   $("removePw").onclick = () => {
     lockInfo = null; lsDel(LOCK_KEY); bioDisable();
-    $("pwStatus").textContent = "PIN kod olib tashlandi. Endi ma'lumotlar tugma bilan ochiladi.";
+    $("pwStatus").textContent = _t("PIN kod olib tashlandi. Endi ma'lumotlar tugma bilan ochiladi.");
   };
   document.addEventListener("visibilitychange", () => {
     if (document.hidden) {
@@ -2161,6 +2216,37 @@
   $("lockDelay").addEventListener("change", () => { lockDelay = +$("lockDelay").value || 0; lsSet(DELAY_KEY, String(lockDelay)); if (lockDelay === 0) lsDel(LAST_KEY); else markActive(true); bump(); });
   ["pointerdown", "keydown", "scroll"].forEach((n) => document.addEventListener(n, bump, true));
 
+  /* ---------- Til: statik matnlarni almashtirish ---------- */
+  const STAT = { nodes: [], attrs: [] };
+  (function collectStatic() {
+    const skip = { SCRIPT: 1, STYLE: 1, svg: 1, SVG: 1, TITLE: 1 };
+    const walk = (el) => {
+      ["placeholder", "aria-label", "title"].forEach((a) => { if (el.getAttribute && el.getAttribute(a)) STAT.attrs.push({ el: el, a: a, o: el.getAttribute(a) }); });
+      for (let n = el.firstChild; n; n = n.nextSibling) {
+        if (n.nodeType === 3) { const tr = n.nodeValue.trim(); if (tr && /[A-Za-zА-Яа-я‘’']{2}/.test(tr)) STAT.nodes.push({ n: n, o: tr }); }
+        else if (n.nodeType === 1) { if (!skip[n.nodeName]) walk(n); else if (n.getAttribute && n.getAttribute("aria-label")) STAT.attrs.push({ el: n, a: "aria-label", o: n.getAttribute("aria-label") }); }
+      }
+    };
+    walk(document.body);
+  })();
+  function applyStatic() {
+    STAT.nodes.forEach((x) => { const v = x.n.nodeValue, lead = v.match(/^\s*/)[0], trail = v.match(/\s*$/)[0]; x.n.nodeValue = lead + _t(x.o) + trail; });
+    STAT.attrs.forEach((x) => { x.el.setAttribute(x.a, _t(x.o)); });
+  }
+  function applyLang() {
+    document.documentElement.lang = LANG;
+    document.documentElement.dir = LANG === "ar" ? "rtl" : "ltr";
+    applyStatic();
+    $("langSel").value = LANG;
+    setDK(dk); fillCats(); renderAll(); renderBioUI(); renderSyncUI(); renderRateInfo();
+    if (!$("lockCard").hidden) lockTexts();
+    if (curPg) $("subTitle").textContent = _t(PAGES[curPg]);
+    if (!outArmed) $("acctOutT").textContent = _t("Akkauntdan chiqish");
+    if (!wipeArmed) $("syncWipe").textContent = _t("Serverdagi nusxani o'chirish");
+    $("toastUndo").textContent = _t("Bekor qilish");
+  }
+  $("langSel").addEventListener("change", () => { const v = $("langSel").value; if (LANGS[v]) { LANG = v; try { localStorage.setItem(LANG_KEY, v); } catch (e) {} applyLang(); } });
+
   /* ---------- Ishga tushirish ---------- */
   setType("exp");
   setDK("owe");
@@ -2172,6 +2258,7 @@
   const resume = lockDelay > 0 && lastAct && Date.now() - lastAct >= 0 && Date.now() - lastAct < lockDelay * 60000;
   setLocked(!resume);
   renderBioUI();
+  if (LANG !== "uz") applyLang();
   if (!resume && lockInfo && bioId) setTimeout(() => bioUnlock(true), 350);
   if (FB_CONFIG || (window.claude && window.claude.use)) $("syncDetails").hidden = false;
   $("acctPanel").hidden = !FB_CONFIG;
