@@ -1,15 +1,26 @@
-// Oddiy oflayn qo'llab-quvvatlash: avval tarmoq, bo'lmasa saqlangan nusxa.
-const CACHE = "hisobchi-v1";
+// Oflayn qo'llab-quvvatlash: ilova fayllari avval tarmoqdan, bo'lmasa saqlangan nusxadan.
+// Shriftlar (Google Fonts) birinchi yuklanganda saqlanadi va keyin internetsiz ham ishlaydi.
+const CACHE = "hisobchi-v2";
+const FONTS = "hisobchi-fonts-v1";
 const CORE = ["./", "index.html", "manifest.webmanifest", "icons/icon-192.png", "icons/icon-512.png", "icons/apple-touch-icon.png", "icons/favicon.svg"];
 self.addEventListener("install", (e) => {
   e.waitUntil(caches.open(CACHE).then((c) => c.addAll(CORE)).then(() => self.skipWaiting()));
 });
 self.addEventListener("activate", (e) => {
-  e.waitUntil(caches.keys().then((ks) => Promise.all(ks.filter((k) => k !== CACHE).map((k) => caches.delete(k)))).then(() => self.clients.claim()));
+  e.waitUntil(caches.keys().then((ks) => Promise.all(ks.filter((k) => k !== CACHE && k !== FONTS).map((k) => caches.delete(k)))).then(() => self.clients.claim()));
 });
 self.addEventListener("fetch", (e) => {
   const req = e.request;
-  if (req.method !== "GET" || new URL(req.url).origin !== location.origin) return;
+  if (req.method !== "GET") return;
+  const url = new URL(req.url);
+  if (url.hostname === "fonts.googleapis.com" || url.hostname === "fonts.gstatic.com") {
+    e.respondWith(caches.open(FONTS).then((c) => c.match(req).then((hit) => {
+      const net = fetch(req).then((res) => { if (res && (res.ok || res.type === "opaque")) c.put(req, res.clone()); return res; }).catch(() => hit);
+      return hit || net;
+    })));
+    return;
+  }
+  if (url.origin !== location.origin) return;
   e.respondWith(
     fetch(req).then((res) => {
       const copy = res.clone();

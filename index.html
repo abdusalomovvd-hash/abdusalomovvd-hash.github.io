@@ -543,6 +543,10 @@
             <button class="ghost" id="copyBackup" type="button">Nusxa olish</button>
             <button class="ghost" id="restore" type="button">Matndan tiklash</button>
           </div>
+          <div class="row">
+            <button class="ghost" id="saveFile" type="button">Fayl sifatida saqlash</button>
+            <button class="ghost" id="saveCsv" type="button">Amallarni CSV qilish</button>
+          </div>
           <div class="status" id="status" role="status"></div>
         </div>
       </section>
@@ -1373,6 +1377,32 @@
     const fallback = () => { $("backup").select(); say("Matn belgilandi. Nusxa olish uchun qurilmangizning nusxa buyrug'idan foydalaning."); };
     try { navigator.clipboard.writeText(text).then(done, fallback); } catch (err) { fallback(); }
     renderReminders();
+  };
+  function download(name, text, mime) {
+    try {
+      const url = URL.createObjectURL(new Blob([text], { type: mime }));
+      const a = document.createElement("a");
+      a.href = url; a.download = name;
+      document.body.appendChild(a); a.click(); a.remove();
+      setTimeout(() => URL.revokeObjectURL(url), 4000);
+      return true;
+    } catch (err) { return false; }
+  }
+  const stamp = () => new Date().toISOString().slice(0, 10);
+  $("saveFile").onclick = () => {
+    const text = JSON.stringify(stateForSync());
+    $("backup").value = text;
+    if (download("hisobchi-zaxira-" + stamp() + ".json", text, "application/json")) {
+      lsSet(BACKUP_KEY, String(Date.now())); say("Zaxira fayli saqlandi. Tiklash uchun fayl ichidagi matnni yuqoridagi maydonga qo'ying."); renderReminders();
+    } else say("Fayl saqlanmadi. 'Nusxa olish' tugmasidan foydalaning.");
+  };
+  $("saveCsv").onclick = () => {
+    const q = (v) => '"' + String(v == null ? "" : v).replace(/"/g, '""') + '"';
+    const rows = [["Sana", "Turi", "Kategoriya", "Summa", "Valyuta", "Izoh"]];
+    S.tx.slice().sort((a, b) => (a.date < b.date ? 1 : -1)).forEach((x) =>
+      rows.push([x.date, x.type === "inc" ? "Daromad" : "Xarajat", x.cat, x.amount, x.cur || "UZS", x.note || ""]));
+    const csv = "﻿" + rows.map((r) => r.map(q).join(";")).join("\r\n");
+    say(download("hisobchi-amallar-" + stamp() + ".csv", csv, "text/csv;charset=utf-8") ? "CSV saqlandi: " + S.tx.length + " ta amal." : "CSV saqlanmadi.");
   };
   $("restore").onclick = () => {
     try {
