@@ -247,7 +247,21 @@
   .bioBtn .ring { width: 64px; height: 64px; border-radius: 50%; border: 1.5px solid var(--accent); display: grid; place-items: center; background: color-mix(in srgb, var(--accent) 9%, transparent); }
   .bioBtn svg { width: 30px; height: 30px; margin: 0; color: inherit; }
   .bioBtn:active .ring { transform: scale(.94); }
-  .lockcard .err:empty { display: none; }
+  .lockcard .err { min-height: 20px; margin: 0 0 8px; }
+  .pindots { display: flex; gap: 16px; justify-content: center; margin: 4px 0 10px; }
+  .pindots i { width: 14px; height: 14px; border-radius: 50%; border: 1.5px solid var(--ink); transition: background .12s, transform .12s; }
+  .pindots i.on { background: var(--ink); transform: scale(1.08); }
+  .pindots.shake { animation: shake .38s; }
+  .keys { display: grid; grid-template-columns: repeat(3, 76px); gap: 14px 24px; justify-content: center; margin: 10px 0 14px; }
+  .keys button { width: 76px; height: 76px; border-radius: 50%; border: 0; background: color-mix(in srgb, var(--ink) 9%, var(--bg)); color: var(--ink);
+    font: 500 30px/1 var(--font-body); display: grid; place-items: center; touch-action: manipulation; -webkit-tap-highlight-color: transparent; user-select: none; padding: 0; }
+  .keys button:active { background: color-mix(in srgb, var(--accent) 30%, var(--bg)); }
+  .keys .aux { background: transparent; color: var(--accent); }
+  .keys .aux:active { background: color-mix(in srgb, var(--accent) 14%, transparent); }
+  .keys .aux svg { width: 30px; height: 30px; margin: 0; color: inherit; }
+  .keys .aux[hidden] { display: block !important; visibility: hidden; }
+  #forgot[data-pad] { margin-top: 0; }
+  @media (max-height: 640px) { .keys button { width: 64px; height: 64px; font-size: 26px; } .keys { grid-template-columns: repeat(3, 64px); gap: 10px 22px; } .lockmark { width: 60px; height: 60px; margin-bottom: 12px; } }
   .lockcard #forgot { border: 0; color: var(--muted); font-size: 13px; padding: 8px; }
   .pwwrap input::placeholder { letter-spacing: 0; font-size: 15px; }
   @keyframes shake { 0%,100% { transform: translateX(0); } 20% { transform: translateX(-8px); } 40% { transform: translateX(7px); } 60% { transform: translateX(-5px); } 80% { transform: translateX(3px); } }
@@ -330,6 +344,22 @@
     <div class="lockmark"><svg viewBox="0 0 64 64" aria-hidden="true"><path d="M20 15v34M44 15v34" fill="none" stroke="#f1f7f8" stroke-width="6" stroke-linecap="round"/><path d="M20 41l9-8 6 4 9-12" fill="none" stroke="#7fd9a4" stroke-width="4.5" stroke-linecap="round" stroke-linejoin="round"/><circle cx="44" cy="25" r="4" fill="#7fd9a4"/></svg></div>
     <h2 id="lockTitle">Ma'lumotlar yashirilgan</h2>
     <p class="lockp" id="lockSub">Balans, xarajatlar, qarzlar va kreditlar ko'rinmaydi.</p>
+    <div class="pindots" id="pinDots" hidden aria-hidden="true"></div>
+    <div class="err" id="lockErr" role="alert"></div>
+    <div class="keys" id="pinPad" hidden>
+      <button type="button" data-k="1" aria-label="1">1</button>
+      <button type="button" data-k="2" aria-label="2">2</button>
+      <button type="button" data-k="3" aria-label="3">3</button>
+      <button type="button" data-k="4" aria-label="4">4</button>
+      <button type="button" data-k="5" aria-label="5">5</button>
+      <button type="button" data-k="6" aria-label="6">6</button>
+      <button type="button" data-k="7" aria-label="7">7</button>
+      <button type="button" data-k="8" aria-label="8">8</button>
+      <button type="button" data-k="9" aria-label="9">9</button>
+      <button type="button" class="aux" id="bioKey" aria-label="Barmoq izi bilan ochish" hidden><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 10a2 2 0 0 0-2 2c0 1.02-.1 2.51-.26 4"/><path d="M14 13.12c0 2.38 0 6.38-1 8.88"/><path d="M17.29 21.02c.12-.6.43-2.3.5-3.02"/><path d="M2 12a10 10 0 0 1 18-6"/><path d="M2 16h.01"/><path d="M21.8 16c.2-2 .131-5.354 0-6"/><path d="M5 19.5C5.5 18 6 15 6 12a6 6 0 0 1 .34-2"/><path d="M8.65 22c.21-.66.45-1.32.57-2"/><path d="M9 6.8a6 6 0 0 1 9 5.2v2"/></svg></button>
+      <button type="button" data-k="0" aria-label="0">0</button>
+      <button type="button" class="aux" data-k="del" aria-label="O'chirish"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 5H9l-6 7 6 7h12a1 1 0 001-1V6a1 1 0 00-1-1zM17 9.5l-5 5M12 9.5l5 5"/></svg></button>
+    </div>
     <form class="dform" id="unlockForm" autocomplete="off">
       <div class="pwwrap" id="pwRow" hidden>
         <input id="lockPw" type="password" autocomplete="off" placeholder="Parolni kiriting" aria-label="Parol" enterkeyhint="go">
@@ -337,7 +367,6 @@
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2 12s3.6-7 10-7 10 7 10 7-3.6 7-10 7S2 12 2 12z"/><circle cx="12" cy="12" r="3"/></svg>
         </button>
       </div>
-      <div class="err" id="lockErr" role="alert"></div>
       <button class="primary" type="submit" id="unlockBtn">Ko'rsatish</button>
       <button class="ghost" type="button" id="forgot" hidden>Parolni unutdim</button>
     </form>
@@ -581,20 +610,20 @@
       <section class="panel">
         <h2>Himoya</h2>
         <div class="body">
-          <p>Sahifa ochilganda ma'lumotlar yashirin turadi. Parol qo'ysangiz, ko'rsatish uchun parol so'raladi. Boshqa oynaga o'tsangiz yoki 2 daqiqa tegmasangiz, ma'lumotlar yana yashirinadi.</p>
+          <p>Sahifa ochilganda ma'lumotlar yashirin turadi. PIN kod qo'ysangiz, ko'rsatish uchun PIN kod so'raladi. Boshqa oynaga o'tsangiz yoki 2 daqiqa tegmasangiz, ma'lumotlar yana yashirinadi.</p>
           <div class="field">
-            <label for="newPw">Yangi parol (kamida 4 belgi)</label>
-            <input id="newPw" type="password" autocomplete="new-password">
+            <label for="newPw">Yangi PIN kod (4–6 raqam)</label>
+            <input id="newPw" type="password" inputmode="numeric" pattern="[0-9]*" maxlength="6" autocomplete="off">
           </div>
           <div class="row">
-            <button class="ghost" id="savePw" type="button">Parolni saqlash</button>
-            <button class="ghost" id="removePw" type="button">Parolni olib tashlash</button>
+            <button class="ghost" id="savePw" type="button">PIN kodni saqlash</button>
+            <button class="ghost" id="removePw" type="button">PIN kodni olib tashlash</button>
           </div>
           <div class="row">
             <button class="ghost" id="bioToggle" type="button" hidden>Barmoq izi bilan ochishni yoqish</button>
           </div>
           <div class="status" id="pwStatus" role="status"></div>
-          <p>Bu himoya begonalar ekranni tasodifan ko'rib qolishidan saqlaydi. Ma'lumotlar brauzerda shifrlanmagan holda turadi. Parolni unutsangiz, uni faqat barcha ma'lumotlarni o'chirib tiklash mumkin.</p>
+          <p>Bu himoya begonalar ekranni tasodifan ko'rib qolishidan saqlaydi. Ma'lumotlar brauzerda shifrlanmagan holda turadi. PIN kodni unutsangiz, uni faqat barcha ma'lumotlarni o'chirib tiklash mumkin.</p>
         </div>
       </section>
     </div>
@@ -1610,6 +1639,37 @@
     return Promise.resolve("f" + (h >>> 0).toString(16));
   }
 
+  /* ---------- PIN klaviatura ---------- */
+  let pinBuf = "", pinBusy = false;
+  const pinMode = () => !!(lockInfo && lockInfo.len);
+  function renderDots() {
+    if (!pinMode()) return;
+    let s = "";
+    for (let i = 0; i < lockInfo.len; i++) s += "<i" + (i < pinBuf.length ? ' class="on"' : "") + "></i>";
+    $("pinDots").innerHTML = s;
+  }
+  function pinKey(k) {
+    if (!pinMode() || pinBusy) return;
+    $("lockErr").textContent = "";
+    if (k === "del") pinBuf = pinBuf.slice(0, -1);
+    else if (pinBuf.length < lockInfo.len) pinBuf += k;
+    renderDots();
+    if (pinBuf.length !== lockInfo.len) return;
+    pinBusy = true;
+    hashPw(pinBuf, lockInfo.salt).then((hh) => {
+      if (hh === lockInfo.hash) { pinBuf = ""; pinBusy = false; setLocked(false); return; }
+      $("lockErr").textContent = "PIN kod noto'g'ri.";
+      const d = $("pinDots"); d.classList.remove("shake"); void d.offsetWidth; d.classList.add("shake");
+      try { if (navigator.vibrate) navigator.vibrate(60); } catch (e) {}
+      setTimeout(() => { pinBuf = ""; renderDots(); pinBusy = false; }, 420);
+    });
+  }
+  $("pinPad").addEventListener("click", (e) => { const b = e.target.closest ? e.target.closest("button") : null; if (!b) return; if (b.id === "bioKey") bioUnlock(false); else if (b.dataset.k) pinKey(b.dataset.k); });
+  document.addEventListener("keydown", (e) => {
+    if ($("lockCard").hidden || !pinMode()) return;
+    if (/^[0-9]$/.test(e.key)) pinKey(e.key); else if (e.key === "Backspace") pinKey("del");
+  });
+
   /* ---------- Barmoq izi / yuz bilan ochish (WebAuthn, faqat shu qurilmada tekshiriladi) ---------- */
   const BIO_KEY = "hisobchi_bio_v1";
   let bioId = lsGet(BIO_KEY) || null, bioBusy = false;
@@ -1631,7 +1691,7 @@
       await navigator.credentials.get({ publicKey: { challenge: rnd(32), allowCredentials: [{ type: "public-key", id: unb64(bioId), transports: ["internal"] }], userVerification: "required", timeout: 60000 } });
       setLocked(false);
     } catch (e) {
-      if (!auto) $("lockErr").textContent = "Barmoq izi tasdiqlanmadi. Parolni kiriting.";
+      if (!auto) $("lockErr").textContent = (pinMode() ? "Barmoq izi tasdiqlanmadi. PIN kodni kiriting." : "Barmoq izi tasdiqlanmadi. Parolni kiriting.");
     }
     setTimeout(() => { bioBusy = false; }, 600);
   }
@@ -1647,7 +1707,7 @@
     renderBioUI();
   }
   function bioDisable(msg) { bioId = null; lsDel(BIO_KEY); if (msg) $("pwStatus").textContent = msg; renderBioUI(); }
-  $("bioToggle").onclick = () => { if (!lockInfo) { $("pwStatus").textContent = "Avval parol qo'ying."; return; } bioId ? bioDisable("O'chirildi.") : bioEnable(); };
+  $("bioToggle").onclick = () => { if (!lockInfo) { $("pwStatus").textContent = "Avval PIN kod qo'ying."; return; } bioId ? bioDisable("O'chirildi.") : bioEnable(); };
   $("bioBtn").onclick = () => bioUnlock(false);
   $("pwEye").onclick = () => {
     const i = $("lockPw"), show = i.type === "password";
@@ -1667,13 +1727,19 @@
     if (on) {
       closeAllForms(); showTab("home");
       $("lockPw").value = ""; $("lockErr").textContent = "";
-      $("pwRow").hidden = !lockInfo;
+      const pad = pinMode();
+      pinBuf = ""; pinBusy = false;
+      $("pwRow").hidden = !lockInfo || pad;
+      $("unlockBtn").hidden = pad;
+      $("pinPad").hidden = !pad; $("pinDots").hidden = !pad;
+      if (pad) renderDots();
       $("forgot").hidden = !lockInfo;
-      $("bioBtn").hidden = !(lockInfo && bioId);
+      $("bioBtn").hidden = !(lockInfo && bioId && !pad);
+      $("bioKey").hidden = !(pad && bioId);
       $("lockTitle").textContent = lockInfo ? "Hisobchi qulflangan" : "Ma'lumotlar yashirilgan";
-      $("lockSub").textContent = lockInfo ? "Davom etish uchun parolni kiriting." : "Balans, xarajatlar, qarzlar va kreditlar ko'rinmaydi.";
+      $("lockSub").textContent = lockInfo ? (pad ? "PIN kodni kiriting" : "Davom etish uchun parolni kiriting.") : "Balans, xarajatlar, qarzlar va kreditlar ko'rinmaydi.";
       $("lockPw").type = "password"; $("pwEye").setAttribute("aria-label", "Parolni ko'rsatish");
-      $("forgot").textContent = "Parolni unutdim";
+      $("forgot").textContent = pad ? "PIN kodni unutdim" : "Parolni unutdim";
       forgotArmed = false;
       $("unlockBtn").textContent = lockInfo ? "Ochish" : "Ko'rsatish";
     } else { bump(); }
@@ -1692,26 +1758,26 @@
   });
   $("lockBtn").onclick = () => setLocked(true);
   $("forgot").onclick = () => {
-    if (!forgotArmed) { forgotArmed = true; $("forgot").textContent = "Parol va barcha ma'lumotlar o'chadi. Davom etilsinmi?"; return; }
+    if (!forgotArmed) { forgotArmed = true; $("forgot").textContent = "PIN kod va barcha ma'lumotlar o'chadi. Davom etilsinmi?"; return; }
     S = emptyState(); save();
     lsDel(LOCK_KEY); lockInfo = null; bioDisable();
     renderAll(); setLocked(true);
   };
   $("savePw").onclick = () => {
     const pw = $("newPw").value;
-    if (pw.length < 4) { $("pwStatus").textContent = "Parol kamida 4 belgidan iborat bo'lsin."; return; }
+    if (!/^[0-9]{4,6}$/.test(pw)) { $("pwStatus").textContent = "PIN kod 4 dan 6 gacha raqamdan iborat bo'lsin."; return; }
     const salt = uid();
     hashPw(pw, salt).then((h) => {
-      lockInfo = { salt: salt, hash: h };
+      lockInfo = { salt: salt, hash: h, len: pw.length };
       lsSet(LOCK_KEY, JSON.stringify(lockInfo));
       $("newPw").value = "";
-      $("pwStatus").textContent = "Parol saqlandi. Keyingi safar ma'lumotlarni ochish uchun so'raladi.";
+      $("pwStatus").textContent = "PIN kod saqlandi. Keyingi safar ma'lumotlarni ochish uchun so'raladi.";
       renderBioUI();
     });
   };
   $("removePw").onclick = () => {
     lockInfo = null; lsDel(LOCK_KEY); bioDisable();
-    $("pwStatus").textContent = "Parol olib tashlandi. Endi ma'lumotlar tugma bilan ochiladi.";
+    $("pwStatus").textContent = "PIN kod olib tashlandi. Endi ma'lumotlar tugma bilan ochiladi.";
   };
   document.addEventListener("visibilitychange", () => {
     if (document.hidden) setLocked(true);
