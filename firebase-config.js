@@ -1,11 +1,8 @@
-// Bulutli sinxronlash sozlamalari. Firebase konsolidan olingan qiymatlar shu yerga qo'yiladi.
-// Bo'sh qoldirilsa, sinxronlash bo'limi ilovada ko'rinmaydi.
-window.HISOBCHI_FIREBASE = null;
-/* Misol:
+// Bulutli sinxronlash sozlamalari (Firebase web kalitlari ochiq bo'lishi odatiy holat).
+// Ma'lumotlarni himoyalash Firestore qoidalari (firestore.rules) orqali amalga oshiriladi.
 window.HISOBCHI_FIREBASE = {
-  apiKey: "AIza...",
-  authDomain: "loyiha-nomi.firebaseapp.com",
-  projectId: "loyiha-nomi",
-  appId: "1:123456:web:abcdef"
+  apiKey: "AIzaSyBvxtVXn-JudqKScj0hg5FFixyS9IgYo3I",
+  authDomain: "hisobchi-c3ce9.firebaseapp.com",
+  projectId: "hisobchi-c3ce9",
+  appId: "1:611136133661:web:2f95da71de84ba9a40c4f4"
 };
-*/
