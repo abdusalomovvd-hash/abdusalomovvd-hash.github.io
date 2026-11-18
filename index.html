@@ -1,0 +1,1577 @@
+<!doctype html>
+<html lang="uz">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Hisobchi</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@500;600&family=IBM+Plex+Sans:wght@400;500;600&display=swap">
+<style>
+  /* Layout: ledger-style. Sticky wordmark header, month bar, five tabs (bottom nav),
+     one solid petrol balance block as the only heavy element, hairline panels elsewhere.
+     Entry form is a bottom sheet opened from a floating button. */
+  :root {
+    --bg: #eceff1;
+    --surface: #ffffff;
+    --ink: #0f1b22;
+    --muted: #566872;
+    --line: #d9e0e4;
+    --soft: #f0f3f5;
+    --accent: #0b5563;
+    --on-accent: #ffffff;
+    --inc: #14703c;
+    --exp: #b4361b;
+    --warn: #8f5a00;
+    --hero-bg: #0a3340;
+    --hero-ink: #f1f7f8;
+    --hero-muted: #8bb0b8;
+    --hero-line: rgba(255, 255, 255, 0.16);
+    --hero-inc: #7fd9a4;
+    --hero-exp: #f5a583;
+    --hero-warn: #f0c36b;
+    --font-body: "IBM Plex Sans", "Segoe UI", system-ui, sans-serif;
+    --font-num: "IBM Plex Mono", ui-monospace, Menlo, Consolas, monospace;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --bg: #0a1216; --surface: #101b21; --ink: #e3edf0; --muted: #86a0a8; --line: #1f333b; --soft: #152329;
+      --accent: #4fb3c2; --on-accent: #04222a; --inc: #5ccf8c; --exp: #f2916b; --warn: #e5b64a;
+      --hero-bg: #12303a; --hero-line: rgba(255, 255, 255, 0.14);
+      color-scheme: dark;
+    }
+  }
+  :root[data-theme="dark"] {
+    --bg: #0a1216; --surface: #101b21; --ink: #e3edf0; --muted: #86a0a8; --line: #1f333b; --soft: #152329;
+    --accent: #4fb3c2; --on-accent: #04222a; --inc: #5ccf8c; --exp: #f2916b; --warn: #e5b64a;
+    --hero-bg: #12303a; --hero-line: rgba(255, 255, 255, 0.14);
+    color-scheme: dark;
+  }
+
+  * { box-sizing: border-box; }
+  [hidden] { display: none !important; }
+  .balance, .hsplit b, .amt, .num, .split3 b, .cat-row .sum, .chipbtn b { word-spacing: -0.2em; }
+  body {
+    background: var(--bg); color: var(--ink);
+    font: 15px/1.45 var(--font-body);
+    padding-top: 0;
+    padding-bottom: 150px;
+    padding-left: max(16px, env(safe-area-inset-left, 0px));
+    padding-right: max(16px, env(safe-area-inset-right, 0px));
+  }
+  body::before { content: ""; position: fixed; inset: 0 0 auto; height: env(safe-area-inset-top, 0px); z-index: 10; background: var(--bg); }
+  .app { max-width: 560px; margin: 0 auto; display: flex; flex-direction: column; gap: 12px; }
+  #secret, .tab { display: flex; flex-direction: column; gap: 12px; }
+  button, input, select, textarea { font: inherit; color: inherit; }
+  button { cursor: pointer; }
+  :focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+  svg { display: block; }
+  .num, .amt { font-family: var(--font-num); font-weight: 500; font-variant-numeric: tabular-nums; }
+
+  header.top {
+    position: sticky; top: env(safe-area-inset-top, 0px); z-index: 9; background: var(--bg);
+    display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 14px 0 10px;
+  }
+  h1 { font: 600 17px/1 var(--font-body); letter-spacing: 0.02em; margin: 0; }
+  h1 .wm span { color: var(--accent); }
+  h1.brand { display: flex; align-items: center; gap: 10px; }
+  header.top .ghost { display: inline-flex; align-items: center; gap: 6px; }
+
+  .monthbar { display: flex; align-items: center; justify-content: space-between; }
+  .monthbar b { font: 600 13px var(--font-body); letter-spacing: 0.08em; text-transform: uppercase; }
+  .icon-btn {
+    width: 34px; height: 34px; border-radius: 8px; border: 1px solid var(--line);
+    background: var(--surface); display: grid; place-items: center; font-size: 17px; line-height: 1;
+  }
+
+  .panel { background: var(--surface); border: 1px solid var(--line); border-radius: 10px; padding: 16px; }
+  .remind { border-color: var(--accent); }
+  h2 { font: 600 11px/1.2 var(--font-body); letter-spacing: 0.1em; text-transform: uppercase; color: var(--muted); margin: 0 0 12px; }
+  .label { font-size: 11px; color: var(--muted); letter-spacing: 0.08em; text-transform: uppercase; }
+  .phead { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-bottom: 12px; }
+  .phead h2 { margin: 0; }
+  .note { margin-top: 12px; font-size: 13px; color: var(--warn); }
+
+  /* Balance block */
+  .hero { background: var(--hero-bg); color: var(--hero-ink); border-radius: 12px; padding: 20px 18px 16px; }
+  .hlabel { font-size: 11px; color: var(--hero-muted); letter-spacing: 0.1em; text-transform: uppercase; display: block; }
+  .balance { font: 600 40px/1.1 var(--font-num); letter-spacing: -0.03em; margin: 6px 0 4px; overflow-wrap: anywhere; font-variant-numeric: tabular-nums; }
+  .balance small { font: 500 14px var(--font-body); color: var(--hero-muted); letter-spacing: 0; }
+  .spark { width: 100%; height: auto; margin: 8px 0 12px; }
+  .spark .ln { fill: none; stroke: var(--hero-ink); stroke-width: 1.6; stroke-linejoin: round; stroke-linecap: round; }
+  .spark .area { fill: var(--hero-ink); fill-opacity: 0.09; stroke: none; }
+  .spark .zero { stroke: var(--hero-line); stroke-width: 1; stroke-dasharray: 3 3; }
+  .spark .end { fill: var(--hero-ink); }
+  .hsplit { display: grid; grid-template-columns: 1fr 1fr; border-top: 1px solid var(--hero-line); padding-top: 12px; }
+  .hsplit > div { min-width: 0; }
+  .hsplit > div + div { border-left: 1px solid var(--hero-line); padding-left: 16px; }
+  .hsplit b { display: block; font: 600 17px/1.3 var(--font-num); margin-top: 2px; overflow-wrap: anywhere; letter-spacing: -0.02em; }
+  .hero .inc { color: var(--hero-inc); } .hero .exp { color: var(--hero-exp); }
+  .cmp { margin-top: 12px; font-size: 12px; color: var(--hero-muted); }
+  .cmp.up b { color: var(--hero-exp); } .cmp.down b { color: var(--hero-inc); }
+  .cmp b { font-family: var(--font-num); font-weight: 600; }
+  .hero .note { color: var(--hero-warn); }
+
+  .inc { color: var(--inc); } .exp { color: var(--exp); }
+  .split3 { display: grid; grid-template-columns: repeat(auto-fit, minmax(130px, 1fr)); gap: 8px; margin-bottom: 14px; }
+  .split3 > div { background: var(--soft); border-radius: 8px; padding: 10px 12px; min-width: 0; }
+  .split3 b { display: block; font: 600 15px/1.3 var(--font-num); overflow-wrap: anywhere; letter-spacing: -0.02em; margin-top: 2px; }
+
+  .primary { background: var(--accent); color: var(--on-accent); border: 0; border-radius: 8px; padding: 12px 16px; font-weight: 600; flex: 1; }
+  .ghost { background: transparent; border: 1px solid var(--line); border-radius: 8px; padding: 11px 14px; }
+  .small { padding: 7px 12px; font-size: 13px; flex: none; }
+  .link { background: none; border: 0; color: var(--accent); font-weight: 600; padding: 0; font-size: 13px; }
+
+  .quick { display: flex; flex-wrap: wrap; gap: 8px; }
+  .chipbtn { border: 1px solid var(--line); background: var(--surface); border-radius: 8px; padding: 8px 12px; font-size: 14px; }
+  .chipbtn b { font-weight: 600; margin-left: 6px; color: var(--muted); font-size: 13px; }
+
+  /* Category icon tile */
+  .cico { width: 34px; height: 34px; border-radius: 8px; display: grid; place-items: center; flex: none; background: var(--soft); color: var(--c, var(--muted)); }
+  .cico { background: color-mix(in srgb, var(--c, var(--muted)) 15%, transparent); }
+  .cico.sm { width: 28px; height: 28px; }
+  .cico svg { width: 18px; height: 18px; }
+  .cico.sm svg { width: 15px; height: 15px; }
+
+  /* Forms */
+  .dform { display: flex; flex-direction: column; gap: 10px; margin-bottom: 14px; padding-bottom: 14px; border-bottom: 1px solid var(--line); }
+  .dform[hidden] { display: none; }
+  #unlockForm { margin-bottom: 0; padding-bottom: 0; border-bottom: 0; text-align: left; }
+  .seg { display: grid; grid-template-columns: 1fr 1fr; background: var(--soft); border-radius: 8px; padding: 3px; gap: 3px; }
+  .seg.three { grid-template-columns: repeat(3, 1fr); }
+  .seg button { border: 0; background: none; border-radius: 6px; padding: 9px 6px; font-weight: 500; color: var(--muted); }
+  .seg button[aria-pressed="true"] { background: var(--surface); color: var(--ink); box-shadow: 0 0 0 1px var(--line); }
+  #tExp[aria-pressed="true"] { color: var(--exp); } #tInc[aria-pressed="true"] { color: var(--inc); }
+  .fields { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+  .field { display: flex; flex-direction: column; gap: 4px; min-width: 0; }
+  .field.wide { grid-column: 1 / -1; }
+  .field label { font-size: 12px; color: var(--muted); }
+  input, select, textarea {
+    width: 100%; min-width: 0; padding: 11px 12px; border: 1px solid var(--line); border-radius: 8px;
+    background: var(--bg); font-size: 16px;
+  }
+  input.amount { font: 600 22px var(--font-num); font-variant-numeric: tabular-nums; letter-spacing: -0.02em; }
+  .amtrow { display: flex; gap: 8px; }
+  .amtrow input { flex: 1; }
+  .amtrow select { width: 88px; flex: none; }
+  .check { display: flex; align-items: center; gap: 8px; font-size: 14px; color: var(--muted); }
+  .check input { width: 18px; height: 18px; margin: 0; padding: 0; }
+  .actions { display: flex; gap: 10px; }
+  .err { color: var(--exp); font-size: 13px; min-height: 18px; }
+
+  .scrim { position: fixed; inset: 0; background: rgba(5, 12, 16, 0.55); z-index: 25; }
+  .composer {
+    position: fixed; left: 0; right: 0; bottom: 0; z-index: 30; max-width: 560px; margin: 0 auto;
+    max-height: 92dvh; overflow-y: auto; display: flex; flex-direction: column; gap: 10px;
+    background: var(--surface); border-top: 1px solid var(--line); border-radius: 16px 16px 0 0;
+    padding: 12px max(16px, env(safe-area-inset-right, 0px)) calc(16px + env(safe-area-inset-bottom, 0px)) max(16px, env(safe-area-inset-left, 0px));
+  }
+  .composer[hidden] { display: none; }
+  .grab { width: 36px; height: 4px; border-radius: 2px; background: var(--line); margin: 0 auto 4px; }
+  .composer h2 { margin: 0 0 2px; }
+
+  /* Charts */
+  .chart { width: 100%; height: auto; display: block; }
+  .chart .grid { stroke: var(--line); stroke-width: 1; }
+  .chart .ax { fill: var(--muted); font: 10px var(--font-body); }
+  .legend { display: flex; gap: 16px; font-size: 12px; color: var(--muted); margin-top: 8px; }
+  .legend i { display: inline-block; width: 10px; height: 10px; border-radius: 2px; margin-right: 6px; }
+
+  .stack { display: flex; height: 8px; border-radius: 4px; overflow: hidden; background: var(--soft); margin-bottom: 14px; gap: 2px; }
+  .stack i { display: block; height: 100%; }
+  .cat-row { display: flex; align-items: center; gap: 10px; padding: 5px 0; }
+  .cat-row .name { flex: 1; min-width: 0; overflow-wrap: anywhere; }
+  .cat-row .pct { color: var(--muted); font-size: 12px; width: 38px; text-align: right; }
+  .cat-row .sum { width: 96px; text-align: right; font-size: 14px; }
+  .lim { margin: 0 0 8px 38px; }
+  .lim small { color: var(--muted); font-size: 12px; }
+  .bar, .progress { height: 5px; background: var(--soft); border-radius: 3px; overflow: hidden; margin: 5px 0; }
+  .bar i, .progress i { display: block; height: 100%; background: var(--accent); border-radius: 3px; }
+  .bar i.warn { background: var(--warn); } .bar i.over { background: var(--exp); }
+  .empty { text-align: center; color: var(--muted); padding: 18px 0; font-size: 14px; }
+
+  .filters { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 10px; }
+  .filters input { grid-column: 1 / -1; }
+  .info { font-size: 13px; color: var(--muted); margin-bottom: 8px; min-height: 18px; }
+  .day { display: flex; justify-content: space-between; font-size: 11px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted); padding: 14px 0 6px; border-bottom: 1px solid var(--line); }
+  .day:first-child { padding-top: 0; }
+  .tx, .rem { display: flex; align-items: center; gap: 12px; padding: 10px 0; border-bottom: 1px solid var(--line); }
+  .tx:last-child, .rem:last-child { border-bottom: 0; }
+  .mid { flex: 1; min-width: 0; }
+  .mid b { font-weight: 500; display: block; overflow-wrap: anywhere; }
+  .mid small { color: var(--muted); display: block; overflow-wrap: anywhere; font-size: 13px; }
+  .amt { font-size: 14px; white-space: nowrap; }
+  .del { border: 0; background: none; color: var(--muted); font-size: 12px; padding: 6px 2px; white-space: nowrap; }
+  .del.arm { color: var(--exp); font-weight: 600; }
+
+  /* Debts: left stripe encodes state */
+  .debt { padding: 12px 0 12px 12px; border-bottom: 1px solid var(--line); border-left: 3px solid transparent; }
+  .debt:last-child { border-bottom: 0; padding-bottom: 0; }
+  .debt.s-late { border-left-color: var(--exp); }
+  .debt.s-soon { border-left-color: var(--warn); }
+  .debt.s-ok { border-left-color: var(--accent); }
+  .debt.s-done { border-left-color: var(--line); }
+  .dtop { display: flex; align-items: flex-start; justify-content: space-between; gap: 12px; }
+  .dbot { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; margin-top: 8px; }
+  .grow { flex: 1; }
+  .kv { display: flex; justify-content: space-between; gap: 12px; font-size: 13px; color: var(--muted); padding: 1px 0; }
+  .kv b { color: var(--ink); font-weight: 500; text-align: right; }
+  .chip { display: inline-block; font-size: 12px; font-weight: 600; padding: 3px 8px; border-radius: 6px; background: var(--soft); white-space: nowrap; }
+  .chip.late { color: var(--exp); } .chip.soon { color: var(--warn); } .chip.ok { color: var(--muted); }
+  .dbtn { border: 1px solid var(--line); border-radius: 6px; background: none; padding: 6px 10px; font-size: 13px; color: var(--muted); }
+  .dbtn.pay { color: var(--accent); border-color: var(--accent); font-weight: 600; }
+  .dbtn.arm { color: var(--exp); border-color: var(--exp); font-weight: 600; }
+  .payrow { display: flex; gap: 8px; margin-top: 8px; }
+  .payrow input, .dbot input { width: 130px; padding: 7px 10px; font-size: 15px; }
+
+  .status { font-size: 13px; color: var(--muted); min-height: 18px; }
+  .body { display: flex; flex-direction: column; gap: 12px; }
+  .body p, .lockp { margin: 0; color: var(--muted); font-size: 13px; }
+  textarea { min-height: 84px; font: 12px/1.4 var(--font-num); resize: vertical; }
+  .row { display: flex; gap: 10px; flex-wrap: wrap; }
+
+  .lockcard { text-align: center; padding: 28px 18px; }
+  .lockcard svg { margin: 0 auto 12px; color: var(--accent); }
+  .lockcard h2 { color: var(--ink); font-size: 15px; letter-spacing: 0; text-transform: none; margin-bottom: 6px; }
+  .lockcard .lockp { margin-bottom: 16px; }
+
+  /* Bottom nav and floating button */
+  .nav {
+    position: fixed; left: 0; right: 0; bottom: 0; z-index: 20; background: var(--surface); border-top: 1px solid var(--line);
+    padding-bottom: env(safe-area-inset-bottom, 0px);
+    padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px));
+  }
+  .navin { max-width: 560px; margin: 0 auto; display: grid; grid-template-columns: repeat(5, 1fr); }
+  .navin button {
+    position: relative; background: none; border: 0; border-radius: 0; padding: 9px 2px 8px; color: var(--muted);
+    display: flex; flex-direction: column; align-items: center; gap: 3px; font-size: 11px; font-weight: 500;
+  }
+  .navin button[aria-current="page"] { color: var(--accent); box-shadow: inset 0 2px 0 var(--accent); }
+  .badge {
+    position: absolute; top: 4px; left: calc(50% + 6px); min-width: 16px; height: 16px; padding: 0 4px; border-radius: 8px;
+    background: var(--exp); color: #fff; font: 600 10px/16px var(--font-num); text-align: center; font-style: normal;
+  }
+  .badge.dot { min-width: 8px; width: 8px; height: 8px; padding: 0; top: 7px; }
+  .fab {
+    position: fixed; z-index: 19; width: 54px; height: 54px; border-radius: 50%; border: 0;
+    background: var(--accent); color: var(--on-accent); display: grid; place-items: center;
+    bottom: calc(72px + env(safe-area-inset-bottom, 0px));
+    right: max(calc(16px + env(safe-area-inset-right, 0px)), calc((100vw - 560px) / 2 + 16px));
+    box-shadow: 0 4px 14px rgba(0, 0, 0, 0.3);
+  }
+
+  .toast {
+    position: fixed; left: 50%; transform: translateX(-50%); z-index: 40;
+    bottom: calc(132px + env(safe-area-inset-bottom, 0px));
+    background: var(--ink); color: var(--bg); border-radius: 8px; padding: 10px 14px;
+    display: flex; align-items: center; gap: 14px; max-width: calc(100vw - 32px); font-size: 14px;
+  }
+  .toast button { background: none; border: 0; color: var(--bg); font-weight: 600; text-decoration: underline; padding: 0; }
+
+  @media (prefers-reduced-motion: no-preference) {
+    .bar i, .progress i { transition: width .3s ease; }
+    .composer:not([hidden]) { animation: sheetUp .22s ease-out; }
+    .scrim:not([hidden]), .tab:not([hidden]) { animation: fadeIn .18s ease-out; }
+    @keyframes sheetUp { from { transform: translateY(24px); opacity: 0; } to { transform: none; opacity: 1; } }
+    @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+  }
+  @media (max-width: 420px) {
+    .balance { font-size: 34px; }
+    .cat-row .sum { width: 84px; }
+  }
+</style>
+<meta name="theme-color" media="(prefers-color-scheme: light)" content="#eceff1">
+<meta name="theme-color" media="(prefers-color-scheme: dark)" content="#0a1216">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="Hisobchi">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" type="image/svg+xml" href="icons/favicon.svg">
+<link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
+<style>
+  /* Alohida o'rnatiladigan ilova: sahifa asosiy qoidalari va xavfsiz maydonlar */
+  html { color-scheme: light; padding-top: env(safe-area-inset-top, 0px); padding-bottom: env(safe-area-inset-bottom, 0px); }
+  :root[data-theme="dark"], :root:not([data-theme="light"]) { }
+  body { margin: 0; }
+  #syncDetails { display: none; }
+</style>
+</head>
+<body>
+<div class="app">
+  <header class="top">
+    <h1 class="brand"><svg viewBox="0 0 64 64" width="28" height="28" aria-hidden="true"><rect width="64" height="64" rx="15" fill="#0a3340"/><path d="M20 15v34M44 15v34" fill="none" stroke="#f1f7f8" stroke-width="6" stroke-linecap="round"/><path d="M20 41l9-8 6 4 9-12" fill="none" stroke="#7fd9a4" stroke-width="4.5" stroke-linecap="round" stroke-linejoin="round"/><circle cx="44" cy="25" r="4" fill="#7fd9a4"/></svg><span class="wm">Hisob<span>chi</span></span></h1>
+    <button class="ghost small" id="lockBtn" type="button" hidden>
+      <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 11V8a5 5 0 0110 0v3M5 11h14v9H5z"/></svg>
+      Yashirish
+    </button>
+  </header>
+
+  <section class="panel lockcard" id="lockCard">
+    <svg viewBox="0 0 24 24" width="30" height="30" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 11V8a5 5 0 0110 0v3M5 11h14v9H5zM12 15v2"/></svg>
+    <h2>Ma'lumotlar yashirilgan</h2>
+    <p class="lockp">Balans, xarajatlar, qarzlar va kreditlar ko'rinmaydi.</p>
+    <form class="dform" id="unlockForm" autocomplete="off">
+      <div class="field" id="pwRow" hidden>
+        <label for="lockPw">Parol</label>
+        <input id="lockPw" type="password" autocomplete="off">
+      </div>
+      <div class="err" id="lockErr" role="alert"></div>
+      <button class="primary" type="submit" id="unlockBtn">Ko'rsatish</button>
+      <button class="ghost" type="button" id="forgot" hidden>Parolni unutdim</button>
+    </form>
+  </section>
+
+  <div id="secret" hidden>
+    <div class="monthbar" id="monthbar">
+      <button class="icon-btn" id="prev" aria-label="Oldingi oy">&#8249;</button>
+      <b id="monthLabel"></b>
+      <button class="icon-btn" id="next" aria-label="Keyingi oy">&#8250;</button>
+    </div>
+
+    <!-- Bosh -->
+    <div class="tab" id="tab-home">
+      <section class="hero" aria-live="polite">
+        <span class="hlabel">Oy balansi</span>
+        <div class="balance" id="balance"></div>
+        <svg class="spark" id="spark" viewBox="0 0 320 48" aria-hidden="true" hidden></svg>
+        <div class="hsplit">
+          <div><span class="hlabel">Daromad</span><b class="inc" id="sumInc"></b></div>
+          <div><span class="hlabel">Xarajat</span><b class="exp" id="sumExp"></b></div>
+        </div>
+        <div class="cmp" id="cmp"></div>
+        <div class="note" id="rateNote" hidden>Dollarli amallar bor, lekin kurs kiritilmagan. Sozlamalarda kursni kiriting, shunda ular so'mga hisoblanadi.</div>
+      </section>
+
+      <section class="panel remind" id="remPanel" hidden aria-live="polite">
+        <h2>Eslatmalar</h2>
+        <div id="remList"></div>
+      </section>
+
+      <div class="quick" id="quick" hidden></div>
+
+      <section class="panel">
+        <h2>Oxirgi 6 oy</h2>
+        <svg class="chart" id="chart" viewBox="0 0 360 190" role="img" aria-label="Oxirgi 6 oyda daromad va xarajat"></svg>
+        <div class="empty" id="chartEmpty" hidden>Grafik uchun amallar yo'q.</div>
+        <div class="legend"><span><i style="background:var(--inc)"></i>Daromad</span><span><i style="background:var(--exp)"></i>Xarajat</span></div>
+      </section>
+
+      <section class="panel" id="catPanel">
+        <div class="phead">
+          <h2>Xarajatlar</h2>
+          <button class="ghost small" id="limOpen" type="button">Limitlar</button>
+        </div>
+        <form class="dform" id="limForm" hidden autocomplete="off">
+          <div class="fields">
+            <div class="field"><label for="limCat">Kategoriya</label><select id="limCat"></select></div>
+            <div class="field"><label for="limAmt">Oylik limit, so'm</label><input class="money-in" id="limAmt" inputmode="numeric" placeholder="0"></div>
+          </div>
+          <div id="limList"></div>
+          <div class="err" id="limErr" role="alert"></div>
+          <div class="actions">
+            <button class="primary" type="submit">Limitni saqlash</button>
+            <button class="ghost" type="button" id="limClose">Yopish</button>
+          </div>
+        </form>
+        <div class="stack" id="stack"></div>
+        <div id="cats"></div>
+        <div class="empty" id="catEmpty" hidden>Bu oyda xarajat yo'q.</div>
+      </section>
+
+      <section class="panel">
+        <div class="phead">
+          <h2>Oxirgi amallar</h2>
+          <button class="link" id="recentAll" type="button">Hammasi</button>
+        </div>
+        <div id="recent"></div>
+      </section>
+    </div>
+
+    <!-- Amallar -->
+    <div class="tab" id="tab-ledger" hidden>
+      <section class="panel">
+        <h2>Amallar</h2>
+        <div class="filters">
+          <input id="q" type="search" placeholder="Qidirish: izoh yoki kategoriya" aria-label="Qidirish">
+          <select id="fType" aria-label="Turi"><option value="">Hammasi</option><option value="exp">Xarajat</option><option value="inc">Daromad</option></select>
+          <select id="fScope" aria-label="Davr"><option value="month">Shu oy</option><option value="year">Butun yil</option><option value="all">Barcha vaqt</option></select>
+        </div>
+        <div class="info" id="ledgerInfo"></div>
+        <div id="list"></div>
+      </section>
+      <section class="panel" id="recPanel" hidden>
+        <h2>Takrorlanuvchi amallar</h2>
+        <div id="recList"></div>
+      </section>
+    </div>
+
+    <!-- Qarzlar -->
+    <div class="tab" id="tab-debts" hidden>
+      <section class="panel" id="debtPanel">
+        <div class="phead">
+          <h2>Qarzlar va kreditlar</h2>
+          <button class="ghost small" id="dOpen" type="button">Qo'shish</button>
+        </div>
+        <div class="split3">
+          <div><span class="label">Men qarzdorman</span><b class="exp" id="dOwe">0</b></div>
+          <div><span class="label">Menga qarzdor</span><b class="inc" id="dOwed">0</b></div>
+          <div><span class="label">Oylik kredit</span><b id="dMonthly">0</b></div>
+          <div><span class="label">Kreditda qolgan</span><b id="dLoanLeft">0</b></div>
+        </div>
+
+        <form class="dform" id="dform" hidden autocomplete="off">
+          <div class="seg three" role="group" aria-label="Turi">
+            <button type="button" id="k_owe" aria-pressed="true">Qarz oldim</button>
+            <button type="button" id="k_owed" aria-pressed="false">Qarz berdim</button>
+            <button type="button" id="k_loan" aria-pressed="false">Kredit</button>
+          </div>
+          <div class="fields">
+            <div class="field wide">
+              <label id="lblName" for="dname">Kimdan olindi</label>
+              <input id="dname" type="text" maxlength="40" placeholder="Ism yoki nom">
+            </div>
+            <div class="field wide">
+              <label id="lblAmt" for="damount">Qarz summasi</label>
+              <div class="amtrow">
+                <input class="amount money-in" id="damount" inputmode="numeric" placeholder="0">
+                <select id="dcur" aria-label="Valyuta"><option value="UZS">so'm</option><option value="USD">$</option></select>
+              </div>
+            </div>
+            <div class="field wide" id="fDue">
+              <label for="ddue">Qaytarish sanasi</label>
+              <input id="ddue" type="date">
+            </div>
+            <div class="field" id="fDay" hidden>
+              <label for="dday">Har oy to'lov kuni</label>
+              <input id="dday" type="number" inputmode="numeric" min="1" max="31" placeholder="1 dan 31 gacha">
+            </div>
+            <div class="field" id="fEnd" hidden>
+              <label for="dend">Tugash sanasi</label>
+              <input id="dend" type="date">
+            </div>
+            <div class="field" id="fStart" hidden>
+              <label for="dstart">Boshlangan sana</label>
+              <input id="dstart" type="date">
+            </div>
+            <div class="field" id="fPrincipal" hidden>
+              <label for="dprincipal">Olingan summa</label>
+              <input class="money-in" id="dprincipal" inputmode="numeric" placeholder="Ixtiyoriy">
+            </div>
+            <div class="field wide">
+              <label for="dnote">Izoh</label>
+              <input id="dnote" type="text" maxlength="60" placeholder="Ixtiyoriy">
+            </div>
+          </div>
+          <div class="status" id="loanHint" hidden>Boshlangan va tugash sanasini kiritsangiz, necha oy to'langani, qolgani va jami to'lov hisoblanadi. Olingan summani kiritsangiz, ustama ham ko'rinadi.</div>
+          <div class="err" id="derr" role="alert"></div>
+          <div class="actions">
+            <button class="primary" type="submit">Saqlash</button>
+            <button class="ghost" type="button" id="dCancel">Bekor qilish</button>
+          </div>
+        </form>
+
+        <div id="dlist"></div>
+      </section>
+    </div>
+
+    <!-- Maqsad -->
+    <div class="tab" id="tab-goals" hidden>
+      <section class="panel">
+        <div class="phead">
+          <h2>Jamg'arma maqsadlari</h2>
+          <button class="ghost small" id="gOpen" type="button">Qo'shish</button>
+        </div>
+        <form class="dform" id="gform" hidden autocomplete="off">
+          <div class="fields">
+            <div class="field wide"><label for="gname">Maqsad</label><input id="gname" type="text" maxlength="40" placeholder="Masalan, yangi telefon"></div>
+            <div class="field wide"><label for="gtarget">Kerakli summa, so'm</label><input class="amount money-in" id="gtarget" inputmode="numeric" placeholder="0"></div>
+          </div>
+          <div class="err" id="gerr" role="alert"></div>
+          <div class="actions">
+            <button class="primary" type="submit">Saqlash</button>
+            <button class="ghost" type="button" id="gCancel">Bekor qilish</button>
+          </div>
+        </form>
+        <div id="glist"></div>
+      </section>
+    </div>
+
+    <!-- Sozlama -->
+    <div class="tab" id="tab-settings" hidden>
+      <section class="panel">
+        <h2>Sozlamalar</h2>
+        <div class="body">
+          <div class="field">
+            <label for="rate">Dollar kursi (1 $ necha so'm)</label>
+            <input class="money-in" id="rate" inputmode="numeric" placeholder="Kursni o'zingiz kiriting">
+          </div>
+          <div class="field">
+            <label for="themeSel">Mavzu</label>
+            <select id="themeSel"><option value="">Avtomatik</option><option value="light">Yorug'</option><option value="dark">Qorong'i</option></select>
+          </div>
+          <div>
+            <div class="label">Tez tugmalar</div>
+            <div id="quickList"></div>
+          </div>
+        </div>
+      </section>
+
+      <section class="panel" id="syncDetails">
+        <h2>Sinxronlash</h2>
+        <div class="body">
+          <p>Yoqsangiz, ma'lumotlaringizning nusxasi hisobingizdagi shaxsiy joyda saqlanadi, boshqalar uni ko'ra olmaydi. Shunda telefon va kompyuteringizda bir xil ma'lumot ko'rinadi. Parol va yashirish sozlamalari har qurilmada alohida qoladi.</p>
+          <div class="status" id="syncStatus" role="status"></div>
+          <div id="syncChoice" hidden>
+            <p>Serverda ham, shu qurilmada ham ma'lumot bor. Qaysi biri qolsin?</p>
+            <div class="row" style="margin-top:10px">
+              <button class="ghost" id="syncTake" type="button">Serverdagini olish</button>
+              <button class="ghost" id="syncSend" type="button">Shu qurilmadagini yuborish</button>
+            </div>
+          </div>
+          <div class="row">
+            <button class="ghost" id="syncToggle" type="button">Sinxronlashni yoqish</button>
+            <button class="ghost" id="syncWipe" type="button" hidden>Serverdagi nusxani o'chirish</button>
+          </div>
+        </div>
+      </section>
+
+      <section class="panel" id="backupDetails">
+        <h2>Zaxira nusxa</h2>
+        <div class="body">
+          <p>Barcha ma'lumotlarni matn sifatida nusxalab saqlab qo'yishingiz va kerak bo'lganda qayta tiklashingiz mumkin.</p>
+          <textarea id="backup" aria-label="Zaxira ma'lumotlari" placeholder="Tiklash uchun zaxira matnini shu yerga qo'ying"></textarea>
+          <div class="row">
+            <button class="ghost" id="copyBackup" type="button">Nusxa olish</button>
+            <button class="ghost" id="restore" type="button">Matndan tiklash</button>
+          </div>
+          <div class="status" id="status" role="status"></div>
+        </div>
+      </section>
+
+      <section class="panel">
+        <h2>Himoya</h2>
+        <div class="body">
+          <p>Sahifa ochilganda ma'lumotlar yashirin turadi. Parol qo'ysangiz, ko'rsatish uchun parol so'raladi. Boshqa oynaga o'tsangiz yoki 2 daqiqa tegmasangiz, ma'lumotlar yana yashirinadi.</p>
+          <div class="field">
+            <label for="newPw">Yangi parol (kamida 4 belgi)</label>
+            <input id="newPw" type="password" autocomplete="new-password">
+          </div>
+          <div class="row">
+            <button class="ghost" id="savePw" type="button">Parolni saqlash</button>
+            <button class="ghost" id="removePw" type="button">Parolni olib tashlash</button>
+          </div>
+          <div class="status" id="pwStatus" role="status"></div>
+          <p>Bu himoya begonalar ekranni tasodifan ko'rib qolishidan saqlaydi. Ma'lumotlar brauzerda shifrlanmagan holda turadi. Parolni unutsangiz, uni faqat barcha ma'lumotlarni o'chirib tiklash mumkin.</p>
+        </div>
+      </section>
+    </div>
+  </div>
+</div>
+
+<button class="fab" id="fab" type="button" hidden aria-label="Amal qo'shish">
+  <svg viewBox="0 0 24 24" width="26" height="26" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" aria-hidden="true"><path d="M12 5v14M5 12h14"/></svg>
+</button>
+
+<div class="scrim" id="scrim" hidden></div>
+<form class="composer" id="form" hidden autocomplete="off" aria-label="Yangi amal">
+  <div class="grab" aria-hidden="true"></div>
+  <h2>Yangi amal</h2>
+  <div class="seg" role="group" aria-label="Amal turi">
+    <button type="button" id="tExp" aria-pressed="true">Xarajat</button>
+    <button type="button" id="tInc" aria-pressed="false">Daromad</button>
+  </div>
+  <div class="fields">
+    <div class="field wide">
+      <label for="amount">Summa</label>
+      <div class="amtrow">
+        <input class="amount money-in" id="amount" inputmode="numeric" placeholder="0">
+        <select id="cur" aria-label="Valyuta"><option value="UZS">so'm</option><option value="USD">$</option></select>
+      </div>
+    </div>
+    <div class="field">
+      <label for="cat">Kategoriya</label>
+      <select id="cat"></select>
+    </div>
+    <div class="field">
+      <label for="date">Sana</label>
+      <input id="date" type="date">
+    </div>
+    <div class="field wide">
+      <label for="note">Izoh</label>
+      <input id="note" type="text" maxlength="60" placeholder="Ixtiyoriy">
+    </div>
+  </div>
+  <label class="check"><input type="checkbox" id="recur"> Har oy shu kuni takrorlansin</label>
+  <label class="check"><input type="checkbox" id="quickSave"> Tez tugma sifatida saqlash</label>
+  <div class="err" id="err" role="alert"></div>
+  <div class="actions">
+    <button class="primary" type="submit">Saqlash</button>
+    <button class="ghost" type="button" id="cancel">Bekor qilish</button>
+  </div>
+</form>
+
+<nav class="nav" id="nav" hidden aria-label="Bo'limlar">
+  <div class="navin">
+    <button type="button" data-tab="home" aria-current="page">
+      <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 11l9-8 9 8M5 10v10h5v-6h4v6h5V10"/></svg>
+      <span>Bosh</span>
+    </button>
+    <button type="button" data-tab="ledger">
+      <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M8 6h13M8 12h13M8 18h13M3 6h.01M3 12h.01M3 18h.01"/></svg>
+      <span>Amallar</span>
+    </button>
+    <button type="button" data-tab="debts">
+      <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 6h18v12H3zM3 10h18M7 15h3"/></svg>
+      <span>Qarzlar</span>
+      <i class="badge" id="badgeDebts" hidden></i>
+    </button>
+    <button type="button" data-tab="goals">
+      <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 21V4M5 4h12l-2.5 4L17 12H5"/></svg>
+      <span>Maqsad</span>
+    </button>
+    <button type="button" data-tab="settings">
+      <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 7h9M17 7h3M4 17h3M11 17h9M13 5v4M7 15v4"/></svg>
+      <span>Sozlama</span>
+      <i class="badge dot" id="badgeSet" hidden></i>
+    </button>
+  </div>
+</nav>
+
+<div class="toast" id="toast" hidden role="status"><span id="toastMsg"></span><button id="toastUndo" type="button" hidden>Bekor qilish</button></div>
+
+<script>
+(function () {
+  "use strict";
+  const $ = (id) => document.getElementById(id);
+
+  /* ---------- Umumiy yordamchilar ---------- */
+  const CATS = {
+    exp: ["Oziq-ovqat", "Transport", "Uy-joy", "Aloqa", "Xaridlar", "Salomatlik", "Ta'lim", "Ko'ngilochar", "Boshqa"],
+    inc: ["Maosh", "Qo'shimcha daromad", "Sovg'a", "Boshqa"]
+  };
+  const MONTHS = ["Yanvar","Fevral","Mart","Aprel","May","Iyun","Iyul","Avgust","Sentabr","Oktabr","Noyabr","Dekabr"];
+  const MSHORT = ["Yan","Fev","Mar","Apr","May","Iyn","Iyl","Avg","Sen","Okt","Noy","Dek"];
+  const WEEKDAYS = ["Yakshanba","Dushanba","Seshanba","Chorshanba","Payshanba","Juma","Shanba"];
+  const isoRe = /^\d{4}-\d{2}-\d{2}$/;
+
+  const pad = (n) => (n < 10 ? "0" : "") + n;
+  const iso = (d) => d.getFullYear() + "-" + pad(d.getMonth() + 1) + "-" + pad(d.getDate());
+  const parseISO = (s) => { const p = s.split("-"); return new Date(+p[0], +p[1] - 1, +p[2]); };
+  const today0 = () => { const t = new Date(); return new Date(t.getFullYear(), t.getMonth(), t.getDate()); };
+  const uid = () => Date.now().toString(36) + Math.random().toString(36).slice(2, 7);
+  const fmt = (n) => String(Math.round(n)).replace(/\B(?=(\d{3})+(?!\d))/g, " ");
+  const money = (n, cur) => (cur === "USD" ? "$" + fmt(n) : fmt(n));
+  const parseMoney = (s) => parseInt(String(s).replace(/\D/g, ""), 10) || 0;
+  const esc = (s) => String(s).replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
+  const hue = (name) => { let h = 0; for (let i = 0; i < name.length; i++) h = (h * 31 + name.charCodeAt(i)) % 360; return h; };
+  const color = (name) => "hsl(" + hue(name) + " 55% 52%)";
+  const dlabel = (d, withYear) => d.getDate() + " " + MONTHS[d.getMonth()] + (withYear === false ? "" : " " + d.getFullYear());
+  const dayDiff = (a, b) => Math.round((a - b) / 86400000);
+  const hhmm = () => { const t = new Date(); return pad(t.getHours()) + ":" + pad(t.getMinutes()); };
+
+  const lsGet = (k) => { try { return localStorage.getItem(k); } catch (e) { return null; } };
+  const lsSet = (k, v) => { try { localStorage.setItem(k, v); } catch (e) {} };
+  const lsDel = (k) => { try { localStorage.removeItem(k); } catch (e) {} };
+
+  const SKEY = "hisobchi_state_v3", LOCK_KEY = "hisobchi_lock_v1", THEME_KEY = "hisobchi_theme",
+        BACKUP_KEY = "hisobchi_backup_at", SYNC_KEY = "hisobchi_sync_v1", LINK_KEY = "hisobchi_sync_linked";
+
+  /* ---------- Kategoriya belgilari ---------- */
+  const IC = {
+    basket: "M3 9h18l-2 11H5L3 9zM8 9l3-5M16 9l-3-5",
+    car: "M4 16v-4l2-5h12l2 5v4M4 16h16M7 16v3M17 16v3M8 13h.01M16 13h.01",
+    home: "M3 11l9-8 9 8M5 10v10h5v-6h4v6h5V10",
+    phone: "M8 3h8a1 1 0 011 1v16a1 1 0 01-1 1H8a1 1 0 01-1-1V4a1 1 0 011-1zM11 18h2",
+    bag: "M6 8h12l1 12H5L6 8zM9 8V6a3 3 0 016 0v2",
+    plus: "M9 3h6v6h6v6h-6v6H9v-6H3V9h6V3z",
+    book: "M4 5a2 2 0 012-2h13v16H6a2 2 0 00-2 2V5zM4 19a2 2 0 012-2h13",
+    play: "M6 4v16l13-8L6 4z",
+    dots: "M5 12h.01M12 12h.01M19 12h.01",
+    wallet: "M3 7h16a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V7zM3 7l2-3h12M16 14h2",
+    trend: "M3 17l6-6 4 4 8-8M15 7h6v6",
+    gift: "M4 11h16v9H4v-9zM3 8h18v3H3V8zM12 8v12M12 8S9 8 8.5 6 10 3 12 8zM12 8s3 0 3.5-2S14 3 12 8z"
+  };
+  const CICON = { "Oziq-ovqat": "basket", "Transport": "car", "Uy-joy": "home", "Aloqa": "phone", "Xaridlar": "bag", "Salomatlik": "plus", "Ta'lim": "book", "Ko'ngilochar": "play", "Maosh": "wallet", "Qo'shimcha daromad": "trend", "Sovg'a": "gift" };
+  function cico(name, small) {
+    const p = IC[CICON[name] || "dots"];
+    return '<span class="cico' + (small ? " sm" : "") + '" style="--c:' + color(name) + '"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="' + (CICON[name] ? 1.8 : 3) + '" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="' + p + '"/></svg></span>';
+  }
+
+  /* ---------- Ma'lumot modeli ---------- */
+  const validTx = (x) => x && (x.type === "inc" || x.type === "exp") && typeof x.amount === "number" && isFinite(x.amount) && x.amount > 0 && typeof x.cat === "string" && isoRe.test(x.date || "");
+  const cleanTx = (x) => { const o = { id: x.id || uid(), type: x.type, amount: x.amount, cur: x.cur === "USD" ? "USD" : "UZS", cat: x.cat.slice(0, 40), note: String(x.note || "").slice(0, 60), date: x.date }; if (x.rid) o.rid = String(x.rid); return o; };
+
+  const validDebt = (x) => x && (x.kind === "debt" || x.kind === "loan") && typeof x.name === "string" && typeof x.amount === "number" && x.amount > 0 &&
+    (x.kind === "loan" ? typeof x.day === "number" && x.day >= 1 && x.day <= 31 : isoRe.test(x.due || ""));
+  function cleanDebt(x) {
+    const b = { id: x.id || uid(), kind: x.kind, name: x.name.slice(0, 40), amount: x.amount, cur: x.cur === "USD" ? "USD" : "UZS", note: String(x.note || "").slice(0, 60) };
+    if (x.kind === "loan") {
+      b.day = x.day;
+      b.end = isoRe.test(x.end || "") ? x.end : "";
+      b.paid = Array.isArray(x.paid) ? x.paid.filter((s) => typeof s === "string") : [];
+      b.from = isoRe.test(x.from || "") ? x.from : iso(today0());
+      b.start = isoRe.test(x.start || "") ? x.start : b.from;
+      b.principal = typeof x.principal === "number" && x.principal > 0 ? x.principal : 0;
+    } else {
+      b.dir = x.dir === "owed" ? "owed" : "owe";
+      b.due = x.due;
+      b.payments = Array.isArray(x.payments) ? x.payments.filter((p) => p && typeof p.amount === "number" && p.amount > 0 && isoRe.test(p.date || "")).map((p) => ({ id: p.id || uid(), amount: p.amount, date: p.date })) : [];
+      const paid = b.payments.reduce((s, p) => s + p.amount, 0);
+      if (x.done && paid < b.amount) b.payments.push({ id: uid(), amount: b.amount - paid, date: iso(today0()) });
+    }
+    return b;
+  }
+  const validGoal = (x) => x && typeof x.name === "string" && typeof x.target === "number" && x.target > 0;
+  const cleanGoal = (x) => ({ id: x.id || uid(), name: x.name.slice(0, 40), target: x.target, saved: typeof x.saved === "number" && x.saved > 0 ? x.saved : 0 });
+  const validRec = (x) => x && (x.type === "inc" || x.type === "exp") && typeof x.amount === "number" && x.amount > 0 && typeof x.cat === "string" && typeof x.day === "number" && x.day >= 1 && x.day <= 31;
+  const cleanRec = (x) => ({ id: x.id || uid(), type: x.type, amount: x.amount, cur: x.cur === "USD" ? "USD" : "UZS", cat: x.cat.slice(0, 40), note: String(x.note || "").slice(0, 60), day: x.day, last: /^\d{4}-\d{2}$/.test(x.last || "") ? x.last : iso(today0()).slice(0, 7) });
+  const validQuick = (x) => x && (x.type === "inc" || x.type === "exp") && typeof x.amount === "number" && x.amount > 0 && typeof x.cat === "string";
+  const cleanQuick = (x) => ({ id: x.id || uid(), type: x.type, amount: x.amount, cur: x.cur === "USD" ? "USD" : "UZS", cat: x.cat.slice(0, 40), note: String(x.note || "").slice(0, 60) });
+
+  const emptyState = () => ({ tx: [], debts: [], goals: [], recurring: [], limits: {}, quick: [], rate: 0, u: 0 });
+  function normalize(o) {
+    const s = emptyState();
+    if (!o || typeof o !== "object") return s;
+    const arr = (k, v, c) => (Array.isArray(o[k]) ? o[k].filter(v).map(c) : []);
+    s.tx = arr("tx", validTx, cleanTx);
+    s.debts = arr("debts", validDebt, cleanDebt);
+    s.goals = arr("goals", validGoal, cleanGoal);
+    s.recurring = arr("recurring", validRec, cleanRec);
+    s.quick = arr("quick", validQuick, cleanQuick).slice(0, 8);
+    if (o.limits && typeof o.limits === "object") Object.keys(o.limits).forEach((k) => { if (typeof o.limits[k] === "number" && o.limits[k] > 0) s.limits[k.slice(0, 40)] = o.limits[k]; });
+    s.rate = typeof o.rate === "number" && o.rate > 0 ? o.rate : 0;
+    s.u = typeof o.u === "number" ? o.u : 0;
+    return s;
+  }
+  const hasData = (s) => !!(s.tx.length || s.debts.length || s.goals.length || s.recurring.length || s.quick.length || Object.keys(s.limits).length);
+  const stateForSync = () => ({ tx: S.tx, debts: S.debts, goals: S.goals, recurring: S.recurring, limits: S.limits, quick: S.quick, rate: S.rate });
+
+  let S = emptyState();
+  (function load() {
+    let obj = null;
+    const raw = lsGet(SKEY);
+    if (raw) { try { obj = JSON.parse(raw); } catch (e) {} }
+    if (obj) { S = normalize(obj); return; }
+    // Eski versiyalardan ko'chirish
+    try { const a = JSON.parse(lsGet("hisobchi_v2")); if (Array.isArray(a)) S.tx = a.filter((x) => validTx(x) && !x.sample).map(cleanTx); } catch (e) {}
+    try { const d = JSON.parse(lsGet("hisobchi_debts_v1")); if (Array.isArray(d)) S.debts = d.filter(validDebt).map(cleanDebt); } catch (e) {}
+    if (hasData(S)) { S.u = Date.now(); lsSet(SKEY, JSON.stringify(S)); }
+  })();
+  if (!lsGet(BACKUP_KEY)) lsSet(BACKUP_KEY, String(Date.now()));
+
+  function save() {
+    S.u = Date.now();
+    lsSet(SKEY, JSON.stringify(S));
+    schedulePush();
+  }
+
+  const toUZS = (amount, cur) => (cur === "USD" ? amount * S.rate : amount);
+
+  /* ---------- Holat ---------- */
+  let view = new Date(); view = new Date(view.getFullYear(), view.getMonth(), 1);
+  let type = "exp", tab = "home";
+  let armedKey = null, armTimer = null, payOpen = null;
+  const monthKey = () => view.getFullYear() + "-" + pad(view.getMonth() + 1);
+  const monthItems = (key) => S.tx.filter((x) => x.date.slice(0, 7) === key);
+  const sumUZS = (items, t) => items.filter((x) => x.type === t).reduce((s, x) => s + toUZS(x.amount, x.cur), 0);
+
+  function arm(key, rerender) {
+    armedKey = key; clearTimeout(armTimer);
+    armTimer = setTimeout(() => { armedKey = null; rerender(); }, 3000);
+    rerender();
+  }
+  const disarm = () => { armedKey = null; clearTimeout(armTimer); };
+  const isArmed = (k) => armedKey === k;
+
+  let toastT = null, undoFn = null;
+  function toast(msg, undo) {
+    $("toastMsg").textContent = msg;
+    undoFn = undo || null;
+    $("toastUndo").hidden = !undo;
+    $("toast").hidden = false;
+    clearTimeout(toastT);
+    toastT = setTimeout(() => { $("toast").hidden = true; undoFn = null; }, undo ? 5000 : 2500);
+  }
+  $("toastUndo").onclick = () => { if (undoFn) undoFn(); $("toast").hidden = true; undoFn = null; };
+
+  /* ---------- Takrorlanuvchi amallar ---------- */
+  function runRecurring() {
+    const t = today0(); let changed = false;
+    S.recurring.forEach((r) => {
+      let y = +r.last.slice(0, 4), m = +r.last.slice(5, 7) - 1;
+      for (let i = 0; i < 600; i++) {
+        m++; if (m > 11) { m = 0; y++; }
+        const dim = new Date(y, m + 1, 0).getDate();
+        const due = new Date(y, m, Math.min(r.day, dim));
+        if (due > t) break;
+        S.tx.push({ id: uid(), type: r.type, amount: r.amount, cur: r.cur, cat: r.cat, note: r.note, date: iso(due), rid: r.id });
+        r.last = y + "-" + pad(m + 1); changed = true;
+      }
+    });
+    if (changed) save();
+  }
+
+  /* ---------- Balans, kategoriyalar, grafik ---------- */
+  function renderBalance() {
+    const key = monthKey(), items = monthItems(key), t = today0();
+    const inc = sumUZS(items, "inc"), exp = sumUZS(items, "exp"), bal = inc - exp;
+    $("monthLabel").textContent = MONTHS[view.getMonth()] + " " + view.getFullYear();
+    $("balance").innerHTML = (bal < 0 ? "−" : "") + fmt(Math.abs(bal)) + " <small>so'm</small>";
+    $("sumInc").textContent = "+" + fmt(inc);
+    $("sumExp").textContent = "−" + fmt(exp);
+    const usd = S.tx.some((x) => x.cur === "USD") || S.debts.some((d) => d.cur === "USD");
+    $("rateNote").hidden = !(usd && !(S.rate > 0));
+
+    const isCur = t.getFullYear() === view.getFullYear() && t.getMonth() === view.getMonth();
+    const pd = new Date(view.getFullYear(), view.getMonth() - 1, 1);
+    const lim = isCur ? t.getDate() : 31;
+    const pexp = sumUZS(monthItems(pd.getFullYear() + "-" + pad(pd.getMonth() + 1)).filter((x) => +x.date.slice(8, 10) <= lim), "exp");
+    const cmp = $("cmp");
+    if (pexp > 0 && exp > 0) {
+      const pc = Math.round((exp - pexp) / pexp * 100);
+      const sign = pc > 0 ? "+" : pc < 0 ? "−" : "";
+      cmp.className = "cmp " + (pc > 0 ? "up" : pc < 0 ? "down" : "");
+      const shown = Math.abs(pc) > 500 ? "500%+" : Math.abs(pc) + "%";
+      cmp.innerHTML = (isCur ? "O'tgan oyning shu kunlariga nisbatan" : "O'tgan oyga nisbatan") + " xarajat " + (pc === 0 ? "o'zgarmagan" : "<b>" + sign + shown + "</b>");
+    } else { cmp.className = "cmp"; cmp.textContent = ""; }
+
+    const dim = new Date(view.getFullYear(), view.getMonth() + 1, 0).getDate();
+    const endDay = isCur ? t.getDate() : dim;
+    const sp = $("spark");
+    if (!items.length) { sp.setAttribute("hidden", ""); sp.innerHTML = ""; return; }
+    const net = new Array(endDay).fill(0);
+    items.forEach((x) => { const d = +x.date.slice(8, 10); if (d >= 1 && d <= endDay) net[d - 1] += (x.type === "inc" ? 1 : -1) * toUZS(x.amount, x.cur); });
+    const pts = []; let acc = 0;
+    net.forEach((v) => { acc += v; pts.push(acc); });
+    const W = 320, H = 48, P = 5;
+    const lo = Math.min(0, Math.min.apply(null, pts)), hi = Math.max(0, Math.max.apply(null, pts)), span = (hi - lo) || 1;
+    const X = (i) => P + (dim <= 1 ? 0 : i / (dim - 1)) * (W - 2 * P);
+    const Y = (v) => P + (1 - (v - lo) / span) * (H - 2 * P);
+    const line = pts.map((v, i) => (i ? "L" : "M") + X(i).toFixed(1) + " " + Y(v).toFixed(1)).join(" ");
+    const last = pts.length - 1;
+    sp.removeAttribute("hidden");
+    sp.innerHTML = '<line class="zero" x1="' + P + '" x2="' + (W - P) + '" y1="' + Y(0).toFixed(1) + '" y2="' + Y(0).toFixed(1) + '"/>' +
+      '<path class="area" d="' + line + " L" + X(last).toFixed(1) + " " + Y(0).toFixed(1) + " L" + X(0).toFixed(1) + " " + Y(0).toFixed(1) + ' Z"/>' +
+      '<path class="ln" d="' + line + '"/><circle class="end" cx="' + X(last).toFixed(1) + '" cy="' + Y(pts[last]).toFixed(1) + '" r="3"/>';
+  }
+
+  function limitClass(p) { return p > 100 ? "over" : p >= 80 ? "warn" : "ok"; }
+  function renderCats() {
+    const items = monthItems(monthKey()).filter((x) => x.type === "exp");
+    const by = {};
+    items.forEach((x) => { by[x.cat] = (by[x.cat] || 0) + toUZS(x.amount, x.cur); });
+    const total = Object.keys(by).reduce((s, k) => s + by[k], 0);
+    const names = Array.from(new Set(Object.keys(by).concat(Object.keys(S.limits)))).sort((a, b) => (by[b] || 0) - (by[a] || 0));
+    $("catEmpty").hidden = names.length > 0;
+    $("stack").hidden = !total;
+    $("stack").innerHTML = names.filter((n) => by[n] > 0).map((n) => '<i style="flex:' + by[n] + ' 1 0;background:' + color(n) + '" title="' + esc(n) + '"></i>').join("");
+    $("cats").innerHTML = names.map((n) => {
+      const spent = by[n] || 0, lim = S.limits[n];
+      let row = '<div class="cat-row">' + cico(n, true) + '<span class="name">' + esc(n) + '</span>' +
+        '<span class="pct num">' + (total ? Math.round(spent / total * 100) + "%" : "") + '</span><span class="sum num">' + fmt(spent) + '</span></div>';
+      if (lim) {
+        const p = Math.round(spent / lim * 100);
+        row += '<div class="lim"><div class="bar"><i class="' + limitClass(p) + '" style="width:' + Math.min(100, p) + '%"></i></div><small>Limit: ' + fmt(spent) + " / " + fmt(lim) + " · " + p + "%" + (p > 100 ? " (oshib ketdi)" : "") + "</small></div>";
+      }
+      return row;
+    }).join("");
+    $("limCat").innerHTML = CATS.exp.map((c) => '<option value="' + esc(c) + '">' + esc(c) + "</option>").join("");
+    const lk = Object.keys(S.limits);
+    $("limList").innerHTML = lk.map((k) => '<div class="kv"><span>' + esc(k) + '</span><b>' + fmt(S.limits[k]) + ' <button type="button" class="del" data-lim="' + esc(k) + '">O\'chirish</button></b></div>').join("");
+  }
+
+  function niceMax(v) { if (v <= 0) return 1; const p = Math.pow(10, Math.floor(Math.log10(v))); const n = v / p; return (n <= 1 ? 1 : n <= 2 ? 2 : n <= 5 ? 5 : 10) * p; }
+  function short(n) {
+    if (n >= 1e6) return (n / 1e6).toFixed(n % 1e6 === 0 ? 0 : 1).replace(".", ",") + " mln";
+    if (n >= 1e3) return Math.round(n / 1e3) + " ming";
+    return String(Math.round(n));
+  }
+  function renderChart() {
+    const months = [];
+    for (let i = 5; i >= 0; i--) {
+      const d = new Date(view.getFullYear(), view.getMonth() - i, 1);
+      const it = monthItems(d.getFullYear() + "-" + pad(d.getMonth() + 1));
+      months.push({ label: MSHORT[d.getMonth()], inc: sumUZS(it, "inc"), exp: sumUZS(it, "exp") });
+    }
+    const max = Math.max.apply(null, months.map((m) => Math.max(m.inc, m.exp)));
+    $("chartEmpty").hidden = !!max;
+    $("chart").toggleAttribute("hidden", !max);
+    if (!max) { $("chart").innerHTML = ""; return; }
+    const top = niceMax(max), W = 360, H = 190, L = 50, R = 6, T = 10, B = 24, pw = W - L - R, ph = H - T - B, gw = pw / 6, bw = Math.min(18, gw * 0.32);
+    let g = "";
+    [0, 0.5, 1].forEach((f) => {
+      const y = T + ph * (1 - f);
+      g += '<line class="grid" x1="' + L + '" x2="' + (W - R) + '" y1="' + y + '" y2="' + y + '"/><text class="ax" x="' + (L - 6) + '" y="' + (y + 3) + '" text-anchor="end">' + short(top * f) + "</text>";
+    });
+    months.forEach((m, i) => {
+      const cx = L + gw * i + gw / 2, hi = ph * m.inc / top, he = ph * m.exp / top;
+      g += "<g><title>" + m.label + ": daromad " + fmt(m.inc) + ", xarajat " + fmt(m.exp) + '</title>' +
+        '<rect x="' + (cx - bw - 1) + '" y="' + (T + ph - hi) + '" width="' + bw + '" height="' + hi + '" rx="2" fill="var(--inc)"/>' +
+        '<rect x="' + (cx + 1) + '" y="' + (T + ph - he) + '" width="' + bw + '" height="' + he + '" rx="2" fill="var(--exp)"/></g>' +
+        '<text class="ax" x="' + cx + '" y="' + (H - 8) + '" text-anchor="middle">' + m.label + "</text>";
+    });
+    $("chart").innerHTML = g;
+  }
+
+  /* ---------- Amallar ro'yxati ---------- */
+  function ledgerItems() {
+    const scope = $("fScope").value, q = $("q").value.trim().toLowerCase(), ft = $("fType").value;
+    return S.tx.filter((x) => {
+      if (scope === "month" && x.date.slice(0, 7) !== monthKey()) return false;
+      if (scope === "year" && x.date.slice(0, 4) !== String(view.getFullYear())) return false;
+      if (ft && x.type !== ft) return false;
+      if (q && (x.cat + " " + (x.note || "")).toLowerCase().indexOf(q) === -1) return false;
+      return true;
+    }).sort((a, b) => (a.date < b.date ? 1 : a.date > b.date ? -1 : 0));
+  }
+  function txRow(x, del, withDate) {
+    const on = isArmed("tx:" + x.id);
+    const parts = [];
+    if (withDate) parts.push(dlabel(parseISO(x.date), false));
+    if (x.note) parts.push(esc(x.note));
+    if (x.rid) parts.push("takroriy");
+    return '<div class="tx">' + cico(x.cat) + '<div class="mid"><b>' + esc(x.cat) + "</b>" + (parts.length ? "<small>" + parts.join(" · ") + "</small>" : "") + "</div>" +
+      '<span class="amt ' + x.type + '">' + (x.type === "inc" ? "+" : "−") + money(x.amount, x.cur) + "</span>" +
+      (del ? '<button class="del' + (on ? " arm" : "") + '" data-id="' + x.id + '">' + (on ? "Aniq o'chirilsinmi?" : "O'chirish") + "</button>" : "") + "</div>";
+  }
+  function renderLedger() {
+    const items = ledgerItems(), scope = $("fScope").value;
+    const inc = sumUZS(items, "inc"), exp = sumUZS(items, "exp");
+    $("ledgerInfo").textContent = items.length ? items.length + " ta amal · daromad +" + fmt(inc) + " · xarajat −" + fmt(exp) : "";
+    if (!items.length) {
+      $("list").innerHTML = '<div class="empty">' + (S.tx.length ? "Mos amal topilmadi." : 'Hali amal yo\'q. “+” tugmasini bosing.') + "</div>";
+      return;
+    }
+    let html = "", last = "";
+    items.slice(0, 300).forEach((x) => {
+      if (x.date !== last) {
+        const dt = parseISO(x.date);
+        html += '<div class="day"><span>' + dlabel(dt, scope !== "month") + "</span><span>" + WEEKDAYS[dt.getDay()] + "</span></div>";
+        last = x.date;
+      }
+      html += txRow(x, true, false);
+    });
+    if (items.length > 300) html += '<div class="info">Birinchi 300 ta amal ko\'rsatildi. Qidiruvni toraytiring.</div>';
+    $("list").innerHTML = html;
+  }
+  function renderRecent() {
+    const rows = S.tx.slice().reverse().sort((a, b) => (a.date < b.date ? 1 : a.date > b.date ? -1 : 0)).slice(0, 5);
+    $("recent").innerHTML = rows.length ? rows.map((x) => txRow(x, false, true)).join("") : '<div class="empty">Hali amal yo\'q. “+” tugmasini bosing.</div>';
+    $("recentAll").hidden = !rows.length;
+  }
+
+  function renderRecurring() {
+    $("recPanel").hidden = !S.recurring.length;
+    $("recList").innerHTML = S.recurring.map((r) => {
+      const on = isArmed("rec:" + r.id);
+      return '<div class="tx">' + cico(r.cat) + '<div class="mid"><b>' + esc(r.cat) + "</b><small>Har oy " + r.day + "-kuni" + (r.note ? " · " + esc(r.note) : "") + "</small></div>" +
+        '<span class="amt ' + r.type + '">' + (r.type === "inc" ? "+" : "−") + money(r.amount, r.cur) + "</span>" +
+        '<button class="del' + (on ? " arm" : "") + '" data-rec="' + r.id + '">' + (on ? "Aniq o'chirilsinmi?" : "To'xtatish") + "</button></div>";
+    }).join("");
+  }
+
+  function renderQuick() {
+    $("quick").hidden = !S.quick.length;
+    $("quick").innerHTML = S.quick.map((q) => '<button type="button" class="chipbtn" data-q="' + q.id + '">' + esc(q.note || q.cat) + " <b class=\"num\">" + money(q.amount, q.cur) + "</b></button>").join("");
+    $("quickList").innerHTML = S.quick.length
+      ? S.quick.map((q) => '<div class="kv"><span>' + esc(q.note || q.cat) + " · " + money(q.amount, q.cur) + '</span><b><button type="button" class="del" data-qdel="' + q.id + '">O\'chirish</button></b></div>').join("")
+      : '<p>Hali tez tugma yo\'q. Amal qo\'shayotganda "Tez tugma sifatida saqlash"ni belgilang.</p>';
+  }
+
+  /* ---------- Qarzlar va kreditlar ---------- */
+  const sumPaid = (d) => (d.payments || []).reduce((s, p) => s + p.amount, 0);
+  const remainingOf = (d) => Math.max(d.amount - sumPaid(d), 0);
+  const isDone = (d) => d.kind === "debt" && remainingOf(d) <= 0;
+
+  function loanDue(d) {
+    const from = parseISO(d.from);
+    let y = from.getFullYear(), m = from.getMonth();
+    const end = d.end ? parseISO(d.end) : null;
+    for (let i = 0; i < 1200; i++) {
+      const dim = new Date(y, m + 1, 0).getDate();
+      const due = new Date(y, m, Math.min(d.day, dim));
+      if (end && due > end) return null;
+      if (due >= from && d.paid.indexOf(y + "-" + pad(m + 1)) === -1) return due;
+      m++; if (m > 11) { m = 0; y++; }
+    }
+    return null;
+  }
+  // Tugash sanasi bor kredit uchun jami, to'langan va qolgan oylar
+  function loanSched(d) {
+    if (!d.end) return null;
+    const start = parseISO(d.start), end = parseISO(d.end), from = parseISO(d.from);
+    let y = start.getFullYear(), m = start.getMonth(), total = 0, before = 0;
+    for (let i = 0; i < 1200; i++) {
+      const dim = new Date(y, m + 1, 0).getDate();
+      const due = new Date(y, m, Math.min(d.day, dim));
+      if (due > end) break;
+      if (due >= start) { total++; if (due < from) before++; }
+      m++; if (m > 11) { m = 0; y++; }
+    }
+    if (!total) return null;
+    const paid = Math.min(total, before + d.paid.length);
+    return { total: total, paid: paid, remaining: total - paid };
+  }
+
+  function entries() {
+    const t = today0();
+    return S.debts.map((d) => {
+      const due = d.kind === "loan" ? loanDue(d) : (isDone(d) ? null : parseISO(d.due));
+      return { d: d, due: due, diff: due ? dayDiff(due, t) : null };
+    }).sort((a, b) => (a.due && b.due ? a.due - b.due : a.due ? -1 : b.due ? 1 : 0));
+  }
+  const when = (diff) => (diff < 0 ? Math.abs(diff) + " kun kechikdi" : diff === 0 ? "Bugun" : diff === 1 ? "Ertaga" : diff + " kun qoldi");
+  const chipClass = (diff) => (diff < 0 ? "late" : diff <= 7 ? "soon" : "ok");
+  const role = (d) => (d.kind === "loan" ? "Kredit to'lovi" : d.dir === "owe" ? "Qarzni qaytarish" : "Sizga qaytarishi kerak");
+
+  function abtn(act, id, label, armLabel, extra) {
+    const on = isArmed(id + ":" + act);
+    return '<button type="button" class="dbtn ' + (extra || "") + (on ? " arm" : "") + '" data-act="' + act + '" data-id="' + id + '">' + (on ? armLabel : label) + "</button>";
+  }
+
+  function renderReminders() {
+    const rows = [];
+    entries().filter((e) => e.due && e.diff <= 7).forEach((e) => {
+      const d = e.d, amt = d.kind === "loan" ? d.amount : remainingOf(d);
+      rows.push('<div class="rem"><div class="mid"><b>' + esc(d.name) + "</b><small>" + role(d) + " · " + dlabel(e.due, false) + '</small></div><span class="amt">' + money(amt, d.cur) + '</span><span class="chip ' + chipClass(e.diff) + '">' + when(e.diff) + "</span></div>");
+    });
+    const nowKey = iso(today0()).slice(0, 7), cur = monthItems(nowKey), spent = {};
+    cur.filter((x) => x.type === "exp").forEach((x) => { spent[x.cat] = (spent[x.cat] || 0) + toUZS(x.amount, x.cur); });
+    Object.keys(S.limits).forEach((k) => {
+      const p = Math.round((spent[k] || 0) / S.limits[k] * 100);
+      if (p >= 80) rows.push('<div class="rem"><div class="mid"><b>' + esc(k) + "</b><small>Shu oydagi limit: " + fmt(spent[k] || 0) + " / " + fmt(S.limits[k]) + '</small></div><span class="chip ' + (p > 100 ? "late" : "soon") + '">' + (p > 100 ? "Limit oshdi" : p + "%") + "</span></div>");
+    });
+    const days = Math.floor((Date.now() - (+lsGet(BACKUP_KEY) || Date.now())) / 864e5);
+    if (days >= 30 && hasData(S) && !syncOn) {
+      rows.push('<div class="rem"><div class="mid"><b>Zaxira nusxa</b><small>Oxirgi nusxadan beri ' + days + ' kun o\'tdi</small></div><button type="button" class="dbtn pay" data-rem="backup">Nusxa olish</button></div>');
+    }
+    $("remPanel").hidden = !rows.length;
+    $("remList").innerHTML = rows.join("");
+  }
+
+  function renderDebts() {
+    const es = entries();
+    let owe = 0, owed = 0, monthly = 0, left = 0;
+    es.forEach((e) => {
+      const d = e.d;
+      if (d.kind === "loan") {
+        if (e.due) { monthly += toUZS(d.amount, d.cur); const sc = loanSched(d); if (sc) left += toUZS(sc.remaining * d.amount, d.cur); }
+      } else if (d.dir === "owe") owe += toUZS(remainingOf(d), d.cur);
+      else owed += toUZS(remainingOf(d), d.cur);
+    });
+    $("dOwe").textContent = fmt(owe); $("dOwed").textContent = fmt(owed);
+    $("dMonthly").textContent = fmt(monthly); $("dLoanLeft").textContent = left ? fmt(left) : "—";
+
+    if (!es.length) { $("dlist").innerHTML = '<div class="empty">Hali qarz yoki kredit kiritilmagan. "Qo\'shish" tugmasini bosing.</div>'; return; }
+    $("dlist").innerHTML = es.map((e) => {
+      const d = e.d, loan = d.kind === "loan";
+      let chip = e.due
+        ? '<span class="chip ' + chipClass(e.diff) + '">' + (loan ? dlabel(e.due) + " · " : "") + when(e.diff) + "</span>"
+        : '<span class="chip ok">' + (loan ? "Yopilgan" : "Qaytarilgan") + "</span>";
+      let detail, amtHtml, extra = "", acts = "";
+      if (loan) {
+        const sc = loanSched(d);
+        detail = "Har oy " + d.day + "-kuni" + (d.end ? " · " + dlabel(parseISO(d.end)) + "gacha" : "");
+        amtHtml = '<span class="amt exp">' + money(d.amount, d.cur) + "/oy</span>";
+        if (sc) {
+          const pct = Math.round(sc.paid / sc.total * 100), totalPay = sc.total * d.amount;
+          extra = '<div class="progress"><i style="width:' + pct + '%"></i></div>' +
+            '<div class="kv"><span>To\'langan</span><b>' + sc.paid + " / " + sc.total + " oy (" + pct + "%)</b></div>" +
+            '<div class="kv"><span>Qolgan</span><b>' + sc.remaining + " oy · " + money(sc.remaining * d.amount, d.cur) + "</b></div>" +
+            '<div class="kv"><span>Jami to\'lov</span><b>' + money(totalPay, d.cur) + "</b></div>" +
+            (d.principal ? '<div class="kv"><span>Ustama</span><b>' + (totalPay >= d.principal ? money(totalPay - d.principal, d.cur) : "—") + "</b></div>" : "");
+        }
+        if (e.due) acts += abtn("pay", d.id, "To'landi", "Tasdiqlash", "pay");
+      } else {
+        const rem = remainingOf(d), paid = sumPaid(d), pct = Math.min(100, Math.round(paid / d.amount * 100));
+        detail = "Qaytarish: " + dlabel(parseISO(d.due));
+        amtHtml = '<span class="amt ' + (d.dir === "owe" ? "exp" : "inc") + '">' + (isDone(d) ? money(d.amount, d.cur) : "Qoldi " + money(rem, d.cur)) + "</span>";
+        if (paid > 0) extra = '<div class="progress"><i style="width:' + pct + '%"></i></div><div class="kv"><span>To\'langan</span><b>' + money(paid, d.cur) + " / " + money(d.amount, d.cur) + " (" + pct + "%)</b></div>";
+        if (!isDone(d)) {
+          acts += '<button type="button" class="dbtn pay" data-act="payopen" data-id="' + d.id + '">To\'lov kiritish</button>';
+          acts += abtn("close", d.id, "To'liq yopish", "Tasdiqlash", "");
+        }
+        if (d.payments.length) acts += '<button type="button" class="dbtn" data-act="undo" data-id="' + d.id + '" title="Oxirgi to\'lovni bekor qilish">' + (isDone(d) ? "Qayta ochish" : "Bekor qilish") + "</button>";
+        if (payOpen === d.id) extra += '<div class="payrow"><input class="money-in" id="payAmt" inputmode="numeric" placeholder="Summa" aria-label="To\'lov summasi"><button type="button" class="dbtn pay" data-act="paysave" data-id="' + d.id + '">Saqlash</button><button type="button" class="dbtn" data-act="paycancel" data-id="' + d.id + '">Yopish</button></div>';
+      }
+      if (d.note) detail += " · " + d.note;
+      acts += abtn("del", d.id, "O'chirish", "Aniq o'chirilsinmi?", "");
+      return '<div class="debt s-' + (!e.due ? "done" : e.diff < 0 ? "late" : e.diff <= 7 ? "soon" : "ok") + '"><div class="dtop"><div class="mid"><b>' + esc(d.name) + "</b><small>" + esc(detail) + "</small></div>" + amtHtml + "</div>" + extra +
+        '<div class="dbot">' + chip + '<span class="grow"></span>' + acts + "</div></div>";
+    }).join("");
+  }
+
+  /* ---------- Maqsadlar ---------- */
+  function renderGoals() {
+    if (!S.goals.length) { $("glist").innerHTML = '<div class="empty">Hali maqsad yo\'q. "Qo\'shish" tugmasini bosing.</div>'; return; }
+    $("glist").innerHTML = S.goals.map((g) => {
+      const pct = Math.min(100, Math.round(g.saved / g.target * 100)), done = g.saved >= g.target, on = isArmed("g:" + g.id);
+      return '<div class="debt"><div class="dtop"><div class="mid"><b>' + esc(g.name) + "</b><small>" + fmt(g.saved) + " / " + fmt(g.target) + " so'm · " + pct + '%</small></div>' +
+        '<span class="chip ' + (done ? "soon" : "ok") + '">' + (done ? "Erishildi" : fmt(g.target - g.saved) + " qoldi") + "</span></div>" +
+        '<div class="progress"><i style="width:' + pct + '%"></i></div>' +
+        '<div class="dbot"><input class="money-in" id="g_' + g.id + '" inputmode="numeric" placeholder="Summa" aria-label="Summa">' +
+        '<button type="button" class="dbtn pay" data-gact="add" data-id="' + g.id + '">Qo\'shish</button>' +
+        '<button type="button" class="dbtn" data-gact="sub" data-id="' + g.id + '">Ayirish</button><span class="grow"></span>' +
+        '<button type="button" class="dbtn' + (on ? " arm" : "") + '" data-gact="del" data-id="' + g.id + '">' + (on ? "Aniq o'chirilsinmi?" : "O'chirish") + "</button></div></div>";
+    }).join("");
+  }
+
+  function renderSettings() {
+    $("rate").value = S.rate ? fmt(S.rate) : "";
+    $("themeSel").value = lsGet(THEME_KEY) || "";
+  }
+  const TABS = ["home", "ledger", "debts", "goals", "settings"];
+  function updateChrome() {
+    const open = !$("secret").hidden;
+    const withMonth = tab === "home" || tab === "ledger";
+    $("nav").hidden = !open;
+    $("monthbar").hidden = !withMonth;
+    $("fab").hidden = !open || !withMonth || !$("form").hidden;
+    TABS.forEach((t) => { $("tab-" + t).hidden = t !== tab; });
+    Array.prototype.forEach.call($("nav").querySelectorAll("button[data-tab]"), (b) => {
+      if (b.getAttribute("data-tab") === tab) b.setAttribute("aria-current", "page"); else b.removeAttribute("aria-current");
+    });
+  }
+  function showTab(name) {
+    if (TABS.indexOf(name) === -1) return;
+    tab = name; disarm(); payOpen = null;
+    updateChrome();
+    try { window.scrollTo(0, 0); } catch (e) {}
+    if (name === "debts") renderDebts();
+    if (name === "ledger") renderLedger();
+  }
+  function renderBadges() {
+    const n = entries().filter((e) => e.due && e.diff <= 7).length;
+    $("badgeDebts").hidden = !n; $("badgeDebts").textContent = n;
+    $("badgeSet").hidden = !choicePending;
+  }
+  $("nav").addEventListener("click", (e) => {
+    const b = e.target.closest ? e.target.closest("button[data-tab]") : null;
+    if (b) showTab(b.getAttribute("data-tab"));
+  });
+  $("recentAll").addEventListener("click", () => showTab("ledger"));
+
+  function renderAll() {
+    renderBalance(); renderReminders(); renderQuick(); renderChart(); renderCats(); renderRecent();
+    renderLedger(); renderRecurring(); renderDebts(); renderGoals(); renderSettings(); renderBadges();
+  }
+
+  /* ---------- Amal qo'shish ---------- */
+  function fillCats() { $("cat").innerHTML = CATS[type].map((c) => '<option value="' + esc(c) + '">' + esc(c) + "</option>").join(""); }
+  function setType(t) {
+    type = t;
+    $("tExp").setAttribute("aria-pressed", t === "exp");
+    $("tInc").setAttribute("aria-pressed", t === "inc");
+    fillCats();
+  }
+  function openForm() {
+    const now = new Date();
+    const same = now.getFullYear() === view.getFullYear() && now.getMonth() === view.getMonth();
+    $("date").value = same ? iso(now) : iso(view);
+    $("err").textContent = "";
+    $("form").hidden = false; $("scrim").hidden = false; $("fab").hidden = true;
+    $("amount").focus();
+  }
+  function closeForm() {
+    $("form").hidden = true; $("scrim").hidden = true; updateChrome();
+    $("amount").value = ""; $("note").value = "";
+    $("recur").checked = false; $("quickSave").checked = false;
+  }
+  $("tExp").onclick = () => setType("exp");
+  $("tInc").onclick = () => setType("inc");
+  $("fab").onclick = openForm;
+  $("scrim").onclick = closeForm;
+  document.addEventListener("keydown", (e) => { if (e.key === "Escape" && !$("form").hidden) closeForm(); });
+  $("cancel").onclick = closeForm;
+  $("prev").onclick = () => { view = new Date(view.getFullYear(), view.getMonth() - 1, 1); renderAll(); };
+  $("next").onclick = () => { view = new Date(view.getFullYear(), view.getMonth() + 1, 1); renderAll(); };
+
+  document.addEventListener("input", (e) => {
+    const t = e.target;
+    if (t && t.classList && t.classList.contains("money-in")) {
+      const digits = t.value.replace(/\D/g, "").slice(0, 12);
+      t.value = digits ? fmt(+digits) : "";
+    }
+  });
+
+  $("form").addEventListener("submit", (e) => {
+    e.preventDefault();
+    const amount = parseMoney($("amount").value), date = $("date").value;
+    if (!amount) { $("err").textContent = "Summani kiriting."; $("amount").focus(); return; }
+    if (!date) { $("err").textContent = "Sanani tanlang."; return; }
+    const x = { id: uid(), type: type, amount: amount, cur: $("cur").value, cat: $("cat").value, note: $("note").value.trim(), date: date };
+    if ($("recur").checked) {
+      const r = { id: uid(), type: x.type, amount: x.amount, cur: x.cur, cat: x.cat, note: x.note, day: parseISO(date).getDate(), last: date.slice(0, 7) };
+      S.recurring.push(r); x.rid = r.id;
+    }
+    if ($("quickSave").checked && S.quick.length < 8) S.quick.push({ id: uid(), type: x.type, amount: x.amount, cur: x.cur, cat: x.cat, note: x.note });
+    S.tx.push(x);
+    save();
+    view = new Date(parseISO(date).getFullYear(), parseISO(date).getMonth(), 1);
+    closeForm();
+    runRecurring();
+    renderAll();
+  });
+
+  $("quick").addEventListener("click", (e) => {
+    const b = e.target.closest ? e.target.closest("button[data-q]") : null;
+    if (!b) return;
+    const q = S.quick.filter((z) => z.id === b.getAttribute("data-q"))[0];
+    if (!q) return;
+    const x = { id: uid(), type: q.type, amount: q.amount, cur: q.cur, cat: q.cat, note: q.note, date: iso(today0()) };
+    S.tx.push(x); save();
+    const n = today0(); view = new Date(n.getFullYear(), n.getMonth(), 1);
+    renderAll();
+    toast("Qo'shildi: " + (q.note || q.cat), () => { S.tx = S.tx.filter((z) => z.id !== x.id); save(); renderAll(); });
+  });
+
+  $("list").addEventListener("click", (e) => {
+    const id = e.target && e.target.getAttribute && e.target.getAttribute("data-id");
+    if (!id) return;
+    if (!isArmed("tx:" + id)) { arm("tx:" + id, renderLedger); return; }
+    disarm();
+    S.tx = S.tx.filter((x) => x.id !== id); save(); renderAll();
+  });
+  ["q", "fType", "fScope"].forEach((id) => { $(id).addEventListener("input", renderLedger); $(id).addEventListener("change", renderLedger); });
+
+  $("recList").addEventListener("click", (e) => {
+    const id = e.target && e.target.getAttribute && e.target.getAttribute("data-rec");
+    if (!id) return;
+    if (!isArmed("rec:" + id)) { arm("rec:" + id, renderRecurring); return; }
+    disarm();
+    S.recurring = S.recurring.filter((r) => r.id !== id); save(); renderAll();
+  });
+
+  $("quickList").addEventListener("click", (e) => {
+    const id = e.target && e.target.getAttribute && e.target.getAttribute("data-qdel");
+    if (!id) return;
+    S.quick = S.quick.filter((q) => q.id !== id); save(); renderQuick();
+  });
+
+  /* ---------- Limitlar ---------- */
+  $("limOpen").onclick = () => { $("limForm").hidden = false; $("limOpen").hidden = true; $("limErr").textContent = ""; };
+  $("limClose").onclick = () => { $("limForm").hidden = true; $("limOpen").hidden = false; $("limAmt").value = ""; };
+  $("limForm").addEventListener("submit", (e) => {
+    e.preventDefault();
+    const a = parseMoney($("limAmt").value);
+    if (!a) { $("limErr").textContent = "Limit summasini kiriting."; return; }
+    S.limits[$("limCat").value] = a; save();
+    $("limAmt").value = ""; $("limErr").textContent = "";
+    renderAll();
+  });
+  $("limList").addEventListener("click", (e) => {
+    const k = e.target && e.target.getAttribute && e.target.getAttribute("data-lim");
+    if (!k) return;
+    delete S.limits[k]; save(); renderAll();
+  });
+
+  /* ---------- Qarz va kredit amallari ---------- */
+  let dk = "owe";
+  const DK = { owe: ["Kimdan olindi", "Qarz summasi"], owed: ["Kimga berildi", "Qarz summasi"], loan: ["Kredit nomi", "Oylik to'lov"] };
+  function setDK(k) {
+    dk = k;
+    ["owe", "owed", "loan"].forEach((x) => $("k_" + x).setAttribute("aria-pressed", x === k));
+    $("lblName").textContent = DK[k][0]; $("lblAmt").textContent = DK[k][1];
+    const loan = k === "loan";
+    $("fDue").hidden = loan;
+    ["fDay", "fEnd", "fStart", "fPrincipal", "loanHint"].forEach((id) => { $(id).hidden = !loan; });
+  }
+  ["owe", "owed", "loan"].forEach((k) => { $("k_" + k).onclick = () => setDK(k); });
+  function closeDForm() {
+    $("dform").hidden = true; $("dOpen").hidden = false;
+    ["dname", "damount", "ddue", "dday", "dend", "dstart", "dprincipal", "dnote"].forEach((id) => { $(id).value = ""; });
+    $("derr").textContent = "";
+  }
+  $("dOpen").onclick = () => { $("dform").hidden = false; $("dOpen").hidden = true; setDK(dk); $("dname").focus(); };
+  $("dCancel").onclick = closeDForm;
+
+  $("dform").addEventListener("submit", (e) => {
+    e.preventDefault();
+    const name = $("dname").value.trim(), amount = parseMoney($("damount").value), day = parseInt($("dday").value, 10);
+    const end = $("dend").value, start = $("dstart").value;
+    let err = "";
+    if (!name) err = "Nomini yozing.";
+    else if (!amount) err = "Summani kiriting.";
+    else if (dk !== "loan" && !$("ddue").value) err = "Qaytarish sanasini tanlang.";
+    else if (dk === "loan" && !(day >= 1 && day <= 31)) err = "To'lov kunini 1 dan 31 gacha kiriting.";
+    else if (dk === "loan" && end && start && end < start) err = "Tugash sanasi boshlanish sanasidan oldin bo'lmasin.";
+    if (err) { $("derr").textContent = err; return; }
+    const item = { id: uid(), kind: dk === "loan" ? "loan" : "debt", name: name, amount: amount, cur: $("dcur").value, note: $("dnote").value.trim() };
+    if (dk === "loan") {
+      item.day = day; item.end = end; item.paid = []; item.from = iso(today0());
+      item.start = start || item.from; item.principal = parseMoney($("dprincipal").value);
+    } else { item.dir = dk; item.due = $("ddue").value; item.payments = []; }
+    S.debts.push(cleanDebt(item)); save();
+    closeDForm(); renderAll();
+  });
+
+  $("dlist").addEventListener("click", (e) => {
+    const b = e.target.closest ? e.target.closest("button[data-act]") : null;
+    if (!b) return;
+    const id = b.getAttribute("data-id"), act = b.getAttribute("data-act");
+    const d = S.debts.filter((x) => x.id === id)[0];
+    if (!d) return;
+    const redo = () => { renderDebts(); };
+    if (act === "payopen") { payOpen = id; renderDebts(); const f = $("payAmt"); if (f) f.focus(); return; }
+    if (act === "paycancel") { payOpen = null; renderDebts(); return; }
+    if (act === "paysave") {
+      const a = parseMoney($("payAmt").value);
+      if (!a) { toast("To'lov summasini kiriting."); return; }
+      d.payments.push({ id: uid(), amount: Math.min(a, remainingOf(d)), date: iso(today0()) });
+      payOpen = null; save(); renderAll(); return;
+    }
+    if (act === "undo") { d.payments.pop(); save(); renderAll(); return; }
+    const key = id + ":" + act;
+    if (!isArmed(key)) { arm(key, redo); return; }
+    disarm();
+    if (act === "del") S.debts = S.debts.filter((x) => x.id !== id);
+    else if (act === "close") d.payments.push({ id: uid(), amount: remainingOf(d), date: iso(today0()) });
+    else if (act === "pay") { const due = loanDue(d); if (due) d.paid.push(due.getFullYear() + "-" + pad(due.getMonth() + 1)); }
+    save(); renderAll();
+  });
+
+  /* ---------- Maqsadlar amallari ---------- */
+  $("gOpen").onclick = () => { $("gform").hidden = false; $("gOpen").hidden = true; $("gname").focus(); };
+  function closeGForm() { $("gform").hidden = true; $("gOpen").hidden = false; $("gname").value = ""; $("gtarget").value = ""; $("gerr").textContent = ""; }
+  $("gCancel").onclick = closeGForm;
+  $("gform").addEventListener("submit", (e) => {
+    e.preventDefault();
+    const name = $("gname").value.trim(), target = parseMoney($("gtarget").value);
+    if (!name) { $("gerr").textContent = "Maqsad nomini yozing."; return; }
+    if (!target) { $("gerr").textContent = "Kerakli summani kiriting."; return; }
+    S.goals.push({ id: uid(), name: name, target: target, saved: 0 }); save();
+    closeGForm(); renderGoals();
+  });
+  $("glist").addEventListener("click", (e) => {
+    const b = e.target.closest ? e.target.closest("button[data-gact]") : null;
+    if (!b) return;
+    const id = b.getAttribute("data-id"), act = b.getAttribute("data-gact");
+    const g = S.goals.filter((x) => x.id === id)[0];
+    if (!g) return;
+    if (act === "del") {
+      if (!isArmed("g:" + id)) { arm("g:" + id, renderGoals); return; }
+      disarm(); S.goals = S.goals.filter((x) => x.id !== id); save(); renderGoals(); return;
+    }
+    const a = parseMoney($("g_" + id).value);
+    if (!a) { toast("Summani kiriting."); return; }
+    g.saved = Math.max(0, g.saved + (act === "add" ? a : -a));
+    save(); renderGoals();
+  });
+
+  /* ---------- Sozlamalar ---------- */
+  $("rate").addEventListener("change", () => { S.rate = parseMoney($("rate").value); save(); renderAll(); });
+  function applyTheme(v) { if (v) document.documentElement.setAttribute("data-theme", v); else document.documentElement.removeAttribute("data-theme"); }
+  $("themeSel").addEventListener("change", () => { const v = $("themeSel").value; if (v) lsSet(THEME_KEY, v); else lsDel(THEME_KEY); applyTheme(v); });
+  applyTheme(lsGet(THEME_KEY) || "");
+
+  /* ---------- Zaxira nusxa ---------- */
+  const say = (msg) => { $("status").textContent = msg; };
+  $("copyBackup").onclick = () => {
+    const text = JSON.stringify(stateForSync());
+    $("backup").value = text;
+    lsSet(BACKUP_KEY, String(Date.now()));
+    const done = () => say("Nusxa olindi.");
+    const fallback = () => { $("backup").select(); say("Matn belgilandi. Nusxa olish uchun qurilmangizning nusxa buyrug'idan foydalaning."); };
+    try { navigator.clipboard.writeText(text).then(done, fallback); } catch (err) { fallback(); }
+    renderReminders();
+  };
+  $("restore").onclick = () => {
+    try {
+      const parsed = JSON.parse($("backup").value);
+      const obj = Array.isArray(parsed) ? { tx: parsed } : parsed;
+      if (!obj || typeof obj !== "object") throw new Error("format");
+      const checks = [["tx", validTx], ["debts", validDebt], ["goals", validGoal], ["recurring", validRec], ["quick", validQuick]];
+      checks.forEach((c) => { if (c[0] in obj && !(Array.isArray(obj[c[0]]) && obj[c[0]].every(c[1]))) throw new Error("format"); });
+      if (!checks.some((c) => c[0] in obj) && !("limits" in obj)) throw new Error("format");
+      const n = normalize(obj);
+      ["tx", "debts", "goals", "recurring", "limits", "quick", "rate"].forEach((k) => { if (k in obj) S[k] = n[k]; });
+      save(); runRecurring(); renderAll();
+      say("Tiklandi: " + S.tx.length + " ta amal, " + S.debts.length + " ta qarz/kredit.");
+    } catch (err) { say("Matn noto'g'ri. Zaxira nusxadan olingan matnni to'liq qo'ying."); }
+  };
+  $("remList").addEventListener("click", (e) => {
+    const b = e.target.closest ? e.target.closest("button[data-rem]") : null;
+    if (!b) return;
+    showTab("settings");
+    $("copyBackup").onclick();
+  });
+
+  /* ---------- Sinxronlash ---------- */
+  let syncOn = lsGet(SYNC_KEY) === "1", syncRef = null, unsub = null, reconciled = false, choicePending = null,
+      pushing = false, pushAgain = false, pushTimer = null, lastPushed = 0;
+  const setSync = (t) => { $("syncStatus").textContent = t; };
+  function renderSyncUI() {
+    $("syncToggle").textContent = syncOn ? "Sinxronlashni o'chirish" : "Sinxronlashni yoqish";
+    $("syncWipe").hidden = !syncOn;
+    if (!syncOn) { $("syncChoice").hidden = true; setSync("O'chirilgan. Ma'lumotlar faqat shu qurilmada."); }
+  }
+  function applyRemote(rs) {
+    S = normalize(Object.assign({}, rs.s, { u: rs.u }));
+    lsSet(SKEY, JSON.stringify(S));
+    lastPushed = rs.u;
+    runRecurring();
+    renderAll();
+    setSync("Yangilandi: " + hhmm());
+  }
+  async function pushNow() {
+    if (!syncRef) return;
+    if (pushing) { pushAgain = true; return; }
+    const body = { u: S.u, s: stateForSync() };
+    if (JSON.stringify(body).length > 250000) { setSync("Ma'lumot hajmi katta, sinxronlash to'xtatildi. Zaxira nusxa oling."); return; }
+    pushing = true;
+    try { await syncRef.set(body); lastPushed = body.u; setSync("Saqlandi: " + hhmm()); }
+    catch (e) { setSync("Serverga saqlab bo'lmadi (" + ((e && e.code) || "xato") + "). Ma'lumotlar shu qurilmada saqlangan."); }
+    pushing = false;
+    if (pushAgain) { pushAgain = false; if (S.u > lastPushed) pushNow(); }
+  }
+  function schedulePush() {
+    if (!syncOn || !syncRef || !reconciled || choicePending) return;
+    clearTimeout(pushTimer);
+    pushTimer = setTimeout(pushNow, 1000);
+  }
+  function onRemote(snap) {
+    if (snap.metadata.fromCache && !reconciled) return;
+    const d = snap.exists ? snap.data() : null;
+    const rs = d && d.s && typeof d.u === "number" ? d : null;
+    if (!reconciled) {
+      reconciled = true;
+      const linked = lsGet(LINK_KEY) === "1";
+      const done = () => { lsSet(LINK_KEY, "1"); };
+      if (!rs) { done(); if (hasData(S)) { S.u = S.u || Date.now(); pushNow(); } else setSync("Yoqilgan. Serverda hali ma'lumot yo'q."); return; }
+      if (!hasData(S)) { done(); applyRemote(rs); return; }
+      const same = JSON.stringify(normalize(Object.assign({}, rs.s, { u: 0 }))) === JSON.stringify(normalize(Object.assign({}, stateForSync(), { u: 0 })));
+      if (same) { done(); setSync("Yoqilgan. Ma'lumotlar bir xil."); return; }
+      if (linked) {
+        done();
+        if (rs.u > S.u) applyRemote(rs); else if (rs.u < S.u) pushNow(); else setSync("Yoqilgan.");
+        return;
+      }
+      choicePending = rs; renderBadges();
+      $("syncChoice").hidden = false;
+      showTab("settings");
+      setSync("Tanlov kerak.");
+      return;
+    }
+    if (rs && rs.u > S.u) applyRemote(rs);
+  }
+  async function startSync() {
+    if (unsub || !syncOn) return;
+    setSync("Ulanmoqda...");
+    const cl = window.claude;
+    let db = null, user = null;
+    try { if (cl && cl.use) { db = await cl.use("db"); user = await cl.use("user"); } } catch (e) {}
+    if (!db || !user) { setSync("Sinxronlash bu ko'rinishda mavjud emas."); return; }
+    let id = null;
+    try { id = await user.id(); } catch (e) {}
+    if (!id) { setSync("Sinxronlash uchun hisobingizga kirgan bo'lishingiz kerak."); return; }
+    try { syncRef = db.doc("data/users/" + id + "/main"); } catch (e) { setSync("Sinxronlash sozlanmadi."); return; }
+    const timer = setTimeout(() => setSync("Serverga hali ulanib bo'lmadi. Ma'lumotlar shu qurilmada saqlanmoqda."), 10000);
+    reconciled = false;
+    unsub = syncRef.onSnapshot((snap) => { if (!snap.metadata.fromCache) clearTimeout(timer); onRemote(snap); },
+      (err) => { clearTimeout(timer); unsub = null; setSync("Sinxronlash to'xtadi (" + ((err && err.code) || "xato") + ")."); });
+  }
+  function stopSync() {
+    if (unsub) { try { unsub(); } catch (e) {} }
+    unsub = null; syncRef = null; reconciled = false; choicePending = null; clearTimeout(pushTimer);
+  }
+  $("syncToggle").onclick = () => {
+    syncOn = !syncOn;
+    lsSet(SYNC_KEY, syncOn ? "1" : "0");
+    if (syncOn) { renderSyncUI(); startSync(); } else { stopSync(); renderSyncUI(); }
+    renderReminders();
+  };
+  $("syncTake").onclick = () => { const rs = choicePending; choicePending = null; $("syncChoice").hidden = true; renderBadges(); lsSet(LINK_KEY, "1"); if (rs) applyRemote(rs); };
+  $("syncSend").onclick = () => { choicePending = null; $("syncChoice").hidden = true; renderBadges(); lsSet(LINK_KEY, "1"); S.u = Date.now(); lsSet(SKEY, JSON.stringify(S)); pushNow(); };
+  let wipeArmed = false;
+  $("syncWipe").onclick = async () => {
+    if (!wipeArmed) { wipeArmed = true; $("syncWipe").textContent = "Aniq o'chirilsinmi? Sinxronlash ham o'chadi."; setTimeout(() => { wipeArmed = false; $("syncWipe").textContent = "Serverdagi nusxani o'chirish"; }, 4000); return; }
+    wipeArmed = false; $("syncWipe").textContent = "Serverdagi nusxani o'chirish";
+    const ref = syncRef;
+    try { if (ref) await ref.delete(); } catch (e) { setSync("Serverdagi nusxani o'chirib bo'lmadi."); return; }
+    stopSync(); syncOn = false; lsSet(SYNC_KEY, "0"); lsDel(LINK_KEY);
+    renderSyncUI(); setSync("Serverdagi nusxa o'chirildi. Ma'lumotlar shu qurilmada qoldi.");
+    renderReminders();
+  };
+
+  /* ---------- Yashirish va parol ---------- */
+  let lockInfo = null;
+  try { lockInfo = JSON.parse(lsGet(LOCK_KEY)); } catch (e) {}
+  if (!lockInfo || !lockInfo.hash) lockInfo = null;
+
+  function hashPw(pw, salt) {
+    const s = salt + ":" + pw;
+    if (window.crypto && crypto.subtle && window.TextEncoder) {
+      return crypto.subtle.digest("SHA-256", new TextEncoder().encode(s)).then((buf) =>
+        Array.prototype.map.call(new Uint8Array(buf), (b) => ("0" + b.toString(16)).slice(-2)).join(""));
+    }
+    let h = 5381;
+    for (let i = 0; i < s.length; i++) h = ((h << 5) + h + s.charCodeAt(i)) | 0;
+    return Promise.resolve("f" + (h >>> 0).toString(16));
+  }
+
+  let idleT = null, forgotArmed = false;
+  function bump() { clearTimeout(idleT); if (!$("secret").hidden) idleT = setTimeout(() => setLocked(true), 120000); }
+  function closeAllForms() { closeForm(); closeDForm(); closeGForm(); $("limForm").hidden = true; $("limOpen").hidden = false; payOpen = null; $("toast").hidden = true; }
+  function setLocked(on) {
+    $("secret").hidden = on;
+    $("lockCard").hidden = !on;
+    $("lockBtn").hidden = on;
+    clearTimeout(idleT);
+    updateChrome();
+    if (on) {
+      closeAllForms(); showTab("home");
+      $("lockPw").value = ""; $("lockErr").textContent = "";
+      $("pwRow").hidden = !lockInfo;
+      $("forgot").hidden = !lockInfo;
+      $("forgot").textContent = "Parolni unutdim";
+      forgotArmed = false;
+      $("unlockBtn").textContent = lockInfo ? "Ochish" : "Ko'rsatish";
+    } else { bump(); }
+  }
+  $("unlockForm").addEventListener("submit", (e) => {
+    e.preventDefault();
+    if (!lockInfo) { setLocked(false); return; }
+    hashPw($("lockPw").value, lockInfo.salt).then((h) => {
+      if (h === lockInfo.hash) setLocked(false);
+      else { $("lockErr").textContent = "Parol noto'g'ri."; $("lockPw").value = ""; $("lockPw").focus(); }
+    });
+  });
+  $("lockBtn").onclick = () => setLocked(true);
+  $("forgot").onclick = () => {
+    if (!forgotArmed) { forgotArmed = true; $("forgot").textContent = "Parol va barcha ma'lumotlar o'chadi. Davom etilsinmi?"; return; }
+    S = emptyState(); save();
+    lsDel(LOCK_KEY); lockInfo = null;
+    renderAll(); setLocked(true);
+  };
+  $("savePw").onclick = () => {
+    const pw = $("newPw").value;
+    if (pw.length < 4) { $("pwStatus").textContent = "Parol kamida 4 belgidan iborat bo'lsin."; return; }
+    const salt = uid();
+    hashPw(pw, salt).then((h) => {
+      lockInfo = { salt: salt, hash: h };
+      lsSet(LOCK_KEY, JSON.stringify(lockInfo));
+      $("newPw").value = "";
+      $("pwStatus").textContent = "Parol saqlandi. Keyingi safar ma'lumotlarni ochish uchun so'raladi.";
+    });
+  };
+  $("removePw").onclick = () => {
+    lockInfo = null; lsDel(LOCK_KEY);
+    $("pwStatus").textContent = "Parol olib tashlandi. Endi ma'lumotlar tugma bilan ochiladi.";
+  };
+  document.addEventListener("visibilitychange", () => { if (document.hidden) setLocked(true); });
+  ["pointerdown", "keydown", "scroll"].forEach((n) => document.addEventListener(n, bump, true));
+
+  /* ---------- Ishga tushirish ---------- */
+  setType("exp");
+  setDK("owe");
+  runRecurring();
+  renderAll();
+  renderSyncUI();
+  setLocked(true);
+  if (syncOn) startSync();
+})();
+</script>
+<script>
+  if ("serviceWorker" in navigator) { window.addEventListener("load", function () { try { navigator.serviceWorker.register("sw.js"); } catch (e) {} }); }
+</script>
+</body>
+</html>
