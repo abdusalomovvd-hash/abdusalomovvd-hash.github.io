@@ -626,7 +626,7 @@
       <section class="panel">
         <h2>Xavfsizlik</h2>
         <div class="body">
-          <p>Sahifa ochilganda ma'lumotlar yashirin turadi. PIN kod qo'ysangiz, ko'rsatish uchun PIN kod so'raladi. Boshqa oynaga o'tsangiz yoki 2 daqiqa tegmasangiz, ma'lumotlar yana yashirinadi.</p>
+          <p>Sahifa ochilganda ma'lumotlar yashirin turadi. PIN kod qo'ysangiz, ko'rsatish uchun PIN kod so'raladi. Tanlangan vaqt ichida sahifani yangilasangiz yoki ilovadan chiqib qaytsangiz, qayta PIN so'ralmaydi. Vaqt o'tsa yoki tegmasangiz, ma'lumotlar yana yashirinadi.</p>
           <div class="field">
             <label for="newPw">Yangi PIN kod (4–6 raqam)</label>
             <input id="newPw" type="password" inputmode="numeric" pattern="[0-9]*" maxlength="6" autocomplete="off">
@@ -634,6 +634,10 @@
           <div class="row">
             <button class="ghost" id="savePw" type="button">PIN kodni saqlash</button>
             <button class="ghost" id="removePw" type="button">PIN kodni olib tashlash</button>
+          </div>
+          <div class="field">
+            <label for="lockDelay">Avtomatik qulflash</label>
+            <select id="lockDelay"><option value="0">Darhol (har safar)</option><option value="1">1 daqiqadan keyin</option><option value="5">5 daqiqadan keyin</option><option value="15">15 daqiqadan keyin</option></select>
           </div>
           <div class="row">
             <button class="ghost" id="bioToggle" type="button" hidden>Barmoq izi bilan ochishni yoqish</button>
@@ -1874,9 +1878,20 @@
   };
 
   let idleT = null, forgotArmed = false;
-  function bump() { clearTimeout(idleT); if (!$("secret").hidden) idleT = setTimeout(() => setLocked(true), 120000); }
+  const DELAY_KEY = "hisobchi_lockdelay_v1", LAST_KEY = "hisobchi_last_active_v1";
+  let lockDelay = (() => { const v = lsGet(DELAY_KEY); return v === null || v === undefined || v === "" ? 1 : Math.max(0, Math.min(60, +v || 0)); })();
+  let lastWrite = 0;
+  function markActive(force) {
+    if ($("secret").hidden) return;
+    const n = Date.now();
+    if (!force && n - lastWrite < 4000) return;
+    lastWrite = n;
+    if (lockDelay > 0) lsSet(LAST_KEY, String(n)); else lsDel(LAST_KEY);
+  }
+  function bump() { clearTimeout(idleT); if (!$("secret").hidden) { markActive(false); idleT = setTimeout(() => setLocked(true), Math.max(lockDelay, 2) * 60000); } }
   function closeAllForms() { closeForm(); closeDForm(); closeGForm(); $("limForm").hidden = true; $("limOpen").hidden = false; payOpen = null; $("toast").hidden = true; }
   function setLocked(on) {
+    if (on) lsDel(LAST_KEY);
     $("secret").hidden = on;
     $("lockCard").hidden = !on;
     $("lockBtn").hidden = on;
@@ -1900,7 +1915,7 @@
       $("forgot").textContent = pad ? "PIN kodni unutdim" : "Parolni unutdim";
       forgotArmed = false;
       $("unlockBtn").textContent = lockInfo ? "Ochish" : "Ko'rsatish";
-    } else { bump(); }
+    } else { markActive(true); bump(); }
   }
   $("unlockForm").addEventListener("submit", (e) => {
     e.preventDefault();
@@ -1938,9 +1953,16 @@
     $("pwStatus").textContent = "PIN kod olib tashlandi. Endi ma'lumotlar tugma bilan ochiladi.";
   };
   document.addEventListener("visibilitychange", () => {
-    if (document.hidden) setLocked(true);
-    else if (lockInfo && bioId && !$("lockCard").hidden) setTimeout(() => bioUnlock(true), 350);
+    if (document.hidden) {
+      if (lockDelay === 0) setLocked(true); else markActive(true);
+    } else if (!$("secret").hidden) {
+      const last = +lsGet(LAST_KEY) || 0;
+      if (lockDelay === 0 || !last || Date.now() - last > lockDelay * 60000) setLocked(true); else bump();
+    } else if (lockInfo && bioId && !$("lockCard").hidden) setTimeout(() => bioUnlock(true), 350);
   });
+  window.addEventListener("pagehide", () => { if (!$("secret").hidden) markActive(true); });
+  $("lockDelay").value = String(lockDelay);
+  $("lockDelay").addEventListener("change", () => { lockDelay = +$("lockDelay").value || 0; lsSet(DELAY_KEY, String(lockDelay)); if (lockDelay === 0) lsDel(LAST_KEY); else markActive(true); bump(); });
   ["pointerdown", "keydown", "scroll"].forEach((n) => document.addEventListener(n, bump, true));
 
   /* ---------- Ishga tushirish ---------- */
@@ -1949,9 +1971,11 @@
   runRecurring();
   renderAll();
   renderSyncUI();
-  setLocked(true);
+  const lastAct = +lsGet(LAST_KEY) || 0;
+  const resume = lockDelay > 0 && lastAct && Date.now() - lastAct >= 0 && Date.now() - lastAct < lockDelay * 60000;
+  setLocked(!resume);
   renderBioUI();
-  if (lockInfo && bioId) setTimeout(() => bioUnlock(true), 350);
+  if (!resume && lockInfo && bioId) setTimeout(() => bioUnlock(true), 350);
   if (FB_CONFIG || (window.claude && window.claude.use)) $("syncDetails").hidden = false;
   $("acctPanel").hidden = !FB_CONFIG;
   renderAccount();
