@@ -280,6 +280,7 @@ window.HISOBCHI_I18N = {
   "PIN kod olib tashlandi. Endi ma'lumotlar tugma bilan ochiladi.": "PIN-код удалён. Теперь данные открываются кнопкой.",
   "mln": "млн",
   "ming": "тыс.",
+  "Chiqish uchun yana bir marta bosing": "Нажмите ещё раз, чтобы выйти",
   "months": [
    "Январь",
    "Февраль",
@@ -612,6 +613,7 @@ window.HISOBCHI_I18N = {
   "PIN kod olib tashlandi. Endi ma'lumotlar tugma bilan ochiladi.": "PIN removed. Data now opens with a button.",
   "mln": "M",
   "ming": "K",
+  "Chiqish uchun yana bir marta bosing": "Press back again to exit",
   "months": [
    "January",
    "February",
@@ -930,6 +932,7 @@ window.HISOBCHI_I18N = {
   "PIN kod olib tashlandi. Endi ma'lumotlar tugma bilan ochiladi.": "تمت إزالة رمز PIN. تُفتح البيانات الآن بزر.",
   "mln": "مليون",
   "ming": "ألف",
+  "Chiqish uchun yana bir marta bosing": "اضغط مرة أخرى للخروج",
   "months": [
    "يناير",
    "فبراير",
@@ -1248,6 +1251,7 @@ window.HISOBCHI_I18N = {
   "PIN kod olib tashlandi. Endi ma'lumotlar tugma bilan ochiladi.": "PIN kodu kaldırıldı. Artık veriler bir düğmeyle açılır.",
   "mln": "milyon",
   "ming": "bin",
+  "Chiqish uchun yana bir marta bosing": "Çıkmak için tekrar basın",
   "months": [
    "Ocak",
    "Şubat",

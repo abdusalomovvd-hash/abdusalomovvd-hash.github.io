@@ -2266,6 +2266,33 @@
   if (syncOn) startSync(false);
   autoRate();
   document.addEventListener("visibilitychange", () => { if (!document.hidden) autoRate(); });
+
+  /* ---------- Orqaga tugmasi (Android) ---------- */
+  // Tarixda doim bitta "qo'riqchi" yozuv turadi; Orqaga bosilganda avval ichki qatlamlar yopiladi.
+  let exitArmed = false, exitT = null;
+  function backStep() {
+    if ($("secret").hidden) return false;                 // qulf ekrani: oddiy chiqish
+    if (!$("form").hidden) { closeForm(); return true; }
+    if (!$("dform").hidden) { closeDForm(); return true; }
+    if (!$("gform").hidden) { closeGForm(); return true; }
+    if (!$("limForm").hidden) { $("limClose").onclick(); return true; }
+    if (!$("profForm").hidden) { $("profCancel").onclick(); return true; }
+    if (payOpen) { payOpen = null; renderDebts(); return true; }
+    if (tab === "settings" && curPg) { closePg(); return true; }
+    if (tab !== "home") { showTab("home"); return true; }
+    return false;
+  }
+  try {
+    history.replaceState({ tj: 0 }, "");
+    history.pushState({ tj: 1 }, "");
+    window.addEventListener("popstate", () => {
+      if (backStep()) { exitArmed = false; history.pushState({ tj: 1 }, ""); return; }
+      if ($("secret").hidden || exitArmed) { exitArmed = false; history.back(); return; }
+      exitArmed = true; clearTimeout(exitT); exitT = setTimeout(() => { exitArmed = false; }, 2200);
+      toast(_t("Chiqish uchun yana bir marta bosing"));
+      history.pushState({ tj: 1 }, "");
+    });
+  } catch (e) {}
 })();
 </script>
 <script>
