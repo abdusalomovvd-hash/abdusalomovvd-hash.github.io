@@ -361,6 +361,26 @@
   .pinfo b { font-size: 17px; font-weight: 600; overflow-wrap: anywhere; }
   .pinfo span { font-size: 13px; color: var(--muted); overflow-wrap: anywhere; }
   .body a { color: var(--accent); }
+  .menu { padding: 0; overflow: hidden; margin-bottom: 14px; }
+  .mrow { display: flex; align-items: center; gap: 14px; width: 100%; padding: 13px 16px; border: 0; border-bottom: 1px solid var(--line); background: transparent; text-align: left; font-size: 15px; color: var(--ink); }
+  .mrow:last-child { border-bottom: 0; }
+  .mrow[hidden] { display: none; }
+  .mrow:active { background: var(--soft); }
+  .mrow .mico { width: 34px; height: 34px; border-radius: 9px; display: grid; place-items: center; flex: none; color: var(--c); background: color-mix(in srgb, var(--c) 14%, transparent); }
+  .mrow .mico svg { width: 19px; height: 19px; }
+  .mrow .mt { flex: 1; min-width: 0; font-weight: 500; }
+  .mrow .mv { font-size: 13px; color: var(--muted); white-space: nowrap; }
+  .mrow .mv.pill { color: var(--inc); background: color-mix(in srgb, var(--inc) 14%, transparent); border-radius: 999px; padding: 3px 9px; font-weight: 500; font-size: 12px; }
+  .mrow .chev { width: 18px; height: 18px; color: var(--muted); flex: none; }
+  .mrow.out .mt { color: var(--exp); }
+  .menunote { margin: -4px 4px 14px; font-size: 12px; color: var(--muted); }
+  .menunote:empty { display: none; }
+  .subpg { display: none; }
+  .subpg.on { display: block; }
+  .subpg > h2 { display: none; }
+  .subhead { display: flex; align-items: center; gap: 12px; margin-bottom: 14px; }
+  .subhead b { font-size: 17px; font-weight: 600; }
+  .subhead .ghost { display: inline-flex; align-items: center; }
   .status:empty { display: none; }
   .body > .row:empty { display: none; }
 </style>
@@ -609,7 +629,59 @@
         </form>
       </section>
 
-      <section class="panel">
+      <div class="subhead" id="subHead" hidden>
+        <button class="ghost small" id="subBack" type="button">&#8249; Orqaga</button>
+        <b id="subTitle"></b>
+      </div>
+
+      <div id="menuGroup">
+      <section class="panel menu" id="menuWrap">
+        <button type="button" class="mrow" data-go="look" id="row_look">
+          <span class="mico" style="--c:#7a5cc2"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12.8A9 9 0 1111.2 3a7 7 0 009.8 9.8z"/></svg></span>
+          <span class="mt">Ko'rinish</span>
+          <span class="mv" id="vLook"></span><svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 6l6 6-6 6"/></svg>
+        </button>
+        <button type="button" class="mrow" data-go="security" id="row_security">
+          <span class="mico" style="--c:#0b7a75"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3l8 3v6c0 4.5-3.2 8-8 9-4.8-1-8-4.5-8-9V6l8-3zM9 12l2 2 4-4"/></svg></span>
+          <span class="mt">Xavfsizlik</span>
+          <span class="mv" id="vSec"></span><svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 6l6 6-6 6"/></svg>
+        </button>
+        <button type="button" class="mrow" data-go="calc" id="row_calc">
+          <span class="mico" style="--c:#b7791f"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="5" y="3" width="14" height="18" rx="2"/><path d="M8 7h8M8 12h.01M12 12h.01M16 12h.01M8 16h.01M12 16h.01M16 16h.01"/></svg></span>
+          <span class="mt">Hisob-kitob</span>
+          <span class="mv" id="vCalc"></span><svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 6l6 6-6 6"/></svg>
+        </button>
+        <button type="button" class="mrow" data-go="sync" id="row_sync">
+          <span class="mico" style="--c:#2b6cb0"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 18a4 4 0 01-.5-8A6 6 0 0118 9a4.5 4.5 0 01-1 9H7z"/></svg></span>
+          <span class="mt">Sinxronlash</span>
+          <span class="mv" id="vSync"></span><svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 6l6 6-6 6"/></svg>
+        </button>
+        <button type="button" class="mrow" data-go="backup" id="row_backup">
+          <span class="mico" style="--c:#2f855a"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 7h16v4H4zM6 11v9h12v-9M10 15h4"/></svg></span>
+          <span class="mt">Zaxira va eksport</span>
+          <span class="mv" id="vBack"></span><svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 6l6 6-6 6"/></svg>
+        </button>
+        <button type="button" class="mrow" data-go="about" id="row_about">
+          <span class="mico" style="--c:#64748b"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 11v5M12 8h.01"/></svg></span>
+          <span class="mt">Ilova haqida</span>
+          <span class="mv" id="vAbout"></span><svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 6l6 6-6 6"/></svg>
+        </button>
+      </section>
+
+      <section class="panel menu" id="acctPanel" hidden>
+        <button type="button" class="mrow" id="acctIn">
+          <span class="mico" style="--c:#2b6cb0"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 3h4a2 2 0 012 2v14a2 2 0 01-2 2h-4M10 17l5-5-5-5M15 12H3"/></svg></span>
+          <span class="mt">Google bilan kirish</span><svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 6l6 6-6 6"/></svg>
+        </button>
+        <button type="button" class="mrow out" id="acctOut" hidden>
+          <span class="mico" style="--c:#c0392b"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 21H5a2 2 0 01-2-2V5a2 2 0 012-2h4M16 17l5-5-5-5M21 12H9"/></svg></span>
+          <span class="mt" id="acctOutT">Akkauntdan chiqish</span>
+        </button>
+      </section>
+      <p class="menunote" id="acctInfo"></p>
+      </div>
+
+      <section class="panel subpg" data-pg="look">
         <h2>Ko'rinish</h2>
         <div class="body">
           <div class="field">
@@ -623,7 +695,7 @@
         </div>
       </section>
 
-      <section class="panel">
+      <section class="panel subpg" data-pg="security">
         <h2>Xavfsizlik</h2>
         <div class="body">
           <p>Sahifa ochilganda ma'lumotlar yashirin turadi. PIN kod qo'ysangiz, ko'rsatish uchun PIN kod so'raladi. Tanlangan vaqt ichida sahifani yangilasangiz yoki ilovadan chiqib qaytsangiz, qayta PIN so'ralmaydi. Vaqt o'tsa yoki tegmasangiz, ma'lumotlar yana yashirinadi.</p>
@@ -647,7 +719,7 @@
         </div>
       </section>
 
-      <section class="panel">
+      <section class="panel subpg" data-pg="calc">
         <h2>Hisob-kitob</h2>
         <div class="body">
           <div class="field">
@@ -661,7 +733,7 @@
         </div>
       </section>
 
-      <section class="panel" id="syncDetails" hidden>
+      <section class="panel subpg" data-pg="sync" id="syncDetails" hidden>
         <h2>Sinxronlash</h2>
         <div class="body">
           <p>Yoqsangiz, Google hisobingiz orqali ma'lumotlaringizning nusxasi shaxsiy joyda saqlanadi, boshqalar uni ko'ra olmaydi. Shunda telefon va kompyuteringizda bir xil ma'lumot ko'rinadi. Parol va yashirish sozlamalari har qurilmada alohida qoladi.</p>
@@ -680,7 +752,7 @@
         </div>
       </section>
 
-      <section class="panel" id="backupDetails">
+      <section class="panel subpg" data-pg="backup" id="backupDetails">
         <h2>Zaxira nusxa</h2>
         <div class="body">
           <p>Barcha ma'lumotlarni matn sifatida nusxalab saqlab qo'yishingiz va kerak bo'lganda qayta tiklashingiz mumkin.</p>
@@ -697,19 +769,7 @@
         </div>
       </section>
 
-      <section class="panel" id="acctPanel" hidden>
-        <h2>Akkaunt</h2>
-        <div class="body">
-          <p id="acctInfo">Google hisobi ulanmagan.</p>
-          <div class="row">
-            <button class="ghost" id="acctIn" type="button">Google bilan kirish</button>
-            <button class="ghost" id="acctOut" type="button" hidden>Akkauntdan chiqish</button>
-          </div>
-          <p>Akkauntdan chiqsangiz, sinxronlash to'xtaydi. Ma'lumotlaringiz shu telefonda qoladi va bulutdagi nusxa o'chmaydi.</p>
-        </div>
-      </section>
-
-      <section class="panel">
+      <section class="panel subpg" data-pg="about">
         <h2>Ilova haqida</h2>
         <div class="body">
           <p>Hisobchi · shaxsiy moliya hisobchisi</p>
@@ -1292,6 +1352,7 @@
     try { window.scrollTo(0, 0); } catch (e) {}
     if (name === "debts") renderDebts();
     if (name === "ledger") renderLedger();
+    if (name === "settings") closePg();
   }
   function renderBadges() {
     const n = entries().filter((e) => e.due && e.diff <= 7).length;
@@ -1597,7 +1658,7 @@
   $("remList").addEventListener("click", (e) => {
     const b = e.target.closest ? e.target.closest("button[data-rem]") : null;
     if (!b) return;
-    showTab("settings");
+    showTab("settings"); openPg("backup");
     $("copyBackup").onclick();
   });
 
@@ -1627,6 +1688,39 @@
     lsSet(PROF_KEY, JSON.stringify(prof));
   }
 
+  /* ---------- Profil menyusi ---------- */
+  const PAGES = { look: "Ko'rinish", security: "Xavfsizlik", calc: "Hisob-kitob", sync: "Sinxronlash", backup: "Zaxira va eksport", about: "Ilova haqida" };
+  let curPg = null;
+  function setVal(id, text, pill) { const e = $(id); e.textContent = text; e.classList.toggle("pill", !!pill); }
+  function renderMenu() {
+    const th = lsGet(THEME_KEY) || "";
+    setVal("vLook", th === "light" ? "Yorug'" : th === "dark" ? "Qorong'i" : "Avtomatik");
+    lockInfo ? setVal("vSec", "PIN yoqilgan", true) : setVal("vSec", "O'chiq");
+    setVal("vCalc", S.rate > 0 ? "1 $ = " + fmt(S.rate) : "Kurs yo'q");
+    syncOn && acctEmail ? setVal("vSync", "Ulangan", true) : setVal("vSync", syncOn ? "Ulanmoqda" : "O'chiq");
+    const bt = +lsGet(BACKUP_KEY) || 0, days = bt ? Math.floor((Date.now() - bt) / 86400000) : -1;
+    setVal("vBack", days >= 1 ? days + " kun oldin" : "");
+    setVal("vAbout", "");
+    $("row_sync").hidden = $("syncDetails").hidden;
+  }
+  function openPg(name) {
+    if (!PAGES[name]) return;
+    curPg = name;
+    $("profCard").hidden = true; $("menuGroup").hidden = true; $("subHead").hidden = false;
+    $("subTitle").textContent = PAGES[name];
+    Array.prototype.forEach.call(document.querySelectorAll(".subpg"), (s) => s.classList.toggle("on", s.getAttribute("data-pg") === name));
+    try { window.scrollTo(0, 0); } catch (e) {}
+  }
+  function closePg() {
+    curPg = null;
+    $("profCard").hidden = false; $("menuGroup").hidden = false; $("subHead").hidden = true;
+    Array.prototype.forEach.call(document.querySelectorAll(".subpg"), (s) => s.classList.remove("on"));
+    renderMenu();
+    try { window.scrollTo(0, 0); } catch (e) {}
+  }
+  $("menuWrap").addEventListener("click", (e) => { const b = e.target.closest ? e.target.closest("button[data-go]") : null; if (b) openPg(b.getAttribute("data-go")); });
+  $("subBack").onclick = closePg;
+
   /* ---------- Sinxronlash ---------- */
   let syncOn = lsGet(SYNC_KEY) === "1", syncRef = null, unsub = null, reconciled = false, choicePending = null,
       pushing = false, pushAgain = false, pushTimer = null, lastPushed = 0;
@@ -1634,8 +1728,8 @@
   function renderAccount() {
     $("acctIn").hidden = !!acctEmail || syncOn;
     $("acctOut").hidden = !(acctEmail || syncOn);
-    $("acctInfo").textContent = acctEmail ? "Google hisobi: " + acctEmail : (syncOn ? "Ulanmoqda..." : "Google hisobi ulanmagan.");
-    renderProfile();
+    $("acctInfo").textContent = acctEmail ? "Google hisobi: " + acctEmail : (syncOn ? "Ulanmoqda..." : "");
+    renderProfile(); renderMenu();
   }
   function renderSyncUI() {
     renderAccount();
@@ -1686,7 +1780,7 @@
       }
       choicePending = rs; renderBadges();
       $("syncChoice").hidden = false;
-      showTab("settings");
+      showTab("settings"); openPg("sync");
       setSync("Tanlov kerak.");
       return;
     }
@@ -1761,8 +1855,8 @@
   }
   let outArmed = false;
   $("acctOut").onclick = () => {
-    if (!outArmed) { outArmed = true; $("acctOut").textContent = "Chiqilsinmi? Ma'lumotlar telefonda qoladi."; setTimeout(() => { outArmed = false; $("acctOut").textContent = "Akkauntdan chiqish"; }, 4000); return; }
-    outArmed = false; $("acctOut").textContent = "Akkauntdan chiqish"; signOutSync(); setSync("Akkauntdan chiqildi. Ma'lumotlar shu qurilmada qoldi.");
+    if (!outArmed) { outArmed = true; $("acctOutT").textContent = "Chiqilsinmi? Ma'lumotlar telefonda qoladi."; setTimeout(() => { outArmed = false; $("acctOutT").textContent = "Akkauntdan chiqish"; }, 4000); return; }
+    outArmed = false; $("acctOutT").textContent = "Akkauntdan chiqish"; signOutSync(); setSync("Akkauntdan chiqildi. Ma'lumotlar shu qurilmada qoldi.");
   };
   $("acctIn").onclick = () => { syncOn = true; lsSet(SYNC_KEY, "1"); renderSyncUI(); startSync(true); renderReminders(); };
   $("syncToggle").onclick = () => {
