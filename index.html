@@ -168,6 +168,32 @@
   .composer[hidden] { display: none; }
   .grab { width: 36px; height: 4px; border-radius: 2px; background: var(--line); margin: 0 auto 4px; }
   .composer h2 { margin: 0 0 2px; }
+  .composer > * { flex-shrink: 0; }
+  .amtbox { display: flex; align-items: center; gap: 10px; padding: 4px 2px 2px; }
+  .amtbox input.amount { flex: 1; min-width: 0; border: 0; background: transparent; padding: 0; font-size: 38px; font-weight: 600; text-align: left; outline: 0; caret-color: transparent; }
+  .amtbox select { width: auto; flex: none; border-radius: 999px; padding: 8px 12px; font-weight: 600; }
+  .catscroll { display: flex; gap: 8px; overflow-x: auto; padding: 2px 0 4px; scrollbar-width: none; margin: 0 calc(-1 * max(16px, env(safe-area-inset-right, 0px))); padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: 16px; }
+  .catscroll::-webkit-scrollbar { display: none; }
+  .catbtn { flex: none; display: flex; flex-direction: column; align-items: center; gap: 6px; width: 86px; padding: 9px 4px 8px; border: 1px solid var(--line); border-radius: 12px; background: transparent; font-size: 12px; color: var(--muted); }
+  .catbtn[aria-pressed="true"] { border-color: var(--accent); background: color-mix(in srgb, var(--accent) 10%, transparent); color: var(--ink); font-weight: 500; box-shadow: 0 0 0 1px var(--accent); }
+  .catbtn span.t { max-width: 100%; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .nkeys { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; }
+  .nkeys button { height: 52px; border: 0; border-radius: 12px; background: color-mix(in srgb, var(--ink) 7%, var(--surface)); font: 500 22px/1 var(--font-body); color: var(--ink); touch-action: manipulation; -webkit-tap-highlight-color: transparent; user-select: none; padding: 0; display: grid; place-items: center; }
+  .nkeys button:active { background: color-mix(in srgb, var(--accent) 28%, var(--surface)); }
+  .nkeys .aux { color: var(--accent); }
+  .nkeys .aux svg { width: 24px; height: 24px; }
+  @media (max-height: 720px) {
+    .composer { gap: 8px; }
+    .nkeys button { height: 42px; font-size: 20px; border-radius: 10px; }
+    .nkeys { gap: 6px; }
+    .amtbox input.amount { font-size: 30px; }
+    .catbtn { width: 82px; padding: 6px 4px 6px; gap: 4px; }
+    .catbtn .cico { width: 28px; height: 28px; }
+    .composer input#note { padding: 9px 12px; }
+  }
+  .composer details { border-top: 1px solid var(--line); padding-top: 10px; }
+  .composer summary { font-size: 13px; color: var(--muted); cursor: pointer; padding: 2px 0 8px; }
+  .composer .actions.sticky { position: sticky; bottom: calc(-16px - env(safe-area-inset-bottom, 0px)); background: var(--surface); padding: 8px 0 2px; z-index: 2; }
 
   /* Charts */
   .chart { width: 100%; height: auto; display: block; }
@@ -697,36 +723,37 @@
 <div class="scrim" id="scrim" hidden></div>
 <form class="composer" id="form" hidden autocomplete="off" aria-label="Yangi amal">
   <div class="grab" aria-hidden="true"></div>
-  <h2>Yangi amal</h2>
   <div class="seg" role="group" aria-label="Amal turi">
     <button type="button" id="tExp" aria-pressed="true">Xarajat</button>
     <button type="button" id="tInc" aria-pressed="false">Daromad</button>
   </div>
-  <div class="fields">
-    <div class="field wide">
-      <label for="amount">Summa</label>
-      <div class="amtrow">
-        <input class="amount money-in" id="amount" inputmode="numeric" placeholder="0">
-        <select id="cur" aria-label="Valyuta"><option value="UZS">so'm</option><option value="USD">$</option></select>
+  <div class="amtbox">
+    <input class="amount money-in" id="amount" inputmode="none" readonly placeholder="0" aria-label="Summa">
+    <select id="cur" aria-label="Valyuta"><option value="UZS">so'm</option><option value="USD">$</option></select>
+  </div>
+  <div class="catscroll" id="catRow" role="group" aria-label="Kategoriya"></div>
+  <select id="cat" hidden aria-hidden="true" tabindex="-1"></select>
+  <input id="note" type="text" maxlength="60" placeholder="Izoh (ixtiyoriy)" aria-label="Izoh">
+  <div class="nkeys" id="nkeys">
+    <button type="button" data-n="1">1</button><button type="button" data-n="2">2</button><button type="button" data-n="3">3</button>
+    <button type="button" data-n="4">4</button><button type="button" data-n="5">5</button><button type="button" data-n="6">6</button>
+    <button type="button" data-n="7">7</button><button type="button" data-n="8">8</button><button type="button" data-n="9">9</button>
+    <button type="button" data-n="000" class="aux">000</button><button type="button" data-n="0">0</button>
+    <button type="button" data-n="del" class="aux" aria-label="O'chirish"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 5H9l-6 7 6 7h12a1 1 0 001-1V6a1 1 0 00-1-1zM17 9.5l-5 5M12 9.5l5 5"/></svg></button>
+  </div>
+  <details>
+    <summary>Sana va qo'shimcha</summary>
+    <div class="fields">
+      <div class="field wide">
+        <label for="date">Sana</label>
+        <input id="date" type="date">
       </div>
     </div>
-    <div class="field">
-      <label for="cat">Kategoriya</label>
-      <select id="cat"></select>
-    </div>
-    <div class="field">
-      <label for="date">Sana</label>
-      <input id="date" type="date">
-    </div>
-    <div class="field wide">
-      <label for="note">Izoh</label>
-      <input id="note" type="text" maxlength="60" placeholder="Ixtiyoriy">
-    </div>
-  </div>
-  <label class="check"><input type="checkbox" id="recur"> Har oy shu kuni takrorlansin</label>
-  <label class="check"><input type="checkbox" id="quickSave"> Tez tugma sifatida saqlash</label>
+    <label class="check" style="margin-top:10px"><input type="checkbox" id="recur"> Har oy shu kuni takrorlansin</label>
+    <label class="check" style="margin-top:8px"><input type="checkbox" id="quickSave"> Tez tugma sifatida saqlash</label>
+  </details>
   <div class="err" id="err" role="alert"></div>
-  <div class="actions">
+  <div class="actions sticky">
     <button class="primary" type="submit">Saqlash</button>
     <button class="ghost" type="button" id="cancel">Bekor qilish</button>
   </div>
@@ -1279,7 +1306,32 @@
   }
 
   /* ---------- Amal qo'shish ---------- */
-  function fillCats() { $("cat").innerHTML = CATS[type].map((c) => '<option value="' + esc(c) + '">' + esc(c) + "</option>").join(""); }
+  function fillCats() {
+    $("cat").innerHTML = CATS[type].map((c) => '<option value="' + esc(c) + '">' + esc(c) + "</option>").join("");
+    pickCat(CATS[type][0]);
+    $("catRow").innerHTML = CATS[type].map((c) => '<button type="button" class="catbtn" data-cat="' + esc(c) + '" aria-pressed="' + (c === $("cat").value) + '">' + cico(c) + '<span class="t">' + esc(c) + "</span></button>").join("");
+    $("catRow").scrollLeft = 0;
+  }
+  function pickCat(c) {
+    $("cat").value = c;
+    const row = $("catRow"), bs = row.querySelectorAll ? row.querySelectorAll(".catbtn") : [];
+    for (let i = 0; i < bs.length; i++) bs[i].setAttribute("aria-pressed", bs[i].getAttribute("data-cat") === c ? "true" : "false");
+  }
+  $("catRow").addEventListener("click", (e) => { const b = e.target.closest ? e.target.closest(".catbtn") : null; if (b) pickCat(b.getAttribute("data-cat")); });
+  function numKey(k) {
+    let d = $("amount").value.replace(/\D/g, "");
+    if (k === "del") d = d.slice(0, -1);
+    else if (d || k !== "0") { if (k === "000" && !d) return; d = (d + k).slice(0, 12); }
+    $("amount").value = d ? fmt(+d) : "";
+    $("err").textContent = "";
+  }
+  $("nkeys").addEventListener("click", (e) => { const b = e.target.closest ? e.target.closest("button") : null; if (b && b.dataset.n) numKey(b.dataset.n); });
+  document.addEventListener("keydown", (e) => {
+    if ($("form").hidden) return;
+    const a = document.activeElement;
+    if (a && a !== document.body && a.id !== "amount" && /^(INPUT|SELECT|TEXTAREA)$/.test(a.tagName)) return;
+    if (/^[0-9]$/.test(e.key)) numKey(e.key); else if (e.key === "Backspace") numKey("del");
+  });
   function setType(t) {
     type = t;
     $("tExp").setAttribute("aria-pressed", t === "exp");
@@ -1292,12 +1344,13 @@
     $("date").value = same ? iso(now) : iso(view);
     $("err").textContent = "";
     $("form").hidden = false; $("scrim").hidden = false; $("fab").hidden = true;
-    $("amount").focus();
+    $("form").scrollTop = 0;
   }
   function closeForm() {
     $("form").hidden = true; $("scrim").hidden = true; updateChrome();
     $("amount").value = ""; $("note").value = "";
     $("recur").checked = false; $("quickSave").checked = false;
+    const dt = $("form").querySelector("details"); if (dt) dt.open = false;
   }
   $("tExp").onclick = () => setType("exp");
   $("tInc").onclick = () => setType("inc");
@@ -1319,7 +1372,7 @@
   $("form").addEventListener("submit", (e) => {
     e.preventDefault();
     const amount = parseMoney($("amount").value), date = $("date").value;
-    if (!amount) { $("err").textContent = "Summani kiriting."; $("amount").focus(); return; }
+    if (!amount) { $("err").textContent = "Summani kiriting."; return; }
     if (!date) { $("err").textContent = "Sanani tanlang."; return; }
     const x = { id: uid(), type: type, amount: amount, cur: $("cur").value, cat: $("cat").value, note: $("note").value.trim(), date: date };
     if ($("recur").checked) {
