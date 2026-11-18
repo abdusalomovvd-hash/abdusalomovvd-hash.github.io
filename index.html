@@ -328,6 +328,15 @@
   :root[data-theme="dark"], :root:not([data-theme="light"]) { }
   body { margin: 0; }
   #syncDetails[hidden] { display: none; }
+  .pcard .pmain { display: flex; align-items: center; gap: 14px; }
+  .avatar { width: 56px; height: 56px; border-radius: 50%; background: var(--hero-bg); color: var(--hero-ink); display: grid; place-items: center; font: 600 20px/1 var(--font-body); flex: none; letter-spacing: .02em; }
+  .avatar svg { width: 26px; height: 26px; }
+  .pinfo { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 2px; }
+  .pinfo b { font-size: 17px; font-weight: 600; overflow-wrap: anywhere; }
+  .pinfo span { font-size: 13px; color: var(--muted); overflow-wrap: anywhere; }
+  .body a { color: var(--accent); }
+  .status:empty { display: none; }
+  .body > .row:empty { display: none; }
 </style>
 </head>
 <body>
@@ -394,7 +403,7 @@
           <div><span class="hlabel">Xarajat</span><b class="exp" id="sumExp"></b></div>
         </div>
         <div class="cmp" id="cmp"></div>
-        <div class="note" id="rateNote" hidden>Dollarli amallar bor, lekin kurs kiritilmagan. Sozlamalarda kursni kiriting, shunda ular so'mga hisoblanadi.</div>
+        <div class="note" id="rateNote" hidden>Dollarli amallar bor, lekin kurs kiritilmagan. Profil bo'limida kursni kiriting, shunda ular so'mga hisoblanadi.</div>
       </section>
 
       <section class="panel remind" id="remPanel" hidden aria-live="polite">
@@ -553,16 +562,67 @@
 
     <!-- Sozlama -->
     <div class="tab" id="tab-settings" hidden>
+      <section class="panel pcard" id="profCard">
+        <div class="pmain">
+          <div class="avatar" id="avatar" aria-hidden="true"></div>
+          <div class="pinfo">
+            <b id="profName">Ismingizni kiriting</b>
+            <span id="profSub">Ma'lumotlar faqat shu qurilmada</span>
+          </div>
+          <button class="ghost small" id="profEdit" type="button">Tahrirlash</button>
+        </div>
+        <form class="dform" id="profForm" hidden autocomplete="off" style="margin:14px 0 0">
+          <div class="fields">
+            <div class="field"><label for="pFirst">Ism</label><input id="pFirst" maxlength="30" autocomplete="given-name"></div>
+            <div class="field"><label for="pLast">Familiya</label><input id="pLast" maxlength="30" autocomplete="family-name"></div>
+          </div>
+          <div class="actions">
+            <button class="primary" type="submit">Saqlash</button>
+            <button class="ghost" type="button" id="profCancel">Bekor qilish</button>
+          </div>
+        </form>
+      </section>
+
       <section class="panel">
-        <h2>Sozlamalar</h2>
+        <h2>Ko'rinish</h2>
         <div class="body">
           <div class="field">
-            <label for="rate">Dollar kursi (1 $ necha so'm)</label>
-            <input class="money-in" id="rate" inputmode="numeric" placeholder="Kursni o'zingiz kiriting">
+            <label for="langSel">Ilova tili</label>
+            <select id="langSel"><option value="uz">O'zbekcha</option><option value="ru" disabled>Русский (tez orada)</option><option value="en" disabled>English (tez orada)</option></select>
           </div>
           <div class="field">
             <label for="themeSel">Mavzu</label>
             <select id="themeSel"><option value="">Avtomatik</option><option value="light">Yorug'</option><option value="dark">Qorong'i</option></select>
+          </div>
+        </div>
+      </section>
+
+      <section class="panel">
+        <h2>Xavfsizlik</h2>
+        <div class="body">
+          <p>Sahifa ochilganda ma'lumotlar yashirin turadi. PIN kod qo'ysangiz, ko'rsatish uchun PIN kod so'raladi. Boshqa oynaga o'tsangiz yoki 2 daqiqa tegmasangiz, ma'lumotlar yana yashirinadi.</p>
+          <div class="field">
+            <label for="newPw">Yangi PIN kod (4–6 raqam)</label>
+            <input id="newPw" type="password" inputmode="numeric" pattern="[0-9]*" maxlength="6" autocomplete="off">
+          </div>
+          <div class="row">
+            <button class="ghost" id="savePw" type="button">PIN kodni saqlash</button>
+            <button class="ghost" id="removePw" type="button">PIN kodni olib tashlash</button>
+          </div>
+          <div class="row">
+            <button class="ghost" id="bioToggle" type="button" hidden>Barmoq izi bilan ochishni yoqish</button>
+          </div>
+          <div class="status" id="pwStatus" role="status"></div>
+          <p>Bu himoya begonalar ekranni tasodifan ko'rib qolishidan saqlaydi. Ma'lumotlar brauzerda shifrlanmagan holda turadi. PIN kodni unutsangiz, uni faqat barcha ma'lumotlarni o'chirib tiklash mumkin.</p>
+        </div>
+      </section>
+
+      <section class="panel">
+        <h2>Hisob-kitob</h2>
+        <div class="body">
+          <div class="field">
+            <label for="rate">Dollar kursi (1 $ necha so'm)</label>
+            <input class="money-in" id="rate" inputmode="numeric" placeholder="Kursni o'zingiz kiriting">
           </div>
           <div>
             <div class="label">Tez tugmalar</div>
@@ -607,23 +667,23 @@
         </div>
       </section>
 
-      <section class="panel">
-        <h2>Himoya</h2>
+      <section class="panel" id="acctPanel" hidden>
+        <h2>Akkaunt</h2>
         <div class="body">
-          <p>Sahifa ochilganda ma'lumotlar yashirin turadi. PIN kod qo'ysangiz, ko'rsatish uchun PIN kod so'raladi. Boshqa oynaga o'tsangiz yoki 2 daqiqa tegmasangiz, ma'lumotlar yana yashirinadi.</p>
-          <div class="field">
-            <label for="newPw">Yangi PIN kod (4–6 raqam)</label>
-            <input id="newPw" type="password" inputmode="numeric" pattern="[0-9]*" maxlength="6" autocomplete="off">
-          </div>
+          <p id="acctInfo">Google hisobi ulanmagan.</p>
           <div class="row">
-            <button class="ghost" id="savePw" type="button">PIN kodni saqlash</button>
-            <button class="ghost" id="removePw" type="button">PIN kodni olib tashlash</button>
+            <button class="ghost" id="acctIn" type="button">Google bilan kirish</button>
+            <button class="ghost" id="acctOut" type="button" hidden>Akkauntdan chiqish</button>
           </div>
-          <div class="row">
-            <button class="ghost" id="bioToggle" type="button" hidden>Barmoq izi bilan ochishni yoqish</button>
-          </div>
-          <div class="status" id="pwStatus" role="status"></div>
-          <p>Bu himoya begonalar ekranni tasodifan ko'rib qolishidan saqlaydi. Ma'lumotlar brauzerda shifrlanmagan holda turadi. PIN kodni unutsangiz, uni faqat barcha ma'lumotlarni o'chirib tiklash mumkin.</p>
+          <p>Akkauntdan chiqsangiz, sinxronlash to'xtaydi. Ma'lumotlaringiz shu telefonda qoladi va bulutdagi nusxa o'chmaydi.</p>
+        </div>
+      </section>
+
+      <section class="panel">
+        <h2>Ilova haqida</h2>
+        <div class="body">
+          <p>Hisobchi · shaxsiy moliya hisobchisi</p>
+          <p><a href="privacy-policy.html" target="_blank" rel="noopener">Maxfiylik siyosati</a> · abdusalomovv.d@gmail.com</p>
         </div>
       </section>
     </div>
@@ -692,8 +752,8 @@
       <span>Maqsad</span>
     </button>
     <button type="button" data-tab="settings">
-      <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 7h9M17 7h3M4 17h3M11 17h9M13 5v4M7 15v4"/></svg>
-      <span>Sozlama</span>
+      <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="8" r="4"/><path d="M4 21c0-4.4 3.6-7 8-7s8 2.6 8 7"/></svg>
+      <span>Profil</span>
       <i class="badge dot" id="badgeSet" hidden></i>
     </button>
   </div>
@@ -1484,11 +1544,44 @@
     $("copyBackup").onclick();
   });
 
+  /* ---------- Profil ---------- */
+  const PROF_KEY = "hisobchi_profile_v1";
+  let prof = { first: "", last: "" }, acctEmail = "";
+  try { const p = JSON.parse(lsGet(PROF_KEY)); if (p && typeof p === "object") prof = { first: String(p.first || "").slice(0, 30), last: String(p.last || "").slice(0, 30) }; } catch (e) {}
+  function renderProfile() {
+    const full = (prof.first + " " + prof.last).trim();
+    const ini = ((prof.first.charAt(0) || "") + (prof.last.charAt(0) || "")).toUpperCase();
+    $("avatar").innerHTML = ini ? esc(ini) : '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><circle cx="12" cy="8" r="4"/><path d="M4 21c0-4.4 3.6-7 8-7s8 2.6 8 7"/></svg>';
+    $("profName").textContent = full || "Ismingizni kiriting";
+    $("profSub").textContent = acctEmail || "Ma'lumotlar faqat shu qurilmada";
+  }
+  $("profEdit").onclick = () => { $("pFirst").value = prof.first; $("pLast").value = prof.last; $("profForm").hidden = false; $("profEdit").hidden = true; $("pFirst").focus(); };
+  $("profCancel").onclick = () => { $("profForm").hidden = true; $("profEdit").hidden = false; };
+  $("profForm").addEventListener("submit", (e) => {
+    e.preventDefault();
+    prof = { first: $("pFirst").value.trim().slice(0, 30), last: $("pLast").value.trim().slice(0, 30) };
+    lsSet(PROF_KEY, JSON.stringify(prof));
+    $("profForm").hidden = true; $("profEdit").hidden = false; renderProfile();
+  });
+  function adoptName(full) {
+    if (prof.first || prof.last || !full) return;
+    const parts = String(full).trim().split(/\s+/);
+    prof = { first: (parts.shift() || "").slice(0, 30), last: parts.join(" ").slice(0, 30) };
+    lsSet(PROF_KEY, JSON.stringify(prof));
+  }
+
   /* ---------- Sinxronlash ---------- */
   let syncOn = lsGet(SYNC_KEY) === "1", syncRef = null, unsub = null, reconciled = false, choicePending = null,
       pushing = false, pushAgain = false, pushTimer = null, lastPushed = 0;
   const setSync = (t) => { $("syncStatus").textContent = t; };
+  function renderAccount() {
+    $("acctIn").hidden = !!acctEmail || syncOn;
+    $("acctOut").hidden = !(acctEmail || syncOn);
+    $("acctInfo").textContent = acctEmail ? "Google hisobi: " + acctEmail : (syncOn ? "Ulanmoqda..." : "Google hisobi ulanmagan.");
+    renderProfile();
+  }
   function renderSyncUI() {
+    renderAccount();
     $("syncToggle").textContent = syncOn ? "Sinxronlashni o'chirish" : "Sinxronlashni yoqish";
     $("syncWipe").hidden = !syncOn;
     if (!syncOn) { $("syncChoice").hidden = true; setSync("O'chirilgan. Ma'lumotlar faqat shu qurilmada."); }
@@ -1566,7 +1659,7 @@
     if (!user) return null;
     const doc = fb.firestore().doc("users/" + user.uid);
     return {
-      email: user.email || "",
+      email: user.email || "", name: user.displayName || "",
       onSnapshot: (ok, bad) => doc.onSnapshot({ includeMetadataChanges: true }, ok, bad),
       set: (b) => doc.set(JSON.parse(JSON.stringify(b))),
       delete: () => doc.delete()
@@ -1592,7 +1685,7 @@
         return;
       }
       if (!syncRef) { setSync("Sinxronlash uchun Google bilan kiring. Tugmani bosing."); syncOn = false; lsSet(SYNC_KEY, "0"); renderSyncUI(); return; }
-      email = syncRef.email;
+      email = syncRef.email; acctEmail = email; adoptName(syncRef.name); renderAccount();
     } else { setSync("Sinxronlash bu ko'rinishda mavjud emas."); return; }
     const timer = setTimeout(() => setSync("Serverga hali ulanib bo'lmadi. Ma'lumotlar shu qurilmada saqlanmoqda."), 10000);
     reconciled = false;
@@ -1604,10 +1697,21 @@
     if (unsub) { try { unsub(); } catch (e) {} }
     unsub = null; syncRef = null; reconciled = false; choicePending = null; clearTimeout(pushTimer);
   }
+  function signOutSync() {
+    stopSync(); syncOn = false; lsSet(SYNC_KEY, "0"); lsDel(LINK_KEY); acctEmail = "";
+    try { if (window.firebase && firebase.apps.length) firebase.auth().signOut(); } catch (e) {}
+    renderSyncUI(); renderReminders();
+  }
+  let outArmed = false;
+  $("acctOut").onclick = () => {
+    if (!outArmed) { outArmed = true; $("acctOut").textContent = "Chiqilsinmi? Ma'lumotlar telefonda qoladi."; setTimeout(() => { outArmed = false; $("acctOut").textContent = "Akkauntdan chiqish"; }, 4000); return; }
+    outArmed = false; $("acctOut").textContent = "Akkauntdan chiqish"; signOutSync(); setSync("Akkauntdan chiqildi. Ma'lumotlar shu qurilmada qoldi.");
+  };
+  $("acctIn").onclick = () => { syncOn = true; lsSet(SYNC_KEY, "1"); renderSyncUI(); startSync(true); renderReminders(); };
   $("syncToggle").onclick = () => {
     syncOn = !syncOn;
     lsSet(SYNC_KEY, syncOn ? "1" : "0");
-    if (syncOn) { renderSyncUI(); startSync(true); } else { stopSync(); renderSyncUI(); try { if (window.firebase && firebase.apps.length) firebase.auth().signOut(); } catch (e) {} }
+    if (syncOn) { renderSyncUI(); startSync(true); } else { signOutSync(); }
     renderReminders();
   };
   $("syncTake").onclick = () => { const rs = choicePending; choicePending = null; $("syncChoice").hidden = true; renderBadges(); lsSet(LINK_KEY, "1"); if (rs) applyRemote(rs); };
@@ -1618,7 +1722,8 @@
     wipeArmed = false; $("syncWipe").textContent = "Serverdagi nusxani o'chirish";
     const ref = syncRef;
     try { if (ref) await ref.delete(); } catch (e) { setSync("Serverdagi nusxani o'chirib bo'lmadi."); return; }
-    stopSync(); syncOn = false; lsSet(SYNC_KEY, "0"); lsDel(LINK_KEY);
+    stopSync(); syncOn = false; lsSet(SYNC_KEY, "0"); lsDel(LINK_KEY); acctEmail = "";
+    try { if (window.firebase && firebase.apps.length) firebase.auth().signOut(); } catch (e) {}
     renderSyncUI(); setSync("Serverdagi nusxa o'chirildi. Ma'lumotlar shu qurilmada qoldi.");
     renderReminders();
   };
@@ -1795,6 +1900,8 @@
   renderBioUI();
   if (lockInfo && bioId) setTimeout(() => bioUnlock(true), 350);
   if (FB_CONFIG || (window.claude && window.claude.use)) $("syncDetails").hidden = false;
+  $("acctPanel").hidden = !FB_CONFIG;
+  renderAccount();
   if (syncOn) startSync(false);
 })();
 </script>

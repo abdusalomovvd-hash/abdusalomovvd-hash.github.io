@@ -1,6 +1,6 @@
 // Oflayn qo'llab-quvvatlash: ilova fayllari avval tarmoqdan, bo'lmasa saqlangan nusxadan.
 // Shriftlar (Google Fonts) birinchi yuklanganda saqlanadi va keyin internetsiz ham ishlaydi.
-const CACHE = "hisobchi-v6";
+const CACHE = "hisobchi-v7";
 const FONTS = "hisobchi-fonts-v1";
 const CORE = ["./", "index.html", "firebase-config.js", "manifest.webmanifest", "icons/icon-192.png", "icons/icon-512.png", "icons/apple-touch-icon.png", "icons/favicon.svg"];
 self.addEventListener("install", (e) => {
