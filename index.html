@@ -4,6 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <title>Hisobchi</title>
+<script src="firebase-config.js"></script>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@500;600&family=IBM+Plex+Sans:wght@400;500;600&display=swap">
 <style>
   /* Layout: ledger-style. Sticky wordmark header, month bar, five tabs (bottom nav),
@@ -292,7 +293,7 @@
   html { color-scheme: light; padding-top: env(safe-area-inset-top, 0px); padding-bottom: env(safe-area-inset-bottom, 0px); }
   :root[data-theme="dark"], :root:not([data-theme="light"]) { }
   body { margin: 0; }
-  #syncDetails { display: none; }
+  #syncDetails[hidden] { display: none; }
 </style>
 </head>
 <body>
@@ -515,10 +516,10 @@
         </div>
       </section>
 
-      <section class="panel" id="syncDetails">
+      <section class="panel" id="syncDetails" hidden>
         <h2>Sinxronlash</h2>
         <div class="body">
-          <p>Yoqsangiz, ma'lumotlaringizning nusxasi hisobingizdagi shaxsiy joyda saqlanadi, boshqalar uni ko'ra olmaydi. Shunda telefon va kompyuteringizda bir xil ma'lumot ko'rinadi. Parol va yashirish sozlamalari har qurilmada alohida qoladi.</p>
+          <p>Yoqsangiz, Google hisobingiz orqali ma'lumotlaringizning nusxasi shaxsiy joyda saqlanadi, boshqalar uni ko'ra olmaydi. Shunda telefon va kompyuteringizda bir xil ma'lumot ko'rinadi. Parol va yashirish sozlamalari har qurilmada alohida qoladi.</p>
           <div class="status" id="syncStatus" role="status"></div>
           <div id="syncChoice" hidden>
             <p>Serverda ham, shu qurilmada ham ma'lumot bor. Qaysi biri qolsin?</p>
@@ -1483,19 +1484,61 @@
     }
     if (rs && rs.u > S.u) applyRemote(rs);
   }
-  async function startSync() {
+  /* Firebase (Google bilan kirish + Firestore). Sozlamalar firebase-config.js faylidan olinadi. */
+  const FB_CONFIG = window.HISOBCHI_FIREBASE || null;
+  const FB_VER = "10.14.1";
+  let fbReady = null;
+  function loadScript(src) {
+    return new Promise((res, rej) => { const s = document.createElement("script"); s.src = src; s.onload = res; s.onerror = () => rej(new Error("load")); document.head.appendChild(s); });
+  }
+  function loadFirebase() {
+    if (fbReady) return fbReady;
+    const base = "https://www.gstatic.com/firebasejs/" + FB_VER + "/";
+    fbReady = loadScript(base + "firebase-app-compat.js").then(() => loadScript(base + "firebase-auth-compat.js")).then(() => loadScript(base + "firebase-firestore-compat.js"))
+      .then(() => { if (!firebase.apps.length) firebase.initializeApp(FB_CONFIG); return firebase; })
+      .catch((e) => { fbReady = null; throw e; });
+    return fbReady;
+  }
+  async function fbRef(interactive) {
+    const fb = await loadFirebase();
+    const auth = fb.auth();
+    let user = auth.currentUser;
+    if (!user) user = await new Promise((res) => { const off = auth.onAuthStateChanged((x) => { off(); res(x); }); });
+    if (!user && interactive) user = (await auth.signInWithPopup(new fb.auth.GoogleAuthProvider())).user;
+    if (!user) return null;
+    const doc = fb.firestore().doc("users/" + user.uid);
+    return {
+      email: user.email || "",
+      onSnapshot: (ok, bad) => doc.onSnapshot({ includeMetadataChanges: true }, ok, bad),
+      set: (b) => doc.set(JSON.parse(JSON.stringify(b))),
+      delete: () => doc.delete()
+    };
+  }
+  async function startSync(interactive) {
     if (unsub || !syncOn) return;
     setSync("Ulanmoqda...");
     const cl = window.claude;
     let db = null, user = null;
     try { if (cl && cl.use) { db = await cl.use("db"); user = await cl.use("user"); } } catch (e) {}
-    if (!db || !user) { setSync("Sinxronlash bu ko'rinishda mavjud emas."); return; }
-    let id = null;
-    try { id = await user.id(); } catch (e) {}
-    if (!id) { setSync("Sinxronlash uchun hisobingizga kirgan bo'lishingiz kerak."); return; }
-    try { syncRef = db.doc("data/users/" + id + "/main"); } catch (e) { setSync("Sinxronlash sozlanmadi."); return; }
+    let email = "";
+    if (db && user) {
+      let id = null;
+      try { id = await user.id(); } catch (e) {}
+      if (!id) { setSync("Sinxronlash uchun hisobingizga kirgan bo'lishingiz kerak."); return; }
+      try { syncRef = db.doc("data/users/" + id + "/main"); } catch (e) { setSync("Sinxronlash sozlanmadi."); return; }
+    } else if (FB_CONFIG) {
+      try { syncRef = await fbRef(!!interactive); }
+      catch (e) {
+        syncOn = false; lsSet(SYNC_KEY, "0"); renderSyncUI();
+        setSync(e && e.code === "auth/popup-closed-by-user" ? "Kirish bekor qilindi." : "Ulanib bo'lmadi (" + ((e && (e.code || e.message)) || "xato") + "). Internetni tekshiring.");
+        return;
+      }
+      if (!syncRef) { setSync("Sinxronlash uchun Google bilan kiring. Tugmani bosing."); syncOn = false; lsSet(SYNC_KEY, "0"); renderSyncUI(); return; }
+      email = syncRef.email;
+    } else { setSync("Sinxronlash bu ko'rinishda mavjud emas."); return; }
     const timer = setTimeout(() => setSync("Serverga hali ulanib bo'lmadi. Ma'lumotlar shu qurilmada saqlanmoqda."), 10000);
     reconciled = false;
+    if (email) setSync("Ulandi: " + email);
     unsub = syncRef.onSnapshot((snap) => { if (!snap.metadata.fromCache) clearTimeout(timer); onRemote(snap); },
       (err) => { clearTimeout(timer); unsub = null; setSync("Sinxronlash to'xtadi (" + ((err && err.code) || "xato") + ")."); });
   }
@@ -1506,7 +1549,7 @@
   $("syncToggle").onclick = () => {
     syncOn = !syncOn;
     lsSet(SYNC_KEY, syncOn ? "1" : "0");
-    if (syncOn) { renderSyncUI(); startSync(); } else { stopSync(); renderSyncUI(); }
+    if (syncOn) { renderSyncUI(); startSync(true); } else { stopSync(); renderSyncUI(); try { if (window.firebase && firebase.apps.length) firebase.auth().signOut(); } catch (e) {} }
     renderReminders();
   };
   $("syncTake").onclick = () => { const rs = choicePending; choicePending = null; $("syncChoice").hidden = true; renderBadges(); lsSet(LINK_KEY, "1"); if (rs) applyRemote(rs); };
@@ -1597,7 +1640,8 @@
   renderAll();
   renderSyncUI();
   setLocked(true);
-  if (syncOn) startSync();
+  if (FB_CONFIG || (window.claude && window.claude.use)) $("syncDetails").hidden = false;
+  if (syncOn) startSync(false);
 })();
 </script>
 <script>

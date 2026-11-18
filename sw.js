@@ -1,6 +1,6 @@
 // Oflayn qo'llab-quvvatlash: ilova fayllari avval tarmoqdan, bo'lmasa saqlangan nusxadan.
 // Shriftlar (Google Fonts) birinchi yuklanganda saqlanadi va keyin internetsiz ham ishlaydi.
-const CACHE = "hisobchi-v2";
+const CACHE = "hisobchi-v3";
 const FONTS = "hisobchi-fonts-v1";
 const CORE = ["./", "index.html", "manifest.webmanifest", "icons/icon-192.png", "icons/icon-512.png", "icons/apple-touch-icon.png", "icons/favicon.svg"];
 self.addEventListener("install", (e) => {
@@ -13,7 +13,7 @@ self.addEventListener("fetch", (e) => {
   const req = e.request;
   if (req.method !== "GET") return;
   const url = new URL(req.url);
-  if (url.hostname === "fonts.googleapis.com" || url.hostname === "fonts.gstatic.com") {
+  if (url.hostname === "fonts.googleapis.com" || url.hostname === "fonts.gstatic.com" || url.hostname === "www.gstatic.com") {
     e.respondWith(caches.open(FONTS).then((c) => c.match(req).then((hit) => {
       const net = fetch(req).then((res) => { if (res && (res.ok || res.type === "opaque")) c.put(req, res.clone()); return res; }).catch(() => hit);
       return hit || net;
