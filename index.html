@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<title>Hisobchi</title>
+<title>Tejamkor</title>
 <script src="firebase-config.js"></script>
 <script src="i18n.js"></script>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@500;600&family=IBM+Plex+Sans:wght@400;500;600&display=swap">
@@ -352,7 +352,7 @@
 <meta name="theme-color" media="(prefers-color-scheme: dark)" content="#0a1216">
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-title" content="Hisobchi">
+<meta name="apple-mobile-web-app-title" content="Tejamkor">
 <meta name="apple-mobile-web-app-status-bar-style" content="default">
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="icon" type="image/svg+xml" href="icons/favicon.svg">
@@ -815,7 +815,7 @@
       <section class="panel subpg" data-pg="about">
         <h2>Ilova haqida</h2>
         <div class="body">
-          <p>Hisobchi · shaxsiy moliya hisobchisi</p>
+          <p>Tejamkor · shaxsiy moliya hisobchisi</p>
           <p><a href="privacy-policy.html" target="_blank" rel="noopener">Maxfiylik siyosati</a> · abdusalomovv.d@gmail.com</p>
         </div>
       </section>
@@ -1780,7 +1780,7 @@
   $("saveFile").onclick = () => {
     const text = JSON.stringify(stateForSync());
     $("backup").value = text;
-    if (download("hisobchi-zaxira-" + stamp() + ".json", text, "application/json")) {
+    if (download("tejamkor-zaxira-" + stamp() + ".json", text, "application/json")) {
       lsSet(BACKUP_KEY, String(Date.now())); say(_t("Zaxira fayli saqlandi. Tiklash uchun fayl ichidagi matnni yuqoridagi maydonga qo'ying.")); renderReminders();
     } else say(_t("Fayl saqlanmadi. 'Nusxa olish' tugmasidan foydalaning."));
   };
@@ -1790,7 +1790,7 @@
     S.tx.slice().sort((a, b) => (a.date < b.date ? 1 : -1)).forEach((x) =>
       rows.push([x.date, x.type === "inc" ? _t("Daromad") : _t("Xarajat"), _t(x.cat), x.amount, x.cur || "UZS", x.note || ""]));
     const csv = "﻿" + rows.map((r) => r.map(q).join(";")).join("\r\n");
-    say(download("hisobchi-amallar-" + stamp() + ".csv", csv, "text/csv;charset=utf-8") ? _t("CSV saqlandi: {n} ta amal.", { n: S.tx.length }) : _t("CSV saqlanmadi."));
+    say(download("tejamkor-amallar-" + stamp() + ".csv", csv, "text/csv;charset=utf-8") ? _t("CSV saqlandi: {n} ta amal.", { n: S.tx.length }) : _t("CSV saqlanmadi."));
   };
   $("restore").onclick = () => {
     try {
@@ -2106,7 +2106,7 @@
   async function bioEnable() {
     try {
       const cred = await navigator.credentials.create({ publicKey: {
-        challenge: rnd(32), rp: { name: "Hisobchi" }, user: { id: rnd(16), name: "hisobchi", displayName: "Hisobchi" },
+        challenge: rnd(32), rp: { name: "Tejamkor" }, user: { id: rnd(16), name: "tejamkor", displayName: "Tejamkor" },
         pubKeyCredParams: [{ type: "public-key", alg: -7 }, { type: "public-key", alg: -257 }],
         authenticatorSelection: { authenticatorAttachment: "platform", userVerification: "required", residentKey: "discouraged" }, timeout: 60000 } });
       bioId = b64(cred.rawId); lsSet(BIO_KEY, bioId);
@@ -2138,7 +2138,7 @@
   function closeAllForms() { closeForm(); closeDForm(); closeGForm(); $("limForm").hidden = true; $("limOpen").hidden = false; payOpen = null; $("toast").hidden = true; }
   function lockTexts() {
     const pad = pinMode();
-    $("lockTitle").textContent = _t(lockInfo ? "Hisobchi qulflangan" : "Ma'lumotlar yashirilgan");
+    $("lockTitle").textContent = _t(lockInfo ? "Tejamkor qulflangan" : "Ma'lumotlar yashirilgan");
     $("lockSub").textContent = _t(lockInfo ? (pad ? "PIN kodni kiriting" : "Davom etish uchun parolni kiriting.") : "Balans, xarajatlar, qarzlar va kreditlar ko'rinmaydi.");
     $("pwEye").setAttribute("aria-label", _t($("lockPw").type === "password" ? "Parolni ko'rsatish" : "Parolni yashirish"));
     if (!forgotArmed) $("forgot").textContent = _t(pad ? "PIN kodni unutdim" : "Parolni unutdim");
