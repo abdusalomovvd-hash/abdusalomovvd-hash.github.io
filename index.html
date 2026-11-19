@@ -263,9 +263,9 @@
   .lockcard { text-align: center; border: 0; background: transparent; box-shadow: none; padding: 8px 4px 24px;
     min-height: calc(100vh - 170px); min-height: calc(100dvh - 170px);
     display: flex; flex-direction: column; align-items: center; justify-content: center; }
-  .lockmark { width: 76px; height: 76px; border-radius: 22px; background: var(--hero-bg); display: grid; place-items: center;
+  .lockmark { width: 76px; height: 76px; border-radius: 22px; background: #0f2747; display: grid; place-items: center;
     box-shadow: 0 0 0 1px var(--line), 0 12px 28px -14px rgba(10, 51, 64, .55); margin-bottom: 20px; }
-  .lockmark svg { width: 46px; height: 46px; margin: 0; color: inherit; }
+  .lockmark svg { width: 54px; height: 54px; margin: 0; color: inherit; }
   .lockcard h2 { color: var(--ink); font-size: 20px; font-weight: 600; letter-spacing: 0; text-transform: none; margin: 0 0 6px; }
   .lockcard .lockp { margin-bottom: 22px; max-width: 280px; }
   .lockcard #unlockForm { width: 100%; max-width: 320px; align-items: stretch; gap: 12px; }
@@ -414,7 +414,7 @@
 <body>
 <div class="app">
   <header class="top">
-    <h1 class="brand"><svg viewBox="0 0 64 64" width="28" height="28" aria-hidden="true"><rect width="64" height="64" rx="15" fill="#0a3340"/><path d="M20 15v34M44 15v34" fill="none" stroke="#f1f7f8" stroke-width="6" stroke-linecap="round"/><path d="M20 41l9-8 6 4 9-12" fill="none" stroke="#7fd9a4" stroke-width="4.5" stroke-linecap="round" stroke-linejoin="round"/><circle cx="44" cy="25" r="4" fill="#7fd9a4"/></svg><span class="wm">Hisob<span>chi</span></span></h1>
+    <h1 class="brand"><svg viewBox="0 0 64 64" width="28" height="28" aria-hidden="true"><rect width="64" height="64" rx="15" fill="#0f2747"/><defs><linearGradient id="gh" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#ffd36b"/><stop offset="1" stop-color="#f0a830"/></linearGradient></defs><circle cx="32" cy="32" r="21" fill="url(#gh)"/><circle cx="32" cy="32" r="17" fill="none" stroke="#0f2747" stroke-width="1.6" opacity=".28"/><path d="M23 24.5h18M32 24.5v17.5" fill="none" stroke="#0f2747" stroke-width="5.8" stroke-linecap="round"/></svg><span class="wm">Tejam<span>kor</span></span></h1>
     <button class="ghost small" id="lockBtn" type="button" hidden>
       <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 11V8a5 5 0 0110 0v3M5 11h14v9H5z"/></svg>
       Yashirish
@@ -422,7 +422,7 @@
   </header>
 
   <section class="panel lockcard" id="lockCard">
-    <div class="lockmark"><svg viewBox="0 0 64 64" aria-hidden="true"><path d="M20 15v34M44 15v34" fill="none" stroke="#f1f7f8" stroke-width="6" stroke-linecap="round"/><path d="M20 41l9-8 6 4 9-12" fill="none" stroke="#7fd9a4" stroke-width="4.5" stroke-linecap="round" stroke-linejoin="round"/><circle cx="44" cy="25" r="4" fill="#7fd9a4"/></svg></div>
+    <div class="lockmark"><svg viewBox="0 0 64 64" aria-hidden="true"><defs><linearGradient id="gl" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#ffd36b"/><stop offset="1" stop-color="#f0a830"/></linearGradient></defs><circle cx="32" cy="32" r="21" fill="url(#gl)"/><circle cx="32" cy="32" r="17" fill="none" stroke="#0f2747" stroke-width="1.6" opacity=".28"/><path d="M23 24.5h18M32 24.5v17.5" fill="none" stroke="#0f2747" stroke-width="5.8" stroke-linecap="round"/></svg></div>
     <h2 id="lockTitle">Ma'lumotlar yashirilgan</h2>
     <p class="lockp" id="lockSub">Balans, xarajatlar, qarzlar va kreditlar ko'rinmaydi.</p>
     <div class="pindots" id="pinDots" hidden aria-hidden="true"></div>
