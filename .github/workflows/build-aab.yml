@@ -19,6 +19,8 @@ jobs:
           node-version: "20"
 
       - uses: android-actions/setup-android@v3
+        with:
+          packages: ""
 
       - name: Install Bubblewrap
         run: npm install -g @bubblewrap/cli@1.24.1
