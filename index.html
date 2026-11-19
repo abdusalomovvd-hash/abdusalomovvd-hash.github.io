@@ -519,6 +519,51 @@
   .abnote { color: var(--gold); font-weight: 600; }
   .avatar { background: linear-gradient(150deg, #f2b632, #d9a21b) !important; color: #0f2747 !important; box-shadow: 0 0 0 4px var(--gold-soft); font-weight: 800; }
   #menuWrap.menu { border-radius: 18px; overflow: hidden; }
+
+  /* ---------- Qarzlar: yangi ko'rinish ---------- */
+  #debtPanel.panel { background: transparent; border: 0; box-shadow: none; padding: 0; }
+  .dhero { border-radius: 20px; padding: 16px; color: #fff; background: linear-gradient(150deg, #0f2747, #143a63); box-shadow: var(--shadow); margin-bottom: 12px; }
+  .dhero > small { font-size: 10.5px; letter-spacing: .1em; text-transform: uppercase; color: #f2c75a; }
+  .dhero > b { display: block; font: 800 30px var(--font-num); margin: 2px 0 12px; direction: ltr; text-align: start; }
+  .dhero .g4 { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+  .dhero .g4 > div { background: rgba(255, 255, 255, .08); border-radius: 12px; padding: 8px 10px; min-width: 0; }
+  .dhero .g4 span { display: block; font-size: 10px; opacity: .75; text-transform: uppercase; letter-spacing: .06em; }
+  .dhero .g4 b { font: 700 14px var(--font-num); overflow-wrap: anywhere; } .dhero .o { color: #f5a583; } .dhero .i { color: #7fd9a4; }
+  .dwarn { display: flex; gap: 10px; align-items: center; background: color-mix(in srgb, var(--exp) 14%, var(--surface)); color: var(--exp); border-radius: 14px; padding: 10px 12px; font-size: 12.5px; font-weight: 600; margin-bottom: 10px; }
+  .dwarn i { width: 8px; height: 8px; border-radius: 50%; background: var(--exp); flex: none; }
+  .dnear { display: flex; gap: 12px; align-items: center; background: var(--surface); border: 1px solid var(--line); border-radius: 18px; padding: 12px 14px; box-shadow: var(--shadow); margin-bottom: 10px; }
+  .dnear .ic { width: 40px; height: 40px; border-radius: 12px; background: var(--gold-soft); display: grid; place-items: center; flex: none; }
+  .dnear .ic svg { width: 20px; height: 20px; stroke: var(--gold); fill: none; stroke-width: 2; stroke-linecap: round; }
+  .dnear small { display: block; color: var(--muted); font-size: 11px; } .dnear b { font-size: 14px; } .dnear .am { margin-inline-start: auto; font: 800 14px var(--font-num); white-space: nowrap; }
+  .ddaily { display: flex; gap: 12px; align-items: center; border-radius: 20px; padding: 12px 14px; color: #fff; background: linear-gradient(150deg, #0f2747, #143a63); box-shadow: var(--shadow); margin-bottom: 12px; }
+  .ddaily small { font-size: 10.5px; letter-spacing: .1em; text-transform: uppercase; color: #f2c75a; display: block; } .ddaily b { font: 700 14px/1.35 var(--font-num); display: block; margin-top: 2px; }
+  .dchips { display: flex; gap: 6px; overflow-x: auto; margin: 4px 0 12px; padding-bottom: 2px; } .dchips::-webkit-scrollbar { display: none; }
+  .dchips button { white-space: nowrap; border: 1.5px solid var(--line); background: var(--surface); border-radius: 999px; padding: 7px 13px; font: 600 12.5px var(--font-num); color: var(--muted); }
+  .dchips button.on { background: var(--gold-soft); border-color: var(--gold); color: var(--ink); }
+  #dlist .debt, #glist .debt { background: var(--surface); border: 1px solid var(--line); border-radius: 18px; padding: 14px; margin-bottom: 12px; box-shadow: var(--shadow); }
+  #dlist .debt:last-child, #glist .debt:last-child { padding-bottom: 14px; }
+  .drow { display: flex; gap: 12px; align-items: center; }
+  .drow .mid { flex: 1; min-width: 0; } .drow .mid b { display: block; font-size: 15px; }
+  .mcw { width: 54px; display: grid; place-items: center; flex: none; } .mcw svg { overflow: visible; }
+  @media (prefers-reduced-motion: no-preference) { .mcw svg { animation: mcBob 3.2s ease-in-out infinite; transform-origin: 50% 90%; } }
+  @keyframes mcBob { 50% { transform: translateY(-3px) rotate(-2deg); } }
+  .say { position: relative; margin-top: 12px; background: var(--soft); border-radius: 14px; padding: 10px 12px; font: 600 13px/1.4 var(--font-num); }
+  .say::before { content: ""; position: absolute; inset-inline-start: 24px; top: -6px; width: 12px; height: 12px; background: inherit; transform: rotate(45deg); border-radius: 2px; }
+  .say.red { background: color-mix(in srgb, var(--exp) 14%, var(--surface)); color: var(--exp); }
+  .say.gold { background: var(--gold-soft); } .say.grn { background: color-mix(in srgb, var(--inc) 14%, var(--surface)); color: var(--inc); }
+  .hist { margin-top: 10px; border-top: 1px dashed var(--line); padding-top: 8px; } .hist > small { color: var(--muted); font-size: 11px; }
+  .hist div { display: flex; justify-content: space-between; font-size: 12px; color: var(--muted); padding: 2px 0; }
+  .track { display: flex; justify-content: space-between; font-size: 10px; color: var(--muted); }
+  .milest { margin-top: 8px; font-size: 12px; font-weight: 700; color: var(--gold); background: var(--gold-soft); border-radius: 12px; padding: 8px 10px; }
+  .dfx { margin-top: 10px; border-radius: 16px; padding: 14px; text-align: center; color: #fff; background: linear-gradient(150deg, #0f2747, #143a63); position: relative; overflow: hidden; }
+  .dfx b { display: block; font: 800 15px var(--font-num); } .dfx small { color: #f2c75a; }
+  .dfx i { position: absolute; width: 7px; height: 12px; border-radius: 2px; }
+  .demp { text-align: center; padding: 26px 16px; background: var(--surface); border: 1px solid var(--line); border-radius: 18px; box-shadow: var(--shadow); }
+  .demp b { display: block; font: 800 17px var(--font-num); margin-top: 8px; } .demp p { color: var(--muted); font-size: 13px; margin: 6px 0 14px; }
+  .demp .say { text-align: center; margin: 0 0 14px; } .demp .say::before { display: none; }
+  #dform.dform { background: var(--surface); border: 1px solid var(--line); border-radius: 18px; padding: 14px; box-shadow: var(--shadow); margin-bottom: 12px; }
+  #dform .primary, .demp .primary { background: var(--gold); border-color: var(--gold); color: var(--on-gold); font-weight: 800; }
+  .dbtn.pay { background: var(--gold); border-color: var(--gold); color: var(--on-gold); }
 </style>
 <meta name="theme-color" media="(prefers-color-scheme: light)" content="#eceff1">
 <meta name="theme-color" media="(prefers-color-scheme: dark)" content="#0a1216">
@@ -723,12 +768,18 @@
           <h2>Qarzlar va kreditlar</h2>
           <button class="ghost small" id="dOpen" type="button">Qo'shish</button>
         </div>
-        <div class="split3">
-          <div><span class="label">Men qarzdorman</span><b class="exp" id="dOwe">0</b></div>
-          <div><span class="label">Menga qarzdor</span><b class="inc" id="dOwed">0</b></div>
-          <div><span class="label">Oylik kredit</span><b id="dMonthly">0</b></div>
-          <div><span class="label">Kreditda qolgan</span><b id="dLoanLeft">0</b></div>
+        <div class="dhero"><small>Sof holat</small><b id="dNet">0</b>
+          <div class="g4">
+            <div><span>Men qarzdorman</span><b class="o" id="dOwe">0</b></div>
+            <div><span>Menga qarzdor</span><b class="i" id="dOwed">0</b></div>
+            <div><span>Oylik kredit</span><b id="dMonthly">0</b></div>
+            <div><span>Kreditda qolgan</span><b id="dLoanLeft">0</b></div>
+          </div>
         </div>
+        <div id="dAlert"></div>
+        <div id="dNear"></div>
+        <div class="ddaily" id="dDaily"></div>
+        <div class="dchips" id="dChips"></div>
 
         <form class="dform" id="dform" hidden autocomplete="off">
           <div class="seg three" role="group" aria-label="Turi">
@@ -1554,6 +1605,53 @@
     $("remList").innerHTML = rows.join("");
   }
 
+  /* ---------- Tangacha personaj va gaplar ---------- */
+  var mcN = 0;
+  function mascot(kind, sz) {
+    mcN++; const id = "mg" + mcN, L = "#0f2747";
+    const w = (cx, px, py, r) => '<circle cx="' + cx + '" cy="26" r="' + (r || 5.2) + '" fill="#fff" stroke="' + L + '" stroke-width="1.4"/><circle cx="' + (cx + (px || 0)) + '" cy="' + (26 + (py || 0)) + '" r="2.6" fill="' + L + '"/>';
+    const ey = { cool: '<path d="M10 22h24l-2 8a4 4 0 01-4 3h-3a4 4 0 01-4-3l-1-3h-2l-1 3a4 4 0 01-4 3h-3a4 4 0 01-4-3z" fill="' + L + '"/>',
+      panic: w(16, 0, 0, 6.2) + w(32, 0, 0, 6.2) + '<circle cx="16" cy="26" r="1.5" fill="' + L + '"/><circle cx="32" cy="26" r="1.5" fill="' + L + '"/>',
+      sly: w(16, 2.4, 1) + w(32, 2.4, 1) + '<path d="M10 20l11 2M38 20l-11 2" stroke="' + L + '" stroke-width="2" stroke-linecap="round"/>',
+      zen: '<path d="M11 26q5 4 10 0M27 26q5 4 10 0" stroke="' + L + '" stroke-width="2.2" fill="none" stroke-linecap="round"/>',
+      nerv: w(16, -1.6, 1.2) + w(32, -1.6, 1.2) + '<path d="M10 19l10-1M38 19l-10-1" stroke="' + L + '" stroke-width="2" stroke-linecap="round"/>',
+      party: '<path d="M11 28q5-8 10 0M27 28q5-8 10 0" stroke="' + L + '" stroke-width="2.4" fill="none" stroke-linecap="round"/>', flex: w(16) + w(32) };
+    const mo = { cool: '<path d="M18 38q6 5 12 0" stroke="' + L + '" stroke-width="2.4" fill="none" stroke-linecap="round"/>',
+      panic: '<ellipse cx="24" cy="40" rx="5" ry="6" fill="' + L + '"/><ellipse cx="24" cy="43" rx="3" ry="2.2" fill="#e0675c"/>',
+      sly: '<path d="M17 39q8 4 15-2" stroke="' + L + '" stroke-width="2.4" fill="none" stroke-linecap="round"/>',
+      zen: '<path d="M19 38q5 3 10 0" stroke="' + L + '" stroke-width="2.2" fill="none" stroke-linecap="round"/>',
+      nerv: '<path d="M17 40q3-3 5 0t5 0t5 0" stroke="' + L + '" stroke-width="2.2" fill="none" stroke-linecap="round"/>',
+      party: '<path d="M15 36q9 12 18 0z" fill="' + L + '"/><path d="M19 40q5 4 10 0" fill="#e0675c"/>',
+      flex: '<path d="M17 37q7 7 14 0" stroke="' + L + '" stroke-width="2.4" fill="none" stroke-linecap="round"/>' };
+    const ex = { panic: '<path d="M4 18c-2 3-2 5 0 6 2-1 2-3 0-6zM44 12c-2 3-2 5 0 6 2-1 2-3 0-6z" fill="#6ec1f0"/>', nerv: '<path d="M40 10c-2 3-2 5 0 6 2-1 2-3 0-6z" fill="#6ec1f0"/>',
+      party: '<path d="M16 16l8-12 8 12z" fill="#e0675c" stroke="' + L + '" stroke-width="1.4"/><circle cx="24" cy="6" r="2.5" fill="#f2c75a"/><path d="M2 14l3 3M46 14l-3 3M4 40l4-2M44 40l-4-2" stroke="#46b987" stroke-width="2.4" stroke-linecap="round"/>' };
+    let arms = '<path d="M6 38q-6 3-6 9M42 38q6 3 6 9" stroke="' + L + '" stroke-width="3.2" fill="none" stroke-linecap="round"/>';
+    if (kind === "flex") arms = '<path d="M6 36q-6 0-6-8 0-4 4-4" stroke="' + L + '" stroke-width="3.2" fill="none" stroke-linecap="round"/><circle cx="4" cy="22" r="3.6" fill="#f2c75a" stroke="' + L + '" stroke-width="1.6"/><path d="M42 38q6 3 6 9" stroke="' + L + '" stroke-width="3.2" fill="none" stroke-linecap="round"/>';
+    else if (kind === "panic") arms = '<path d="M6 34q-6-6-4-16M42 34q6-6 4-16" stroke="' + L + '" stroke-width="3.2" fill="none" stroke-linecap="round"/><circle cx="2" cy="17" r="3.2" fill="#f2c75a" stroke="' + L + '" stroke-width="1.5"/><circle cx="46" cy="17" r="3.2" fill="#f2c75a" stroke="' + L + '" stroke-width="1.5"/>';
+    else if (kind === "party") arms = '<path d="M6 36q-7-4-5-14M42 36q7-4 5-14" stroke="' + L + '" stroke-width="3.2" fill="none" stroke-linecap="round"/>';
+    const c = kind === "panic" ? ["#ff9a8a", "#d9573f"] : kind === "party" || kind === "flex" ? ["#ffe08a", "#e2a923"] : ["#f6d36b", "#d9a21b"];
+    return '<svg viewBox="-6 -14 60 74" width="' + sz + '" height="' + Math.round(sz * 74 / 60) + '" aria-hidden="true"><defs><radialGradient id="' + id + '" cx="35%" cy="28%" r="80%"><stop offset="0" stop-color="' + c[0] + '"/><stop offset="1" stop-color="' + c[1] + '"/></radialGradient></defs>' +
+      '<ellipse cx="24" cy="56" rx="14" ry="2.6" fill="#000" opacity=".15"/>' + arms + '<path d="M17 50v6M31 50v6" stroke="' + L + '" stroke-width="3.2" stroke-linecap="round"/>' +
+      '<circle cx="24" cy="30" r="22" fill="url(#' + id + ')" stroke="' + L + '" stroke-width="2"/><circle cx="24" cy="30" r="17.5" fill="none" stroke="' + L + '" stroke-opacity=".2" stroke-width="1.4"/>' +
+      '<circle cx="10" cy="35" r="3" fill="#e0675c" opacity=".45"/><circle cx="38" cy="35" r="3" fill="#e0675c" opacity=".45"/>' + ey[kind] + mo[kind] + (ex[kind] || "") + "</svg>";
+  }
+  function phrase(cat, p, seed) {
+    p = p || {};
+    const L = {
+      late_owe: [() => _t("{name} kutmaydi, uyalmaydi. Siz-chi? Hozir to'lang, uxlab qolasiz 😬", p), () => _t("Muddat o'tdi, vijdon uyg'ondimi? Qaytarish vaqti keldi 🔔"), () => _t("Qarz egasi sizni o'ylab yurgandir. To'lang, tinchlaning 😅")],
+      late_owed: [() => _t("«Ertaga beraman» — {name}, {n} kun oldin. Eslatma yuboramizmi? 😏", p), () => _t("Do'stlik — do'stlik, hisob — hisob. Eslatib qo'ying 🤝"), () => _t("{name} hali ham «unutgan». Xotirani yangilash vaqti 🧠", p)],
+      late_loan: [() => _t("Bank hazillashmaydi — to'lov kechikdi, jarima kutmoqda 🏦"), () => _t("Kredit to'lovi kutyapti. Bank esa kutishni yoqtirmaydi 😬")],
+      soon: [() => _t("Muddatga {n} kun qoldi. Hamyonni tayyorlang 💼", p), () => _t("Oz qoldi! Hozir boshlasangiz, so'nggi kunda yugurmaysiz 🏃"), () => _t("To'lov yaqinlashmoqda. Tinch yuring, lekin tez 😉")],
+      flex: [() => _t("Yarmi ortda, yarmi oldinda. Davom! 💪"), () => _t("Yarmidan oshdi — endi yo'l pastga qarab 🚀"), () => _t("Ofarin! Shu tempda tez tugaydi 🔥")],
+      done: [() => _t("Ofarin! Yelkangizdan tog' tushdi 🏔️🎉"), () => _t("Hisob-kitob tugadi. Dunyoda hali mard bor ekan 🎊"), () => _t("Yopildi! Endi tinch uxlasa bo'ladi 😴✨")],
+      ok: [() => _t("Hozircha tinch. Muddat uzoq, lekin unutmang 😎"), () => _t("Hammasi nazoratda. Davom eting 👌"), () => _t("Vaqt bor, ammo qarz kutmaydi 😌")],
+      daily: [() => _t("Qarz — vaqtinchalik mehmon. Uzoq qolsa, uy egasiga aylanadi 🚪"), () => _t("Kichik to'lov ham yo'lni boshlaydi 🐾"), () => _t("Har to'langan so'm — ozodlikka bir qadam 🕊️"), () => _t("Qarz kechiksa, qarz emas, xotira bo'lib qoladi 🧠"), () => _t("Bugun to'lagan — ertaga uxlaydi 😴"), () => _t("Hisobni yozib boring, hisob sizni asraydi 📒")]
+    }[cat];
+    let h = 0; String(seed || "").split("").forEach((ch) => { h = (h * 31 + ch.charCodeAt(0)) % 9973; });
+    return L[(h + Math.floor(Date.now() / 864e5)) % L.length]();
+  }
+  let dFilter = "all";
+
   function renderDebts() {
     const es = entries();
     let owe = 0, owed = 0, monthly = 0, left = 0;
@@ -1566,9 +1664,21 @@
     });
     $("dOwe").textContent = fmt(owe); $("dOwed").textContent = fmt(owed);
     $("dMonthly").textContent = fmt(monthly); $("dLoanLeft").textContent = left ? fmt(left) : "—";
+    $("dNet").textContent = (owed - owe > 0 ? "+" : owed - owe < 0 ? "\u2212" : "") + fmt(Math.abs(owed - owe)) + " " + _t("so'm");
+    const late = es.filter((e) => e.due && e.diff < 0).length, tom = es.filter((e) => e.due && e.diff === 1).length;
+    $("dAlert").innerHTML = late || tom ? '<div class="dwarn"><i></i>' + [late ? _t("{n} ta qarzning muddati o'tgan", { n: late }) : "", tom ? _t("ertaga muddat: {n} ta", { n: tom }) : ""].filter(Boolean).join(" · ") + "</div>" : "";
+    const nx = es.filter((e) => e.due && e.diff >= 0)[0];
+    $("dNear").innerHTML = nx ? '<div class="dnear"><span class="ic"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg></span><div><small>' + _t("Eng yaqin to'lov") + " · " + when(nx.diff) + "</small><b>" + esc(nx.d.name) + '</b></div><div class="am">' + money(nx.d.kind === "loan" ? nx.d.amount : remainingOf(nx.d), nx.d.cur) + "</div></div>" : "";
+    $("dDaily").hidden = !es.length;
+    $("dDaily").innerHTML = es.length ? mascot(es.some((e) => e.due && e.diff < 0) ? "nerv" : "cool", 46) + "<div><small>" + _t("Bugungi maslahat") + "</small><b>" + phrase("daily", "", "d") + "</b></div>" : "";
+    const cnt = { all: es.length, owe: 0, owed: 0, loan: 0 };
+    es.forEach((e) => { cnt[e.d.kind === "loan" ? "loan" : e.d.dir]++; });
+    $("dChips").hidden = !es.length;
+    $("dChips").innerHTML = [["all", "Hammasi"], ["owe", "Men qarzdorman"], ["owed", "Menga qarzdor"], ["loan", "Kreditlar"]].map((c) => '<button type="button" data-f="' + c[0] + '" class="' + (dFilter === c[0] ? "on" : "") + '">' + _t(c[1]) + " · " + cnt[c[0]] + "</button>").join("");
+    const shown = dFilter === "all" ? es : es.filter((e) => (e.d.kind === "loan" ? "loan" : e.d.dir) === dFilter);
 
-    if (!es.length) { $("dlist").innerHTML = '<div class="empty">' + _t('Hali qarz yoki kredit kiritilmagan. "Qo\'shish" tugmasini bosing.') + '</div>'; return; }
-    $("dlist").innerHTML = es.map((e) => {
+    if (!es.length) { $("dlist").innerHTML = '<div class="demp">' + mascot("zen", 84) + "<b>" + _t("Hali qarz yo'q") + '</b><p>' + _t("Kimga qarz berganingiz yoki kimdan olganingizni yozib boring. Muddat kelganda ilova eslatadi.") + '</p><div class="say gold">' + _t("Qarzsiz yurish — eng katta boylik. Men tinchman, siz-chi? 🧘") + '</div><button type="button" class="primary" id="dEmptyAdd">+ ' + _t("Qarz qo'shish") + "</button></div>"; return; }
+    $("dlist").innerHTML = shown.map((e) => {
       const d = e.d, loan = d.kind === "loan";
       let chip = e.due
         ? '<span class="chip ' + chipClass(e.diff) + '">' + (loan ? dlabel(e.due) + " · " : "") + when(e.diff) + "</span>"
@@ -1601,7 +1711,25 @@
       }
       if (d.note) detail += " · " + d.note;
       acts += abtn("del", d.id, _t("O'chirish"), _t("Aniq o'chirilsinmi?"), "");
-      return '<div class="debt s-' + (!e.due ? "done" : e.diff < 0 ? "late" : e.diff <= 7 ? "soon" : "ok") + '"><div class="dtop"><div class="mid"><b>' + esc(d.name) + "</b><small>" + esc(detail) + "</small></div>" + amtHtml + "</div>" + extra +
+      const done = !e.due, isLate = !done && e.diff < 0;
+      let pctv = 0, scx = null;
+      if (loan) { scx = loanSched(d); pctv = scx ? Math.round(scx.paid / scx.total * 100) : 0; } else pctv = done ? 100 : Math.round(sumPaid(d) / d.amount * 100);
+      let mood = "cool", cat = "ok", tone = "";
+      if (done) { mood = "party"; cat = "done"; tone = "grn"; }
+      else if (isLate) { tone = "red"; if (!loan && d.dir === "owed") { mood = "sly"; cat = "late_owed"; } else { mood = "panic"; cat = loan ? "late_loan" : "late_owe"; } }
+      else if (e.diff <= 3) { mood = "nerv"; cat = "soon"; tone = "gold"; }
+      else if (pctv >= 40) { mood = "flex"; cat = "flex"; tone = "grn"; }
+      const say = phrase(cat, { name: d.name, n: e.diff != null ? Math.abs(e.diff) : 0 }, d.id);
+      let hist = "";
+      if (!loan && d.payments.length) hist = '<div class="hist"><small>' + _t("To'lovlar tarixi") + "</small>" + d.payments.slice(-3).reverse().map((q) => "<div><span>" + dlabel(parseISO(q.date)) + "</span><span>" + money(q.amount, d.cur) + "</span></div>").join("") + "</div>";
+      if (loan && scx && !done) {
+        extra = extra.replace('<div class="kv">', '<div class="track"><span>🏁 ' + _t("Boshlandi") + "</span><span>" + _t("Maqsad") + ' 🎯</span></div><div class="kv">');
+        if (pctv >= 50) extra += '<div class="milest">' + _t("Yarmidan oshdi — davom eting!") + "</div>";
+      }
+      if (loan && done) extra += '<div class="dfx"><i style="left:10%;top:10px;background:#f2b632;transform:rotate(25deg)"></i><i style="left:26%;top:24px;background:#6a93d6;transform:rotate(-30deg)"></i><i style="right:14%;top:12px;background:#46b987;transform:rotate(40deg)"></i><i style="right:30%;top:30px;background:#e0675c"></i><b>' + _t("Kredit to'liq yopildi!") + "</b><small>" + (scx ? _t("{n} oylik yo'l tugadi", { n: scx.total }) : "") + "</small></div>";
+      if (!loan && d.dir === "owed" && !done) acts += '<button type="button" class="dbtn" data-act="copymsg" data-id="' + d.id + '">' + _t("Matnni nusxalash") + "</button>";
+      return '<div class="debt s-' + (done ? "done" : isLate ? "late" : e.diff <= 7 ? "soon" : "ok") + '"><div class="drow"><span class="mcw">' + mascot(mood, 50) + '</span><div class="mid"><b>' + esc(d.name) + "</b><small>" + esc(detail) + "</small></div>" + amtHtml + "</div>" + extra + hist +
+        '<div class="say ' + tone + '">' + esc(say) + '</div><div class="dbot">' + chip + '<span class="grow"></span>' + acts + "</div></div>";
         '<div class="dbot">' + chip + '<span class="grow"></span>' + acts + "</div></div>";
     }).join("");
   }
@@ -1823,6 +1951,8 @@
     ["dname", "damount", "ddue", "dday", "dend", "dstart", "dprincipal", "dnote"].forEach((id) => { $(id).value = ""; });
     $("derr").textContent = "";
   }
+  $("dChips").addEventListener("click", (e) => { const b = e.target.closest ? e.target.closest("button[data-f]") : null; if (b) { dFilter = b.getAttribute("data-f"); renderDebts(); } });
+  $("dlist").addEventListener("click", (e) => { if (e.target.closest && e.target.closest("#dEmptyAdd")) $("dOpen").click(); });
   $("dOpen").onclick = () => { $("dform").hidden = false; $("dOpen").hidden = true; setDK(dk); $("dname").focus(); };
   $("dCancel").onclick = closeDForm;
 
@@ -1853,6 +1983,11 @@
     const d = S.debts.filter((x) => x.id === id)[0];
     if (!d) return;
     const redo = () => { renderDebts(); };
+    if (act === "copymsg") {
+      const due = parseISO(d.due), txt = _t("Salom, {name}! {amt} qarzingiz haqida eslatib o'taman, muddat — {date}. Qulay vaqtda qaytarsangiz, rahmat.", { name: d.name, amt: money(remainingOf(d), d.cur) + (d.cur === "USD" ? "" : " " + _t("so'm")), date: dlabel(due) });
+      try { navigator.clipboard.writeText(txt).then(() => toast(_t("Nusxalandi")), () => toast(txt)); } catch (x) { toast(txt); }
+      return;
+    }
     if (act === "payopen") { payOpen = id; renderDebts(); const f = $("payAmt"); if (f) f.focus(); return; }
     if (act === "paycancel") { payOpen = null; renderDebts(); return; }
     if (act === "paysave") {
