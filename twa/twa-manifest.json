@@ -18,7 +18,10 @@
   "webManifestUrl": "https://abdusalomovvd-hash.github.io/manifest.webmanifest",
   "fullScopeUrl": "https://abdusalomovvd-hash.github.io/",
   "splashScreenFadeOutDuration": 300,
-  "signingKey": { "path": "./android.keystore", "alias": "tejamkor-upload" },
+  "signingKey": {
+    "path": "./android.keystore",
+    "alias": "tejamkor-upload"
+  },
   "appVersion": "1.0.0",
   "appVersionName": "1.0.0",
   "appVersionCode": 1,
@@ -26,9 +29,12 @@
   "generatorApp": "bubblewrap-cli",
   "fallbackType": "customtabs",
   "features": {},
-  "alphaDependencies": { "enabled": false },
+  "alphaDependencies": {
+    "enabled": false
+  },
   "enableSiteSettingsShortcut": false,
   "isChromeOSOnly": false,
   "isMetaQuest": false,
-  "additionalTrustedOrigins": []
+  "additionalTrustedOrigins": [],
+  "minSdkVersion": 24
 }
