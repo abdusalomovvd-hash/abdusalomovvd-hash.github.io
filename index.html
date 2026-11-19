@@ -6,7 +6,7 @@
 <title>Tejamkor</title>
 <script src="firebase-config.js"></script>
 <script src="i18n.js"></script>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@500;600&family=IBM+Plex+Sans:wght@400;500;600&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Manrope:wght@600;700;800&family=IBM+Plex+Sans:wght@400;500;600&display=swap">
 <style>
   /* Layout: ledger-style. Sticky wordmark header, month bar, five tabs (bottom nav),
      one solid petrol balance block as the only heavy element, hairline panels elsewhere.
@@ -31,7 +31,7 @@
     --hero-exp: #f5a583;
     --hero-warn: #f0c36b;
     --font-body: "IBM Plex Sans", "Segoe UI", system-ui, sans-serif;
-    --font-num: "IBM Plex Mono", ui-monospace, Menlo, Consolas, monospace;
+    --font-num: "Manrope", "IBM Plex Sans", "Segoe UI", system-ui, sans-serif;
   }
   @media (prefers-color-scheme: dark) {
     :root:not([data-theme="light"]) {
@@ -50,7 +50,7 @@
 
   * { box-sizing: border-box; }
   [hidden] { display: none !important; }
-  .balance, .hsplit b, .amt, .num, .split3 b, .cat-row .sum, .chipbtn b { word-spacing: -0.2em; }
+  .balance, .hsplit b, .amt, .num, .split3 b, .cat-row .sum, .chipbtn b { word-spacing: 0.04em; font-variant-numeric: tabular-nums; }
   body {
     background: var(--bg); color: var(--ink);
     font: 15px/1.45 var(--font-body);
@@ -347,6 +347,54 @@
     .balance { font-size: 34px; }
     .cat-row .sum { width: 84px; }
   }
+
+  /* ---------- Tejamkor ko'rinish yangilanishi: oltin aksent, yumshoq kartalar ---------- */
+  :root { --gold: #d9a21b; --on-gold: #0f2747; --gold-soft: color-mix(in srgb, #d9a21b 16%, transparent); --shadow: 0 1px 2px rgba(15, 39, 71, 0.06), 0 6px 18px rgba(15, 39, 71, 0.07); }
+  @media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) { --gold: #f2b632; --shadow: 0 1px 2px rgba(0, 0, 0, 0.4), 0 6px 18px rgba(0, 0, 0, 0.3); } }
+  :root[data-theme="dark"] { --gold: #f2b632; --shadow: 0 1px 2px rgba(0, 0, 0, 0.4), 0 6px 18px rgba(0, 0, 0, 0.3); }
+
+  .panel { border-radius: 16px; box-shadow: var(--shadow); border-color: color-mix(in srgb, var(--line) 70%, transparent); }
+  .hero {
+    position: relative; overflow: hidden; border-radius: 20px; padding: 22px 20px 18px;
+    background: radial-gradient(120% 90% at 100% 0%, rgba(242, 182, 50, 0.20), transparent 55%), linear-gradient(150deg, #0f2747 0%, #143a63 100%);
+    box-shadow: 0 10px 28px rgba(15, 39, 71, 0.28);
+  }
+  :root[data-theme="dark"] .hero { background: radial-gradient(120% 90% at 100% 0%, rgba(242, 182, 50, 0.16), transparent 55%), linear-gradient(150deg, #0e2038 0%, #123150 100%); }
+  @media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) .hero { background: radial-gradient(120% 90% at 100% 0%, rgba(242, 182, 50, 0.16), transparent 55%), linear-gradient(150deg, #0e2038 0%, #123150 100%); } }
+  .hlabel { color: color-mix(in srgb, var(--gold) 80%, #fff); }
+  .spark .area { fill: var(--gold); fill-opacity: 0.16; }
+  .spark .ln { stroke: var(--gold); stroke-width: 1.8; }
+  .spark .end { fill: var(--gold); }
+  .hsplit .label::before { content: ""; display: inline-block; width: 7px; height: 7px; border-radius: 50%; margin-inline-end: 6px; background: var(--hero-inc); vertical-align: 1px; }
+  .hsplit > div + div .label::before { background: var(--hero-exp); }
+
+  h2 { color: color-mix(in srgb, var(--muted) 85%, var(--gold)); }
+  .split3 > div { border-radius: 12px; }
+  .tx, .rem { padding: 12px 0; }
+  .progress { height: 9px; border-radius: 5px; }
+  .progress i { border-radius: 5px; background: linear-gradient(90deg, color-mix(in srgb, var(--gold) 75%, #fff), var(--gold)); }
+  .chip { border-radius: 8px; }
+  .dbtn { border-radius: 10px; }
+  .dbtn.pay { background: var(--gold-soft); border-color: transparent; color: var(--ink); }
+  .primary { border-radius: 12px; }
+
+  .fab { background: var(--gold); color: var(--on-gold); box-shadow: 0 6px 18px rgba(15, 39, 71, 0.35); }
+  .navin button[aria-current="page"]::before { content: ""; position: absolute; top: 0; left: 50%; width: 22px; height: 3px; margin-left: -11px; border-radius: 0 0 3px 3px; background: var(--gold); }
+  .navin button[aria-current="page"] .nic { background: var(--gold-soft); }
+
+  @media (prefers-reduced-motion: no-preference) {
+    button, .catbtn, .nkeys button { transition: transform .12s ease, background-color .15s ease, box-shadow .15s ease; }
+    button:active:not(:disabled) { transform: scale(0.97); }
+    .fab:active { transform: scale(0.92); }
+    .tab:not([hidden]) .panel { animation: riseIn .28s ease-out both; }
+    .tab:not([hidden]) .panel:nth-child(2) { animation-delay: .04s; }
+    .tab:not([hidden]) .panel:nth-child(3) { animation-delay: .08s; }
+    .tab:not([hidden]) .panel:nth-child(n+4) { animation-delay: .12s; }
+    @keyframes riseIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: none; } }
+    .progress i { transition: width .6s cubic-bezier(.2, .8, .2, 1); }
+  }
+
+  #fx { position: fixed; inset: 0; width: 100%; height: 100%; z-index: 5; pointer-events: none; }
 </style>
 <meta name="theme-color" media="(prefers-color-scheme: light)" content="#eceff1">
 <meta name="theme-color" media="(prefers-color-scheme: dark)" content="#0a1216">
@@ -412,6 +460,7 @@
 </style>
 </head>
 <body>
+<canvas id="fx" aria-hidden="true"></canvas>
 <div class="app">
   <header class="top">
     <h1 class="brand"><svg viewBox="0 0 64 64" width="28" height="28" aria-hidden="true"><rect width="64" height="64" rx="15" fill="#0f2747"/><defs><linearGradient id="gh" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#ffd36b"/><stop offset="1" stop-color="#f0a830"/></linearGradient></defs><circle cx="32" cy="32" r="21" fill="url(#gh)"/><circle cx="32" cy="32" r="17" fill="none" stroke="#0f2747" stroke-width="1.6" opacity=".28"/><path d="M23 24.5h18M32 24.5v17.5" fill="none" stroke="#0f2747" stroke-width="5.8" stroke-linecap="round"/></svg><span class="wm">Tejam<span>kor</span></span></h1>
@@ -717,6 +766,10 @@
           <div class="field">
             <label for="themeSel">Mavzu</label>
             <select id="themeSel"><option value="">Avtomatik</option><option value="light">Yorug'</option><option value="dark">Qorong'i</option></select>
+          </div>
+          <div class="field">
+            <label for="fxSel">Fon animatsiyasi</label>
+            <select id="fxSel"><option value="">Avtomatik</option><option value="off">O'chiq</option></select>
           </div>
         </div>
       </section>
@@ -2293,6 +2346,63 @@
       history.pushState({ tj: 1 }, "");
     });
   } catch (e) {}
+})();
+</script>
+<script>
+/* Fasl animatsiyasi: sanaga qarab kuzda yaprog'lar, qishda qor, bahorda gul barglari, yozda nur zarralari. */
+(function () {
+  const cv = document.getElementById("fx"), sel = document.getElementById("fxSel");
+  if (!cv || !cv.getContext) return;
+  const KEY = "hisobchi_fx_v1", ctx = cv.getContext("2d"), mq = window.matchMedia ? window.matchMedia("(prefers-reduced-motion: reduce)") : null;
+  let W = 0, H = 0, dpr = 1, ps = [], raf = 0, last = 0, season = "";
+  const get = () => { try { return localStorage.getItem(KEY) || ""; } catch (e) { return ""; } };
+  const isOn = () => get() !== "off" && !(mq && mq.matches) && !document.hidden;
+  const seasonNow = () => { const m = new Date().getMonth(); return m === 11 || m < 2 ? "winter" : m < 5 ? "spring" : m < 8 ? "summer" : "autumn"; };
+  const isDark = () => { const t = document.documentElement.getAttribute("data-theme"); return t === "dark" || (t !== "light" && window.matchMedia && matchMedia("(prefers-color-scheme: dark)").matches); };
+  const PAL = { autumn: ["#d9822b", "#b8501f", "#e0a526", "#9c3d1a"], spring: ["#f4a6b8", "#f8c8d4", "#f2b8c6"], winter: ["#ffffff"], summer: ["#f2b632"] };
+  const rnd = (a, b) => a + Math.random() * (b - a);
+  function make(initial) {
+    const c = PAL[season], p = { x: rnd(0, W), s: rnd(7, 14), col: c[Math.floor(Math.random() * c.length)], rot: rnd(0, 6.28), vr: rnd(-1, 1), ph: rnd(0, 6.28), sw: rnd(10, 28), a: rnd(0.35, 0.6) };
+    if (season === "summer") { p.vy = -rnd(8, 18); p.y = initial ? rnd(0, H) : H + 20; p.s = rnd(4, 9); p.a = rnd(0.25, 0.5); }
+    else { p.vy = rnd(18, 38); p.y = initial ? rnd(0, H) : -20; if (season === "winter") { p.s = rnd(2, 4.5); p.vy = rnd(14, 30); p.a = rnd(0.5, 0.85); } }
+    return p;
+  }
+  function resize() {
+    dpr = Math.min(window.devicePixelRatio || 1, 1.5); W = window.innerWidth; H = window.innerHeight;
+    cv.width = Math.round(W * dpr); cv.height = Math.round(H * dpr);
+    const n = Math.max(8, Math.min(16, Math.round(W * H / 32000)));
+    ps = []; for (let i = 0; i < n; i++) ps.push(make(true));
+  }
+  function draw(p, dark) {
+    ctx.globalAlpha = p.a; ctx.fillStyle = season === "winter" && !dark ? "#9db4c8" : p.col;
+    ctx.save(); ctx.translate(p.x, p.y);
+    if (season === "winter") { ctx.beginPath(); ctx.arc(0, 0, p.s, 0, 6.283); ctx.fill(); }
+    else if (season === "summer") { const g = ctx.createRadialGradient(0, 0, 0, 0, 0, p.s * 2); g.addColorStop(0, p.col); g.addColorStop(1, "rgba(242,182,50,0)"); ctx.fillStyle = g; ctx.beginPath(); ctx.arc(0, 0, p.s * 2, 0, 6.283); ctx.fill(); }
+    else if (season === "spring") { ctx.rotate(p.rot); ctx.beginPath(); ctx.ellipse(0, 0, p.s * 0.8, p.s * 0.45, 0, 0, 6.283); ctx.fill(); }
+    else { ctx.rotate(p.rot); const L = p.s * 1.2; ctx.beginPath(); ctx.moveTo(-L, 0); ctx.quadraticCurveTo(0, -L * 0.8, L, 0); ctx.quadraticCurveTo(0, L * 0.8, -L, 0); ctx.fill(); ctx.globalAlpha = p.a * 0.7; ctx.strokeStyle = "rgba(60,25,10,.6)"; ctx.lineWidth = 0.8; ctx.beginPath(); ctx.moveTo(-L, 0); ctx.lineTo(L, 0); ctx.stroke(); }
+    ctx.restore();
+  }
+  function frame(t) {
+    raf = requestAnimationFrame(frame);
+    if (t - last < 33) return; const dt = Math.min((t - last) / 1000, 0.1); last = t;
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0); ctx.clearRect(0, 0, W, H); const dark = isDark();
+    for (let i = 0; i < ps.length; i++) {
+      const p = ps[i]; p.y += p.vy * dt; p.ph += dt * 0.9; p.rot += p.vr * dt; p.x += Math.sin(p.ph) * p.sw * dt;
+      if (p.y > H + 24 || p.y < -30 || p.x < -30 || p.x > W + 30) { ps[i] = make(false); continue; }
+      draw(p, dark);
+    }
+  }
+  function sync() {
+    cancelAnimationFrame(raf); raf = 0;
+    if (!isOn()) { ctx.setTransform(1, 0, 0, 1, 0, 0); ctx.clearRect(0, 0, cv.width, cv.height); cv.hidden = true; return; }
+    cv.hidden = false; const s = seasonNow(); if (s !== season || !ps.length) { season = s; resize(); }
+    last = 0; raf = requestAnimationFrame(frame);
+  }
+  window.addEventListener("resize", () => { if (isOn()) resize(); });
+  document.addEventListener("visibilitychange", sync);
+  if (mq && mq.addEventListener) mq.addEventListener("change", sync);
+  if (sel) { sel.value = get(); sel.addEventListener("change", () => { try { if (sel.value) localStorage.setItem(KEY, sel.value); else localStorage.removeItem(KEY); } catch (e) {} sync(); }); }
+  sync();
 })();
 </script>
 <script>

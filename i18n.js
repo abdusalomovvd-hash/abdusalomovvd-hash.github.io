@@ -281,6 +281,7 @@ window.HISOBCHI_I18N = {
   "mln": "млн",
   "ming": "тыс.",
   "Chiqish uchun yana bir marta bosing": "Нажмите ещё раз, чтобы выйти",
+  "Fon animatsiyasi": "Анимация фона",
   "months": [
    "Январь",
    "Февраль",
@@ -614,6 +615,7 @@ window.HISOBCHI_I18N = {
   "mln": "M",
   "ming": "K",
   "Chiqish uchun yana bir marta bosing": "Press back again to exit",
+  "Fon animatsiyasi": "Background animation",
   "months": [
    "January",
    "February",
@@ -933,6 +935,7 @@ window.HISOBCHI_I18N = {
   "mln": "مليون",
   "ming": "ألف",
   "Chiqish uchun yana bir marta bosing": "اضغط مرة أخرى للخروج",
+  "Fon animatsiyasi": "حركة الخلفية",
   "months": [
    "يناير",
    "فبراير",
@@ -1252,6 +1255,7 @@ window.HISOBCHI_I18N = {
   "mln": "milyon",
   "ming": "bin",
   "Chiqish uchun yana bir marta bosing": "Çıkmak için tekrar basın",
+  "Fon animatsiyasi": "Arka plan animasyonu",
   "months": [
    "Ocak",
    "Şubat",
