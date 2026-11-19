@@ -598,6 +598,27 @@
   .accrow .chs button.on { background: var(--gold-soft); border-color: var(--gold); } .accrow .chs i { width: 10px; height: 10px; border-radius: 50%; display: block; }
   .acsheet .dng { color: #c0483f; border-color: color-mix(in srgb, #c0483f 40%, var(--line)); }
   .acsheet .primary { background: var(--gold); border-color: var(--gold); color: var(--on-gold); font-weight: 800; }
+
+  /* ---------- O'yin bo'limi ---------- */
+  .gstreak { display: flex; gap: 12px; align-items: center; border-radius: 20px; padding: 14px; color: #fff; background: linear-gradient(150deg, #0f2747, #143a63); box-shadow: var(--shadow); margin-bottom: 12px; }
+  .gstreak small { font-size: 10.5px; letter-spacing: .1em; text-transform: uppercase; color: #f2c75a; display: block; } .gstreak b { font: 800 18px var(--font-num); display: block; } .gstreak span.sub { font-size: 12.5px; opacity: .85; }
+  .gdays { display: flex; gap: 5px; margin-top: 8px; } .gdays i { width: 22px; height: 22px; border-radius: 7px; background: rgba(255, 255, 255, .14); display: grid; place-items: center; font: 800 11px var(--font-num); font-style: normal; } .gdays i.on { background: #f2b632; color: #0f2747; }
+  .gcard { display: flex; gap: 14px; align-items: center; width: 100%; text-align: start; border: 1px solid var(--line); background: var(--surface); border-radius: 18px; padding: 14px; margin-bottom: 10px; box-shadow: var(--shadow); color: var(--ink); font-family: var(--font-num); }
+  .gcard.daily { border: 2px solid var(--gold); background: var(--gold-soft); }
+  .gi { width: 54px; height: 54px; border-radius: 16px; display: grid; place-items: center; font-size: 26px; flex: none; color: #fff; box-shadow: inset 0 1px 0 rgba(255, 255, 255, .35); } .gi svg { width: 28px; height: 28px; stroke: #fff; fill: none; stroke-width: 1.9; stroke-linecap: round; stroke-linejoin: round; }
+  .gcard b { display: block; font-size: 15px; } .gcard small { color: var(--muted); font-size: 12px; } .gcard .best { margin-inline-start: auto; text-align: end; font: 800 13px var(--font-num); color: var(--gold); } .gcard .best small { display: block; font-weight: 500; color: var(--muted); }
+  .gbar { display: flex; justify-content: space-between; align-items: center; gap: 10px; margin-bottom: 10px; } .gsc { background: var(--surface); border: 1px solid var(--line); border-radius: 12px; padding: 6px 12px; text-align: center; font: 800 16px var(--font-num); } .gsc small { display: block; font: 600 9.5px var(--font-num); color: var(--muted); letter-spacing: .08em; text-transform: uppercase; }
+  .ghead { display: flex; align-items: center; gap: 10px; margin: 4px 0 12px; } .ghead h2 { margin: 0; display: block !important; text-transform: none; letter-spacing: 0; color: var(--ink); font: 800 20px var(--font-num); }
+  #g2048 { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; background: var(--line); padding: 8px; border-radius: 18px; touch-action: none; user-select: none; -webkit-user-select: none; }
+  #g2048 .t { aspect-ratio: 1; border-radius: 14px; display: grid; place-items: center; font: 800 16px var(--font-num); background: var(--soft); color: #0f2747; direction: ltr; }
+  .ghint { text-align: center; color: var(--muted); font-size: 12px; margin: 10px 0; }
+  .git { display: flex; gap: 10px; align-items: center; padding: 10px; border: 2px solid var(--line); border-radius: 14px; margin-bottom: 8px; background: var(--surface); width: 100%; text-align: start; color: var(--ink); font-family: var(--font-num); } .git.on { border-color: var(--gold); background: var(--gold-soft); }
+  .git .n { flex: 1; font: 700 14px var(--font-num); } .git .n small { display: block; color: var(--muted); font: 500 11.5px var(--font-num); } .git .p { font: 800 13px var(--font-num); white-space: nowrap; } .git .e { font-size: 22px; }
+  .meter { height: 10px; background: var(--soft); border-radius: 6px; overflow: hidden; margin: 6px 0; } .meter i { display: block; height: 100%; background: linear-gradient(90deg, #46b987, #f2c75a); } .meter.over i { background: #c0483f; }
+  #gmem { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; } .gmc { aspect-ratio: 1; border-radius: 14px; border: 0; background: linear-gradient(140deg, #0f2747, #1d4f86); color: #f2c75a; font: 800 22px var(--font-num); display: grid; place-items: center; } .gmc.open { background: var(--surface); border: 2px solid var(--gold); } .gmc.done { background: var(--gold-soft); border: 2px solid var(--inc); }
+  .gmc .cico { width: 40px; height: 40px; border-radius: 12px; }
+  .gsay { margin-top: 12px; background: var(--soft); border-radius: 14px; padding: 10px 12px; font: 600 13px/1.4 var(--font-num); display: flex; gap: 10px; align-items: center; } .gsay.gold { background: var(--gold-soft); } .gsay.grn { background: color-mix(in srgb, var(--inc) 14%, var(--surface)); color: var(--inc); }
+  .gsay svg { flex: none; }
 </style>
 <meta name="theme-color" media="(prefers-color-scheme: light)" content="#eceff1">
 <meta name="theme-color" media="(prefers-color-scheme: dark)" content="#0a1216">
@@ -873,6 +894,8 @@
     </div>
 
     <!-- Maqsad -->
+    <div class="tab" id="tab-games" hidden></div>
+
     <div class="tab" id="tab-goals" hidden>
       <section class="panel">
         <div class="phead">
@@ -924,6 +947,11 @@
 
       <div id="menuGroup">
       <section class="panel menu" id="menuWrap">
+        <button type="button" class="mrow" data-go="ledger" id="row_ledger">
+          <span class="mico" style="--c:#8a6a2b"><svg viewBox="0 0 24 24" aria-hidden="true"><rect stroke="#fff" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" fill="none" x="4.5" y="3.5" width="15" height="17" rx="2.5"/><path stroke="#fff" stroke-width="1.8" stroke-linecap="round" d="M8.5 8.5h7M8.5 12h7M8.5 15.5h4"/></svg></span>
+          <span class="mt">Barcha amallar</span>
+          <span class="mv"></span><svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 6l6 6-6 6"/></svg>
+        </button>
         <button type="button" class="mrow" data-go="look" id="row_look">
           <span class="mico" style="--c:#6a56b8"><svg viewBox="0 0 24 24" aria-hidden="true"><path stroke="#fff" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" fill="none" fill="#fff" fill-opacity=".30" d="M20.5 14.2A8.5 8.5 0 1 1 9.8 3.5a6.7 6.7 0 0 0 10.7 10.7z"/><path stroke="#fff" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" fill="none" d="M17.5 3.8v3M16 5.3h3"/></svg></span>
           <span class="mt">Ko'rinish</span>
@@ -992,6 +1020,10 @@
           <div class="srow"><div class="st"><b>Fon animatsiyasi</b><small>Yaprog'lar, qor, gul barglari</small></div><button type="button" class="sw" id="fxSw" role="switch" aria-label="Fon animatsiyasi"></button></div>
           <div class="srow"><div class="st"><b>Bayram rasmlari va tabriklar</b><small>Bayram kunlarida balans kartasida</small></div><button type="button" class="sw" id="holSw" role="switch" aria-label="Bayram rasmlari va tabriklar"></button></div>
           <div class="snow" id="fxNow"></div>
+        </div>
+        <div class="sset" id="secSec">
+          <div class="sh"><span class="sic"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="7" width="18" height="11" rx="5"/><path d="M8 10.5v4M6 12.5h4"/></svg></span><div><b>Bo'limlar</b><small>Pastki panel</small></div></div>
+          <div class="srow"><div class="st"><b>O'yin bo'limini ko'rsatish</b><small>O'chirsangiz, o'rniga Amallar chiqadi</small></div><button type="button" class="sw" id="gamesSw" role="switch" aria-label="O'yin bo'limini ko'rsatish"></button></div>
         </div>
         <div hidden>
           <select id="langSel"><option value="uz">O'zbekcha</option><option value="ru">Русский</option><option value="en">English</option><option value="ar">العربية</option><option value="tr">Türkçe</option></select>
@@ -1160,10 +1192,6 @@
       <span class="nic"><svg viewBox="0 0 24 24" aria-hidden="true"><path stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" fill="currentColor" fill-opacity=".20" d="M4 11l8-7 8 7v7.8a1.7 1.7 0 0 1-1.7 1.7H15v-5.7H9v5.7H5.7A1.7 1.7 0 0 1 4 18.8V11z"/></svg></span>
       <span>Bosh</span>
     </button>
-    <button type="button" data-tab="ledger">
-      <span class="nic"><svg viewBox="0 0 24 24" aria-hidden="true"><rect stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" fill="currentColor" fill-opacity=".20" x="3.5" y="4" width="17" height="16" rx="3.5"/><path stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" fill="none" d="M8 9h8M8 12.5h8M8 16h5"/></svg></span>
-      <span>Amallar</span>
-    </button>
     <button type="button" data-tab="debts">
       <span class="nic"><svg viewBox="0 0 24 24" aria-hidden="true"><rect stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" fill="currentColor" fill-opacity=".20" x="3" y="5.5" width="18" height="13" rx="3.2"/><path stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" fill="none" d="M3 10h18M7 15h3.5"/></svg></span>
       <span>Qarzlar</span>
@@ -1172,6 +1200,14 @@
     <button type="button" data-tab="goals">
       <span class="nic"><svg viewBox="0 0 24 24" aria-hidden="true"><path stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" fill="currentColor" fill-opacity=".20" d="M5.5 4h11.2l-2 3.6 2 3.6H5.5z"/><path stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" fill="none" d="M5.5 21V4"/></svg></span>
       <span>Maqsad</span>
+    </button>
+    <button type="button" data-tab="ledger" id="navLedger">
+      <span class="nic"><svg viewBox="0 0 24 24" aria-hidden="true"><rect stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" fill="currentColor" fill-opacity=".20" x="3.5" y="4" width="17" height="16" rx="3.5"/><path stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" fill="none" d="M8 9h8M8 12.5h8M8 16h5"/></svg></span>
+      <span>Amallar</span>
+    </button>
+    <button type="button" data-tab="games" id="navGames">
+      <span class="nic"><svg viewBox="0 0 24 24" aria-hidden="true"><rect stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" fill="currentColor" fill-opacity=".20" x="3" y="7" width="18" height="11" rx="5"/><path stroke="currentColor" stroke-width="1.8" stroke-linecap="round" d="M8 10.5v4M6 12.5h4M16 11.5h.01M18 13.5h.01"/></svg></span>
+      <span>O'yin</span>
     </button>
     <button type="button" data-tab="settings">
       <span class="nic"><svg viewBox="0 0 24 24" aria-hidden="true"><circle stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" fill="currentColor" fill-opacity=".20" cx="12" cy="8" r="4"/><path stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" fill="currentColor" fill-opacity=".20" d="M4.5 20.5c0-4 3.4-6.5 7.5-6.5s7.5 2.5 7.5 6.5z"/></svg></span>
@@ -1809,13 +1845,16 @@
     $("themeSel").value = lsGet(THEME_KEY) || "";
     renderLook();
   }
-  const TABS = ["home", "ledger", "debts", "goals", "settings"];
+  const TABS = ["home", "ledger", "debts", "goals", "games", "settings"], GAMES_KEY = "hisobchi_games_v1";
+  const gamesOn = () => lsGet(GAMES_KEY) !== "off";
   function updateChrome() {
     const open = !$("secret").hidden;
     const withMonth = tab === "home" || tab === "ledger";
     $("nav").hidden = !open;
     $("monthbar").hidden = !withMonth;
     $("fab").hidden = !open || !withMonth || !$("form").hidden;
+    if (tab === "games" && !gamesOn()) tab = "home";
+    $("navGames").hidden = !gamesOn(); $("navLedger").hidden = gamesOn();
     TABS.forEach((t) => { $("tab-" + t).hidden = t !== tab; });
     Array.prototype.forEach.call($("nav").querySelectorAll("button[data-tab]"), (b) => {
       if (b.getAttribute("data-tab") === tab) b.setAttribute("aria-current", "page"); else b.removeAttribute("aria-current");
@@ -1823,12 +1862,13 @@
   }
   function showTab(name) {
     if (TABS.indexOf(name) === -1) return;
-    tab = name; disarm(); payOpen = null;
+    tab = name; disarm(); payOpen = null; if (name !== "games") gStop();
     updateChrome();
     try { window.scrollTo(0, 0); } catch (e) {}
     if (name === "debts") renderDebts();
     if (name === "ledger") renderLedger();
     if (name === "settings") closePg();
+    if (name === "games") renderGames();
   }
   function renderBadges() {
     const n = entries().filter((e) => e.due && e.diff <= 7).length;
@@ -1840,6 +1880,111 @@
     if (b) showTab(b.getAttribute("data-tab"));
   });
   $("recentAll").addEventListener("click", () => showTab("ledger"));
+
+  /* ---------- O'yin bo'limi ---------- */
+  const GST_KEY = "hisobchi_gstat_v1";
+  function gst() { let o = {}; try { o = JSON.parse(lsGet(GST_KEY)) || {}; } catch (e) {} return Object.assign({ streak: 0, last: "", done: {}, b2048: 0, bbud: 0, bmem: 0 }, o); }
+  function gsave(o) { try { lsSet(GST_KEY, JSON.stringify(o)); } catch (e) {} }
+  function gStreakNow(o) { const t = iso(today0()), y = iso(new Date(today0().getTime() - 864e5)); return o.last === t || o.last === y ? o.streak : 0; }
+  function gMarkDaily() {
+    const o = gst(), t = iso(today0()), y = iso(new Date(today0().getTime() - 864e5));
+    if (o.done[t]) return; o.done[t] = 1; o.streak = (o.last === y ? o.streak : 0) + 1; o.last = t;
+    Object.keys(o.done).sort().slice(0, -30).forEach((k) => delete o.done[k]); gsave(o);
+  }
+  const gIco = { coin: '<circle cx="12" cy="12" r="8.5"/><path d="M9 9.5h6M9 14.5h6M12 7v10"/>', calc: '<rect x="5" y="3" width="14" height="18" rx="2.5"/><path d="M8 7h8M8 12h2M12 12h2M8 16h2M12 16h2"/>', cards: '<rect x="3.5" y="6" width="11" height="14" rx="2"/><path d="M8 6V4.5A1.5 1.5 0 019.5 3H18a2 2 0 012 2v10a2 2 0 01-2 2h-3.5"/>', cal: '<rect x="3.5" y="5" width="17" height="15" rx="2.5"/><path d="M3.5 10h17M8 3v4M16 3v4"/>' };
+  function gSvg(n) { return '<svg viewBox="0 0 24 24" aria-hidden="true">' + gIco[n] + "</svg>"; }
+  let gOff = null;
+  function gStop() { if (gOff) { gOff(); gOff = null; } }
+  function renderGames() {
+    gStop();
+    const el = $("tab-games"), o = gst(), st = gStreakNow(o), t = iso(today0()), dn = !!o.done[t];
+    let days = "";
+    for (let i = 6; i >= 0; i--) { const d = iso(new Date(today0().getTime() - i * 864e5)); days += '<i class="' + (o.done[d] ? "on" : "") + '">' + (o.done[d] ? "✓" : "") + "</i>"; }
+    el.innerHTML = '<div class="ghead"><h2>' + _t("O'yin") + '</h2></div><div class="gstreak"><span class="mcw" style="width:58px">' + mascot(dn ? "party" : "cool", 54) + "</span><div><small>" + _t("Ketma-ket kunlar") + "</small><b>\u{1F525} " + _t("{n} kun", { n: st }) + '</b><span class="sub">' + _t(dn ? "Bugungi topshiriq bajarildi ✓" : "Bugungi topshiriq hali bajarilmagan") + '</span><div class="gdays">' + days + "</div></div></div>" +
+      '<button type="button" class="gcard daily" data-g="daily"><span class="gi" style="background:linear-gradient(140deg,#e2a923,#b07d0c)">' + gSvg("cal") + "</span><div><b>" + _t("Kunlik topshiriq") + "</b><small>" + _t("Bugungi byudjet jumboq") + "</small></div></button>" +
+      '<button type="button" class="gcard" data-g="g2048"><span class="gi" style="background:linear-gradient(140deg,#e2a923,#b07d0c)">' + gSvg("coin") + "</span><div><b>" + _t("Tanga 2048") + "</b><small>" + _t("Tangalarni birlashtiring") + '</small></div><div class="best">' + (o.b2048 || 0) + "<small>" + _t("rekord") + "</small></div></button>" +
+      '<button type="button" class="gcard" data-g="bud"><span class="gi" style="background:linear-gradient(140deg,#1f8f63,#0f5f43)">' + gSvg("calc") + "</span><div><b>" + _t("Byudjetni tenglashtir") + "</b><small>" + _t("Mantiq: eng foydali xarajatlarni tanlang") + '</small></div><div class="best">' + (o.bbud ? "★".repeat(o.bbud) : "—") + "<small>" + _t("yulduz") + "</small></div></button>" +
+      '<button type="button" class="gcard" data-g="mem"><span class="gi" style="background:linear-gradient(140deg,#7a4aa8,#4b2a73)">' + gSvg("cards") + "</span><div><b>" + _t("Xotira: kategoriyalar") + "</b><small>" + _t("Juftlarni toping") + '</small></div><div class="best">' + (o.bmem || "—") + "<small>" + _t("yurish") + "</small></div></button>";
+    Array.prototype.forEach.call(el.querySelectorAll("[data-g]"), (b) => { b.onclick = () => { const g = b.getAttribute("data-g"); if (g === "g2048") game2048(); else if (g === "mem") gameMem(); else gameBud(g === "daily"); }; });
+  }
+  function gShell(title, body) {
+    $("tab-games").innerHTML = '<div class="ghead"><button type="button" class="ghost small" id="gBack">‹</button><h2>' + title + "</h2></div>" + body;
+    $("gBack").onclick = renderGames; try { window.scrollTo(0, 0); } catch (e) {}
+  }
+  const gSay = (kind, html, cls) => '<div class="gsay ' + (cls || "") + '">' + mascot(kind, 34) + "<div>" + html + "</div></div>";
+  /* Tanga 2048 */
+  function game2048() {
+    let G = [], score = 0, best = gst().b2048 || 0, over = false;
+    for (let i = 0; i < 16; i++) G.push(0);
+    const add = () => { const e = []; G.forEach((v, i) => { if (!v) e.push(i); }); if (e.length) G[e[Math.floor(Math.random() * e.length)]] = Math.random() < .9 ? 1 : 2; };
+    add(); add();
+    const COL = { 1: "#fbe7a8", 2: "#f7d977", 4: "#f2c75a", 8: "#ecb53a", 16: "#e2a923", 32: "#e0903a", 64: "#e0703a", 128: "#c0483f", 256: "#a8353a", 512: "#7a4aa8", 1024: "#4b2a73", 2048: "#0f2747" };
+    gShell(_t("Tanga 2048"), '<div class="gbar"><div class="gsc"><small>' + _t("Ochko") + '</small><span id="g_sc">0</span></div><div class="gsc"><small>' + _t("Rekord") + '</small><span id="g_bs">0</span></div><button type="button" class="primary" id="g_nw">' + _t("Qayta") + '</button></div><div id="g2048"></div><div class="ghint">' + _t("Strelkalar yoki barmoq bilan suring") + '</div><div id="g_say"></div>');
+    function draw() {
+      $("g2048").innerHTML = G.map((v) => '<div class="t" style="' + (v ? "background:" + (COL[v] || "#0f2747") + ";color:" + (v >= 128 ? "#fff" : "#0f2747") + (String(v * 1000).length > 5 ? ";font-size:13px" : "") : "") + '">' + (v ? fmt(v * 1000) : "") + "</div>").join("");
+      $("g_sc").textContent = score; $("g_bs").textContent = best;
+      $("g_say").innerHTML = over ? gSay("nerv", _t("Tamom! Yana urinib ko'ring.")) : gSay(G.indexOf(128) > -1 ? "flex" : "cool", _t(G.indexOf(128) > -1 ? "128 000! Ofarin, boylik o'sib bormoqda 🔥" : "Bir xil tangalarni qo'shing: 1 000 + 1 000 = 2 000"), "gold");
+    }
+    const line = (a) => { const r = a.filter(Boolean), o = []; for (let i = 0; i < r.length; i++) { if (r[i] === r[i + 1]) { o.push(r[i] * 2); score += r[i] * 10; i++; } else o.push(r[i]); } while (o.length < 4) o.push(0); return o; };
+    function move(d) {
+      if (over) return; const old = G.join();
+      for (let k = 0; k < 4; k++) { const idx = []; for (let j = 0; j < 4; j++) idx.push(d === "L" ? k * 4 + j : d === "R" ? k * 4 + 3 - j : d === "U" ? j * 4 + k : (3 - j) * 4 + k); const l = line(idx.map((i) => G[i])); idx.forEach((i, n) => { G[i] = l[n]; }); }
+      if (G.join() !== old) {
+        add(); if (score > best) { best = score; const o = gst(); o.b2048 = best; gsave(o); }
+        let can = G.indexOf(0) > -1; if (!can) for (let i = 0; i < 16; i++) { if ((i % 4 < 3 && G[i] === G[i + 1]) || (i < 12 && G[i] === G[i + 4])) { can = true; break; } }
+        if (!can) over = true;
+      }
+      draw();
+    }
+    draw(); $("g_nw").onclick = game2048;
+    const el = $("g2048"); let sx = 0, sy = 0;
+    el.addEventListener("pointerdown", (e) => { sx = e.clientX; sy = e.clientY; });
+    el.addEventListener("pointerup", (e) => { const dx = e.clientX - sx, dy = e.clientY - sy; if (Math.max(Math.abs(dx), Math.abs(dy)) < 24) return; move(Math.abs(dx) > Math.abs(dy) ? (dx > 0 ? "R" : "L") : dy > 0 ? "D" : "U"); });
+    const kd = (e) => { const m = { ArrowLeft: "L", ArrowRight: "R", ArrowUp: "U", ArrowDown: "D" }[e.key]; if (m) { e.preventDefault(); move(m); } };
+    document.addEventListener("keydown", kd); gOff = () => document.removeEventListener("keydown", kd);
+  }
+  /* Byudjetni tenglashtir */
+  function gameBud(daily) {
+    let seed = daily ? +iso(today0()).replace(/-/g, "") : Math.floor(Math.random() * 1e9);
+    const rnd = () => { seed = (seed * 1664525 + 1013904223) % 4294967296; return seed / 4294967296; };
+    const base = [[_t("Ijara"), "\u{1F3E0}", 1200, 5], [_t("Oziq-ovqat"), "\u{1F6D2}", 900, 5], [_t("Transport"), "\u{1F695}", 250, 3], [_t("Kafe va restoran"), "\u{1F37D}️", 400, 2], [_t("Kino va o'yin"), "\u{1F3AC}", 180, 2], [_t("Kiyim"), "\u{1F455}", 350, 2], [_t("Sport zal"), "\u{1F3CB}️", 200, 3], [_t("Ta'lim kursi"), "\u{1F393}", 300, 4], [_t("Sayohat"), "✈️", 700, 4]];
+    const items = base.map((x) => [x[0], x[1], Math.round(x[2] * (0.8 + rnd() * 0.45) / 10) * 10, x[3]]);
+    const total = items.reduce((t, x) => t + x[2], 0), B = Math.round(total * 0.58 / 100) * 100;
+    let best = 0; for (let m = 0; m < 1 << items.length; m++) { let c = 0, v = 0; for (let i = 0; i < items.length; i++) if (m >> i & 1) { c += items[i][2]; v += items[i][3]; } if (c <= B && v > best) best = v; }
+    const sel = {};
+    gShell(_t(daily ? "Kunlik topshiriq" : "Byudjetni tenglashtir"), '<div class="box" style="background:var(--surface);border:1px solid var(--line);border-radius:18px;padding:14px;margin-bottom:10px;box-shadow:var(--shadow)"><b style="font-size:13.5px">' + _t("Oylik byudjet: {b} ming so'm", { b: fmt(B) }) + '</b><div style="color:var(--muted);font-size:12px;margin:2px 0 6px">' + _t("Foydasi eng ko'p bo'lgan xarajatlarni tanlang, byudjetdan oshmang.") + '</div><div class="meter" id="b_m"><i></i></div><div id="b_k"></div></div><div id="b_l"></div><button type="button" class="primary" id="b_ck" style="width:100%;padding:13px">' + _t("Tekshirish") + '</button><div id="b_say"></div>');
+    function draw() {
+      let c = 0, v = 0; items.forEach((x, i) => { if (sel[i]) { c += x[2]; v += x[3]; } });
+      const over = c > B;
+      $("b_l").innerHTML = items.map((x, i) => '<button type="button" class="git ' + (sel[i] ? "on" : "") + '" data-i="' + i + '"><span class="e">' + x[1] + '</span><span class="n">' + esc(x[0]) + "<small>" + _t("Foyda:") + " " + "★".repeat(x[3]) + "☆".repeat(5 - x[3]) + '</small></span><span class="p">' + fmt(x[2]) + " " + _t("ming") + "</span></button>").join("");
+      $("b_m").className = "meter" + (over ? " over" : ""); $("b_m").firstChild.style.width = Math.min(100, c / B * 100) + "%";
+      $("b_k").innerHTML = '<div class="akv"><span>' + _t("Sarflandi") + '</span><b style="color:' + (over ? "#c0483f" : "inherit") + '">' + fmt(c) + " / " + fmt(B) + " " + _t("ming") + '</b></div><div class="akv"><span>' + _t("Foyda ochkosi") + "</span><b>" + v + "</b></div>";
+      Array.prototype.forEach.call($("b_l").querySelectorAll(".git"), (b) => { b.onclick = () => { sel[b.getAttribute("data-i")] = !sel[b.getAttribute("data-i")]; $("b_say").innerHTML = ""; draw(); }; });
+      $("b_ck").onclick = () => {
+        if (!v) { $("b_say").innerHTML = gSay("nerv", _t("Avval biror xarajatni tanlang.")); return; }
+        if (over) { $("b_say").innerHTML = gSay("panic", _t("Byudjetdan oshdingiz! Biror narsani olib tashlang."), ""); return; }
+        const stars = v >= best ? 3 : v >= best - 2 ? 2 : 1, o = gst(); if (stars > (o.bbud || 0)) { o.bbud = stars; gsave(o); }
+        if (daily) gMarkDaily();
+        $("b_say").innerHTML = stars === 3 ? gSay("party", "<b>" + _t("3 yulduz! Bundan yaxshi variant yo'q. Haqiqiy tejamkor!") + "</b>", "grn") : gSay(stars === 2 ? "flex" : "nerv", "<b>" + _t("{n} yulduz. Eng yaxshi natija {b} ochko, sizniki {v}. Yana urinib ko'ring.", { n: stars, b: best, v: v }) + "</b>", "gold");
+      };
+    }
+    draw();
+  }
+  /* Xotira */
+  function gameMem() {
+    const E = ["Oziq-ovqat", "Transport", "Uy-joy", "Aloqa", "Salomatlik", "Ta'lim"], deck = E.concat(E).sort(() => Math.random() - .5);
+    let open = [], done = {}, moves = 0, lock = false;
+    gShell(_t("Xotira: kategoriyalar"), '<div class="gbar"><div class="gsc"><small>' + _t("Yurish") + '</small><span id="m_mv">0</span></div><button type="button" class="primary" id="m_nw">' + _t("Qayta") + '</button></div><div id="gmem"></div><div id="m_say"></div>');
+    function draw() {
+      $("gmem").innerHTML = deck.map((e, i) => { const o = open.indexOf(i) > -1, d = done[i]; return '<button type="button" class="gmc ' + (d ? "done" : o ? "open" : "") + '" data-i="' + i + '">' + (d || o ? cico(e) : "?") + "</button>"; }).join("");
+      $("m_mv").textContent = moves;
+      Array.prototype.forEach.call($("gmem").querySelectorAll(".gmc"), (b) => { b.onclick = () => click(+b.getAttribute("data-i")); });
+      if (Object.keys(done).length === 12) { const o = gst(); if (!o.bmem || moves < o.bmem) { o.bmem = moves; gsave(o); } $("m_say").innerHTML = gSay("party", "<b>" + _t("{n} yurishda! Xotirangiz a'lo 🎉", { n: moves }) + "</b>", "grn"); }
+      else $("m_say").innerHTML = gSay("cool", _t("Bir xil kategoriyalarni juftlab toping 🧠"), "gold");
+    }
+    function click(i) { if (lock || done[i] || open.indexOf(i) > -1) return; open.push(i); draw(); if (open.length === 2) { moves++; lock = true; setTimeout(() => { if (deck[open[0]] === deck[open[1]]) { done[open[0]] = deck[open[0]]; done[open[1]] = deck[open[1]]; } open = []; lock = false; draw(); }, 700); } }
+    draw(); $("m_nw").onclick = gameMem;
+  }
 
   /* ---------- Hisoblar va kartalar ---------- */
   const acctById = (id) => S.accts.filter((a) => a.id === id)[0];
@@ -2359,7 +2504,7 @@
     renderMenu();
     try { window.scrollTo(0, 0); } catch (e) {}
   }
-  $("menuWrap").addEventListener("click", (e) => { const b = e.target.closest ? e.target.closest("button[data-go]") : null; if (b) openPg(b.getAttribute("data-go")); });
+  $("menuWrap").addEventListener("click", (e) => { const b = e.target.closest ? e.target.closest("button[data-go]") : null; if (b) { const g = b.getAttribute("data-go"); if (g === "ledger") showTab("ledger"); else openPg(g); } });
   $("subBack").onclick = closePg;
 
   /* ---------- Sinxronlash ---------- */
@@ -2807,6 +2952,7 @@
     $("fxSw").classList.toggle("on", fx); $("fxSw").setAttribute("aria-checked", fx ? "true" : "false");
     $("holSw").classList.toggle("on", hol); $("holSw").setAttribute("aria-checked", hol ? "true" : "false");
     $("fxNow").textContent = nowFxText();
+    const go = gamesOn(); $("gamesSw").classList.toggle("on", go); $("gamesSw").setAttribute("aria-checked", go ? "true" : "false");
   }
   renderLook();
   function pickLang(v) { $("langSel").value = v; $("langSel").dispatchEvent(new Event("change")); }
@@ -2822,6 +2968,7 @@
   });
   $("themeCards").addEventListener("click", (e) => { const b = e.target.closest ? e.target.closest(".th") : null; if (!b) return; $("themeSel").value = b.getAttribute("data-t"); $("themeSel").dispatchEvent(new Event("change")); renderLook(); renderMenu(); });
   $("fxSw").onclick = () => { $("fxSel").value = lsGet(FX_KEY) === "off" ? "" : "off"; $("fxSel").dispatchEvent(new Event("change")); renderLook(); };
+  $("gamesSw").onclick = () => { if (gamesOn()) lsSet(GAMES_KEY, "off"); else lsDel(GAMES_KEY); updateChrome(); renderLook(); };
   $("holSw").onclick = () => { if (lsGet(HOL_KEY) === "off") lsDel(HOL_KEY); else lsSet(HOL_KEY, "off"); applyHoliday(); $("fxSel").dispatchEvent(new Event("change")); renderLook(); };
 
   /* ---------- Birinchi ochilish: til tanlash ---------- */
