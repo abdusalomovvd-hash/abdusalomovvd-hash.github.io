@@ -34,6 +34,14 @@ jobs:
           unset ANDROID_SDK_ROOT
           yes | bubblewrap update --skipVersionUpgrade
 
+      - name: Disable R8 minify (androidbrowserhelper breaks when class names are shrunk)
+        working-directory: twa
+        run: |
+          grep -n "minifyEnabled\|shrinkResources" app/build.gradle || true
+          sed -i -E 's/minifyEnabled[[:space:]]*=?[[:space:]]*true/minifyEnabled false/; s/shrinkResources[[:space:]]*=?[[:space:]]*true/shrinkResources false/' app/build.gradle
+          grep -n "minifyEnabled\|shrinkResources" app/build.gradle
+          ! grep -E "minifyEnabled[[:space:]]*=?[[:space:]]*true" app/build.gradle
+
       - name: Build signed .aab and .apk
         working-directory: twa
         env:
