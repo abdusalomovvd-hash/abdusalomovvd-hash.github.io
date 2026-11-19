@@ -564,6 +564,40 @@
   #dform.dform { background: var(--surface); border: 1px solid var(--line); border-radius: 18px; padding: 14px; box-shadow: var(--shadow); margin-bottom: 12px; }
   #dform .primary, .demp .primary { background: var(--gold); border-color: var(--gold); color: var(--on-gold); font-weight: 800; }
   .dbtn.pay { background: var(--gold); border-color: var(--gold); color: var(--on-gold); }
+
+  /* ---------- Hisoblar va kartalar ---------- */
+  #acctPanelHome.panel { background: transparent; border: 0; box-shadow: none; padding: 0; }
+  .ahead { display: flex; justify-content: space-between; align-items: center; margin: 4px 2px 8px; } .ahead b { font: 800 14px var(--font-num); } .ahead small { color: var(--muted); font-size: 11.5px; display: block; font-weight: 500; }
+  .ahead button { border: 0; background: none; color: var(--gold); font: 700 12.5px var(--font-num); padding: 4px; }
+  .arail { display: flex; gap: 12px; overflow-x: auto; scroll-snap-type: x proximity; padding: 2px 2px 10px; margin: 0 -2px; } .arail::-webkit-scrollbar { display: none; }
+  .cc { border-radius: 18px; padding: 14px; color: #fff; flex: none; width: 236px; height: 140px; display: flex; flex-direction: column; justify-content: space-between; box-shadow: 0 10px 22px rgba(0, 0, 0, .22); position: relative; overflow: hidden; scroll-snap-align: start; border: 0; text-align: start; font-family: var(--font-num); }
+  .cc::after { content: ""; position: absolute; right: -30px; top: -40px; width: 140px; height: 140px; border-radius: 50%; background: rgba(255, 255, 255, .09); pointer-events: none; }
+  .cc .ctop { display: flex; justify-content: space-between; align-items: center; font: 700 13px var(--font-num); gap: 8px; } .cc .ctop span { min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .cc .cbot { display: flex; justify-content: space-between; align-items: flex-end; gap: 8px; } .cc small { display: block; font-size: 10px; opacity: .75; text-transform: uppercase; letter-spacing: .08em; }
+  .cc b { font: 800 18px var(--font-num); direction: ltr; unicode-bidi: isolate; } .cc .cnum { font: 600 13px var(--font-num); letter-spacing: .08em; opacity: .9; direction: ltr; }
+  .cc .chp { width: 34px; height: 25px; border-radius: 6px; background: linear-gradient(135deg, #f6d36b, #c89418); display: block; }
+  .cc .lg2 { font: 800 10.5px var(--font-num); letter-spacing: .06em; background: rgba(255, 255, 255, .2); border-radius: 8px; padding: 3px 7px; flex: none; }
+  .cc.add { background: var(--surface); color: var(--gold); border: 2px dashed var(--line); box-shadow: none; align-items: center; justify-content: center; font: 700 13px var(--font-num); gap: 6px; width: 120px; } .cc.add::after { display: none; } .cc.add i { font-style: normal; font-size: 28px; line-height: 1; }
+  .acov { position: fixed; inset: 0; z-index: 70; background: rgba(8, 18, 26, .55); display: flex; align-items: flex-end; justify-content: center; }
+  .acsheet { background: var(--bg); width: 100%; max-width: 560px; max-height: 92vh; overflow-y: auto; border-radius: 22px 22px 0 0; padding: 14px 16px calc(20px + env(safe-area-inset-bottom, 0px)); }
+  .acsheet .grab { width: 40px; height: 4px; border-radius: 2px; background: var(--line); margin: 0 auto 12px; }
+  .acsheet h3 { font: 800 17px var(--font-num); margin: 0 0 12px; }
+  .acsheet .cc { width: 100%; max-width: 320px; margin: 0 auto 12px; display: flex; }
+  .acsheet .box { background: var(--surface); border: 1px solid var(--line); border-radius: 18px; padding: 14px; margin-bottom: 12px; box-shadow: var(--shadow); }
+  .acsheet .fl { margin-bottom: 10px; } .acsheet .fl > label { display: block; font-size: 11px; color: var(--muted); margin-bottom: 4px; letter-spacing: .04em; text-transform: uppercase; }
+  .acsheet .fl input, .acsheet .fl select { width: 100%; }
+  .bseg { display: grid; grid-template-columns: repeat(5, 1fr); gap: 6px; margin-bottom: 12px; } .bseg button { border: 2px solid var(--line); border-radius: 12px; padding: 8px 2px; font: 700 11px var(--font-num); background: var(--soft); color: var(--ink); } .bseg button.on { border-color: var(--gold); background: var(--surface); box-shadow: 0 0 0 3px color-mix(in srgb, var(--gold) 22%, transparent); }
+  .cdots { display: flex; gap: 8px; flex-wrap: wrap; } .cdots button { width: 30px; height: 30px; border-radius: 50%; border: 3px solid transparent; padding: 0; } .cdots button.on { border-color: var(--gold); box-shadow: 0 0 0 2px var(--surface) inset; }
+  .privn { background: var(--gold-soft); border-radius: 14px; padding: 10px 12px; font-size: 12.5px; line-height: 1.5; margin: 4px 0 12px; }
+  .akv { display: flex; justify-content: space-between; font-size: 13px; color: var(--muted); padding: 3px 0; } .akv b { color: var(--ink); font-weight: 600; font-size: 13px; }
+  .arow { display: flex; gap: 8px; } .arow > button { flex: 1; }
+  .xr { display: grid; grid-template-columns: 1fr 30px 1fr; gap: 8px; align-items: end; margin-bottom: 10px; } .xr .ar { text-align: center; color: var(--gold); font-size: 20px; padding-bottom: 10px; }
+  .accrow { padding: 0 0 6px; } .accrow > small { display: block; font-size: 11px; color: var(--muted); margin-bottom: 4px; letter-spacing: .04em; text-transform: uppercase; }
+  .accrow .chs { display: flex; gap: 6px; overflow-x: auto; } .accrow .chs::-webkit-scrollbar { display: none; }
+  .accrow .chs button { white-space: nowrap; border: 1.5px solid var(--line); background: var(--soft); border-radius: 999px; padding: 7px 12px; font: 600 12.5px var(--font-num); color: var(--ink); display: flex; gap: 6px; align-items: center; }
+  .accrow .chs button.on { background: var(--gold-soft); border-color: var(--gold); } .accrow .chs i { width: 10px; height: 10px; border-radius: 50%; display: block; }
+  .acsheet .dng { color: #c0483f; border-color: color-mix(in srgb, #c0483f 40%, var(--line)); }
+  .acsheet .primary { background: var(--gold); border-color: var(--gold); color: var(--on-gold); font-weight: 800; }
 </style>
 <meta name="theme-color" media="(prefers-color-scheme: light)" content="#eceff1">
 <meta name="theme-color" media="(prefers-color-scheme: dark)" content="#0a1216">
@@ -702,6 +736,8 @@
         <h2>Eslatmalar</h2>
         <div id="remList"></div>
       </section>
+
+      <section class="panel" id="acctPanelHome"></section>
 
       <div class="quick" id="quick" hidden></div>
 
@@ -1078,6 +1114,7 @@
 </button>
 
 <div class="scrim" id="scrim" hidden></div>
+<div class="acov" id="acctOv" hidden><div class="acsheet" id="acctSheet"></div></div>
 <form class="composer" id="form" hidden autocomplete="off" aria-label="Yangi amal">
   <div class="grab" aria-hidden="true"></div>
   <div class="seg" role="group" aria-label="Amal turi">
@@ -1090,6 +1127,7 @@
   </div>
   <div class="catscroll" id="catRow" role="group" aria-label="Kategoriya"></div>
   <select id="cat" hidden aria-hidden="true" tabindex="-1"></select>
+  <div class="accrow" id="accRow" hidden></div>
   <input id="note" type="text" maxlength="60" placeholder="Izoh (ixtiyoriy)" aria-label="Izoh">
   <div class="nkeys" id="nkeys">
     <button type="button" data-n="1">1</button><button type="button" data-n="2">2</button><button type="button" data-n="3">3</button>
@@ -1246,7 +1284,7 @@
 
   /* ---------- Ma'lumot modeli ---------- */
   const validTx = (x) => x && (x.type === "inc" || x.type === "exp") && typeof x.amount === "number" && isFinite(x.amount) && x.amount > 0 && typeof x.cat === "string" && isoRe.test(x.date || "");
-  const cleanTx = (x) => { const o = { id: x.id || uid(), type: x.type, amount: x.amount, cur: x.cur === "USD" ? "USD" : "UZS", cat: x.cat.slice(0, 40), note: String(x.note || "").slice(0, 60), date: x.date }; if (x.rid) o.rid = String(x.rid); if (o.cur === "USD" && typeof x.rate === "number" && x.rate > 0) o.rate = x.rate; return o; };
+  const cleanTx = (x) => { const o = { id: x.id || uid(), type: x.type, amount: x.amount, cur: x.cur === "USD" ? "USD" : "UZS", cat: x.cat.slice(0, 40), note: String(x.note || "").slice(0, 60), date: x.date }; if (x.rid) o.rid = String(x.rid); if (x.acc && x.acc !== "cash") o.acc = String(x.acc).slice(0, 40); if (o.cur === "USD" && typeof x.rate === "number" && x.rate > 0) o.rate = x.rate; return o; };
 
   const validDebt = (x) => x && (x.kind === "debt" || x.kind === "loan") && typeof x.name === "string" && typeof x.amount === "number" && x.amount > 0 &&
     (x.kind === "loan" ? typeof x.day === "number" && x.day >= 1 && x.day <= 31 : isoRe.test(x.due || ""));
@@ -1275,7 +1313,12 @@
   const validQuick = (x) => x && (x.type === "inc" || x.type === "exp") && typeof x.amount === "number" && x.amount > 0 && typeof x.cat === "string";
   const cleanQuick = (x) => ({ id: x.id || uid(), type: x.type, amount: x.amount, cur: x.cur === "USD" ? "USD" : "UZS", cat: x.cat.slice(0, 40), note: String(x.note || "").slice(0, 60) });
 
-  const emptyState = () => ({ tx: [], debts: [], goals: [], recurring: [], limits: {}, quick: [], rate: 0, u: 0 });
+  const BRANDS = ["Humo", "Uzcard", "Visa", "Mastercard", "Boshqa"], ACOL = { navy: ["#0f2747", "#1d4f86"], gold: ["#e2a923", "#b07d0c"], green: ["#1f8f63", "#0f5f43"], purple: ["#7a4aa8", "#4b2a73"], red: ["#c0483f", "#7d2620"], teal: ["#25857e", "#14504b"], black: ["#2a3238", "#0c1013"] };
+  const cleanAcct = (a) => ({ id: String(a.id).slice(0, 40), name: String(a.name || "").slice(0, 24), brand: BRANDS.indexOf(a.brand) >= 0 ? a.brand : "Boshqa", last4: String(a.last4 || "").replace(/\D/g, "").slice(0, 4), color: ACOL[a.color] ? a.color : "navy", start: typeof a.start === "number" && isFinite(a.start) ? a.start : 0 });
+  const validAcct = (a) => a && typeof a.id === "string" && a.id && a.id !== "cash" && typeof a.name === "string";
+  const cleanXfer = (x) => ({ id: x.id || uid(), from: String(x.from), to: String(x.to), amount: x.amount, date: x.date });
+  const validXfer = (x) => x && typeof x.from === "string" && typeof x.to === "string" && x.from !== x.to && typeof x.amount === "number" && x.amount > 0 && isoRe.test(x.date || "");
+  const emptyState = () => ({ tx: [], debts: [], goals: [], recurring: [], limits: {}, quick: [], rate: 0, u: 0, accts: [], xfers: [], cashStart: 0 });
   function normalize(o) {
     const s = emptyState();
     if (!o || typeof o !== "object") return s;
@@ -1285,13 +1328,16 @@
     s.goals = arr("goals", validGoal, cleanGoal);
     s.recurring = arr("recurring", validRec, cleanRec);
     s.quick = arr("quick", validQuick, cleanQuick).slice(0, 8);
+    s.accts = arr("accts", validAcct, cleanAcct).slice(0, 12);
+    s.xfers = arr("xfers", validXfer, cleanXfer).filter((x) => (x.from === "cash" || s.accts.some((a) => a.id === x.from)) && (x.to === "cash" || s.accts.some((a) => a.id === x.to)));
+    s.cashStart = typeof o.cashStart === "number" && isFinite(o.cashStart) ? o.cashStart : 0;
     if (o.limits && typeof o.limits === "object") Object.keys(o.limits).forEach((k) => { if (typeof o.limits[k] === "number" && o.limits[k] > 0) s.limits[k.slice(0, 40)] = o.limits[k]; });
     s.rate = typeof o.rate === "number" && o.rate > 0 ? o.rate : 0;
     s.u = typeof o.u === "number" ? o.u : 0;
     return s;
   }
-  const hasData = (s) => !!(s.tx.length || s.debts.length || s.goals.length || s.recurring.length || s.quick.length || Object.keys(s.limits).length);
-  const stateForSync = () => ({ tx: S.tx, debts: S.debts, goals: S.goals, recurring: S.recurring, limits: S.limits, quick: S.quick, rate: S.rate });
+  const hasData = (s) => !!(s.accts.length || s.tx.length || s.debts.length || s.goals.length || s.recurring.length || s.quick.length || Object.keys(s.limits).length);
+  const stateForSync = () => ({ tx: S.tx, debts: S.debts, goals: S.goals, recurring: S.recurring, limits: S.limits, quick: S.quick, rate: S.rate, accts: S.accts, xfers: S.xfers, cashStart: S.cashStart });
 
   let S = emptyState();
   (function load() {
@@ -1485,6 +1531,7 @@
     if (withDate) parts.push(dlabel(parseISO(x.date), false));
     if (x.note) parts.push(esc(x.note));
     if (x.rid) parts.push(_t("takroriy"));
+    if (S.accts.length) { const ac = x.acc && acctById(x.acc); parts.push(ac ? esc(ac.name) + (ac.last4 ? " \u2022\u2022" + esc(ac.last4) : "") : _t("Naqd")); }
     if (x.cur === "USD" && x.rate > 0) parts.push(_t("kurs") + " " + fmt(x.rate));
     return '<div class="tx">' + cico(x.cat) + '<div class="mid"><b>' + esc(_t(x.cat)) + "</b>" + (parts.length ? "<small>" + parts.join(" · ") + "</small>" : "") + "</div>" +
       '<span class="amt ' + x.type + '">' + (x.type === "inc" ? "+" : "−") + money(x.amount, x.cur) + "</span>" +
@@ -1794,8 +1841,104 @@
   });
   $("recentAll").addEventListener("click", () => showTab("ledger"));
 
+  /* ---------- Hisoblar va kartalar ---------- */
+  const acctById = (id) => S.accts.filter((a) => a.id === id)[0];
+  function acctOf(x) { return x.acc && acctById(x.acc) ? x.acc : "cash"; }
+  function acctBal(id) {
+    let b = id === "cash" ? S.cashStart : (acctById(id) || { start: 0 }).start;
+    S.tx.forEach((x) => { if (acctOf(x) === id) b += (x.type === "inc" ? 1 : -1) * toUZS(x.amount, x.cur, x.rate); });
+    S.xfers.forEach((x) => { if (x.to === id) b += x.amount; if (x.from === id) b -= x.amount; });
+    return b;
+  }
+  const acctName = (a) => (a.id === "cash" ? _t("Naqd") : a.name || a.brand) ;
+  const ALL_ACCTS = () => [{ id: "cash", name: "", brand: "Naqd", last4: "", color: "gold" }].concat(S.accts);
+  function acard(a, tag) {
+    const c = ACOL[a.color] || ACOL.navy, lg = a.id === "cash" ? "" : '<span class="lg2">' + esc(a.brand === "Mastercard" ? "MC" : a.brand === "Boshqa" ? "" : a.brand.toUpperCase()) + "</span>";
+    const T = tag || "button";
+    return "<" + T + ' type="button" class="cc" data-acc="' + esc(a.id) + '" style="background:linear-gradient(140deg,' + c[0] + "," + c[1] + ')"><div class="ctop"><span>' + esc(acctName(a)) + "</span>" + (a.id === "cash" ? "<span>\u{1F4B5}</span>" : lg) + "</div>" +
+      (a.id === "cash" ? "" : '<i class="chp"></i>') + '<div class="cbot"><div><small>' + _t("Balans") + "</small><b>" + fmt(acctBal(a.id)) + "</b></div>" + (a.last4 ? '<span class="cnum">\u2022\u2022\u2022\u2022 ' + esc(a.last4) + "</span>" : "") + "</div></" + T + ">";
+  }
+  function renderAccts() {
+    const el = $("acctPanelHome"); if (!el) return;
+    const all = ALL_ACCTS(), total = all.reduce((t, a) => t + acctBal(a.id), 0);
+    if (!S.accts.length) { el.innerHTML = '<div class="ahead"><div><b>' + _t("Mening kartalarim") + "</b></div><button type=\"button\" data-acadd=\"1\">+ " + _t("Karta qo'shish") + "</button></div>"; return; }
+    el.innerHTML = '<div class="ahead"><div><b>' + _t("Mening kartalarim") + "</b><small>" + _t("Umumiy balans") + ": " + fmt(total) + " " + _t("so'm") + '</small></div><button type="button" data-acadd="1">+ ' + _t("Karta qo'shish") + '</button></div><div class="arail">' + all.map((a) => acard(a)).join("") + "</div>";
+  }
+  let acMode = "", acEdit = null, acDraft = null, acFrom = "cash", acTo = "cash";
+  function closeAcct() { $("acctOv").hidden = true; acMode = ""; acEdit = null; renderAccts(); }
+  function acctMonthStats(id) {
+    const items = S.tx.filter((x) => acctOf(x) === id && x.date.slice(0, 7) === monthKey()), cats = {};
+    items.filter((x) => x.type === "exp").forEach((x) => { cats[x.cat] = (cats[x.cat] || 0) + toUZS(x.amount, x.cur, x.rate); });
+    const top = Object.keys(cats).sort((a, b) => cats[b] - cats[a])[0];
+    return { inc: sumUZS(items, "inc"), exp: sumUZS(items, "exp"), top: top };
+  }
+  function acctOpen(mode, id) {
+    acMode = mode; $("acctOv").hidden = false; const sh = $("acctSheet"), g = '<div class="grab"></div>';
+    if (mode === "detail") {
+      const a = ALL_ACCTS().filter((z) => z.id === id)[0]; if (!a) { closeAcct(); return; }
+      acEdit = id; const st = acctMonthStats(id), on = isArmed("acd:" + id);
+      sh.innerHTML = g + acard(a, "div") + '<div class="box"><div class="akv"><span>' + _t("Shu oy daromad") + '</span><b class="inc">+' + fmt(st.inc) + '</b></div><div class="akv"><span>' + _t("Shu oy xarajat") + '</span><b class="exp">\u2212' + fmt(st.exp) + '</b></div><div class="akv"><span>' + _t("Eng ko'p sarflangan") + "</span><b>" + (st.top ? esc(_t(st.top)) : "\u2014") + "</b></div></div>" +
+        '<div class="arow"><button type="button" class="ghost" data-ac="xfer">' + _t("O'tkazma") + '</button><button type="button" class="ghost" data-ac="edit">' + _t("Tahrirlash") + "</button>" + (id === "cash" ? "" : '<button type="button" class="ghost dng" data-ac="del">' + (on ? _t("Aniq o'chirilsinmi?") : _t("O'chirish")) + "</button>") + '</div><div class="privn" style="margin-top:12px">' + _t("Karta o'chirilsa, uning amallari «Naqd»ga o'tadi.") + "</div>";
+    } else if (mode === "form") {
+      const a = acDraft;
+      const bs = BRANDS.map((b) => '<button type="button" data-brand="' + b + '" class="' + (a.brand === b ? "on" : "") + '">' + (b === "Boshqa" ? _t("Boshqa") : b) + "</button>").join("");
+      const cd = Object.keys(ACOL).map((k) => '<button type="button" data-col="' + k + '" class="' + (a.color === k ? "on" : "") + '" style="background:linear-gradient(140deg,' + ACOL[k][0] + "," + ACOL[k][1] + ')"></button>').join("");
+      const cash = a.id === "cash";
+      sh.innerHTML = g + "<h3>" + (cash ? _t("Naqd") : acEdit ? _t("Kartani tahrirlash") : _t("Yangi karta")) + "</h3><div class=\"box\">" + (cash ? "" : '<div class="bseg">' + bs + '</div><div class="fl"><label>' + _t("Nomi") + '</label><input id="acName" maxlength="24" value="' + esc(a.name) + '" placeholder="Humo (maosh)"></div><div class="fl"><label>' + _t("Oxirgi 4 raqam (ixtiyoriy)") + '</label><input id="acL4" inputmode="numeric" maxlength="4" value="' + esc(a.last4) + '" placeholder="4521"></div>') +
+        '<div class="fl"><label>' + _t(acEdit || cash ? "Boshlang'ich balans" : "Hozirgi balans") + '</label><input class="money-in" id="acBal" inputmode="numeric" value="' + (a.start ? fmt(a.start) : "") + '" placeholder="0"></div>' + (cash ? "" : '<div class="fl"><label>' + _t("Rang") + '</label><div class="cdots">' + cd + "</div></div>") +
+        '<div class="privn">\u{1F512} ' + _t("To'liq karta raqami, muddati va CVV so'ralmaydi va saqlanmaydi.") + '</div><div class="err" id="acErr" role="alert"></div><div class="arow"><button type="button" class="primary" data-ac="save">' + _t("Saqlash") + '</button><button type="button" class="ghost" data-ac="cancel">' + _t("Bekor qilish") + "</button></div></div>";
+    } else if (mode === "xfer") {
+      const opts = (sel) => ALL_ACCTS().map((a) => '<option value="' + esc(a.id) + '"' + (a.id === sel ? " selected" : "") + ">" + esc(acctName(a)) + (a.last4 ? " \u2022\u2022" + esc(a.last4) : "") + "</option>").join("");
+      sh.innerHTML = g + "<h3>" + _t("O'tkazma") + '</h3><div class="box"><div class="xr"><div class="fl" style="margin:0"><label>' + _t("Qayerdan") + '</label><select id="xFrom">' + opts(acFrom) + '</select></div><span class="ar">\u279C</span><div class="fl" style="margin:0"><label>' + _t("Qayerga") + '</label><select id="xTo">' + opts(acTo) + '</select></div></div><div class="fl"><label>' + _t("Summa") + '</label><input class="money-in" id="xAmt" inputmode="numeric" placeholder="0"></div><div class="err" id="acErr" role="alert"></div><div class="arow"><button type="button" class="primary" data-ac="xdo">' + _t("O'tkazish") + '</button><button type="button" class="ghost" data-ac="cancel">' + _t("Bekor qilish") + "</button></div></div>";
+    }
+  }
+  function acctNewDraft() { return { id: "", name: "", brand: "Humo", last4: "", color: "navy", start: 0 }; }
+  document.addEventListener("click", (e) => {
+    const t = e.target; if (!t || !t.closest) return;
+    if (t.closest("[data-acadd]")) { acEdit = null; acDraft = acctNewDraft(); acctOpen("form"); return; }
+    const card = t.closest("#acctPanelHome .cc[data-acc]"); if (card) { acctOpen("detail", card.getAttribute("data-acc")); return; }
+    if (t.id === "acctOv") { closeAcct(); return; }
+    const sh = $("acctSheet"); if (!sh.contains(t)) return;
+    const br = t.closest("[data-brand]"), co = t.closest("[data-col]"), ac = t.closest("[data-ac]");
+    if (br || co) { const nm = $("acName"), l4 = $("acL4"), bl = $("acBal"); acDraft.name = nm.value; acDraft.last4 = l4.value; acDraft.start = parseMoney(bl.value) || 0; if (br) acDraft.brand = br.getAttribute("data-brand"); if (co) acDraft.color = co.getAttribute("data-col"); acctOpen("form"); return; }
+    if (!ac) return;
+    const act = ac.getAttribute("data-ac");
+    if (act === "cancel") { if (acEdit !== null && acMode !== "detail") acctOpen("detail", acEdit); else closeAcct(); return; }
+    if (act === "edit") { const a = ALL_ACCTS().filter((z) => z.id === acEdit)[0]; acDraft = acEdit === "cash" ? { id: "cash", name: "", brand: "Naqd", last4: "", color: "gold", start: S.cashStart } : Object.assign({}, a); acctOpen("form"); return; }
+    if (act === "xfer") { acFrom = acEdit || "cash"; acTo = acFrom === "cash" ? (S.accts[0] ? S.accts[0].id : "cash") : "cash"; acctOpen("xfer"); return; }
+    if (act === "del") {
+      const key = "acd:" + acEdit;
+      if (!isArmed(key)) { arm(key, () => acctOpen("detail", acEdit)); acctOpen("detail", acEdit); return; }
+      disarm(); const id = acEdit;
+      S.tx.forEach((x) => { if (x.acc === id) delete x.acc; });
+      S.xfers = S.xfers.filter((x) => x.from !== id && x.to !== id); S.accts = S.accts.filter((a) => a.id !== id);
+      save(); closeAcct(); renderAll(); return;
+    }
+    if (act === "save") {
+      if (acDraft.id === "cash") { S.cashStart = parseMoney($("acBal").value) || 0; save(); closeAcct(); renderAll(); return; }
+      const name = $("acName").value.trim() || acDraft.brand, l4 = $("acL4").value.replace(/\D/g, "").slice(0, 4);
+      const rec = cleanAcct({ id: acEdit || uid(), name: name, brand: acDraft.brand, last4: l4, color: acDraft.color, start: parseMoney($("acBal").value) || 0 });
+      if (acEdit) S.accts = S.accts.map((a) => (a.id === acEdit ? rec : a)); else S.accts.push(rec);
+      save(); closeAcct(); renderAll(); return;
+    }
+    if (act === "xdo") {
+      const f = $("xFrom").value, to = $("xTo").value, am = parseMoney($("xAmt").value);
+      if (f === to) { $("acErr").textContent = _t("Hisoblar har xil bo'lsin."); return; }
+      if (!am) { $("acErr").textContent = _t("Summani kiriting."); return; }
+      S.xfers.push(cleanXfer({ id: uid(), from: f, to: to, amount: am, date: iso(today0()) })); save(); acctOpen("detail", acEdit); renderAccts(); renderAll(); toast(_t("O'tkazma bajarildi")); return;
+    }
+  });
+  function renderAccRow() {
+    const el = $("accRow"); if (!el) return;
+    el.hidden = !S.accts.length; if (!S.accts.length) return;
+    let cur = $("accRow").getAttribute("data-v") || lsGet("hisobchi_lastacc_v1") || "cash"; if (cur !== "cash" && !acctById(cur)) cur = "cash";
+    el.setAttribute("data-v", cur);
+    el.innerHTML = "<small>" + _t("Qaysi hisobdan") + '</small><div class="chs">' + ALL_ACCTS().map((a) => '<button type="button" data-v="' + esc(a.id) + '" class="' + (a.id === cur ? "on" : "") + '"><i style="background:' + (ACOL[a.color] || ACOL.navy)[0] + '"></i>' + esc(acctName(a)) + (a.last4 ? " \u2022\u2022" + esc(a.last4) : "") + "</button>").join("") + "</div>";
+  }
+  $("accRow").addEventListener("click", (e) => { const b = e.target.closest ? e.target.closest("button[data-v]") : null; if (!b) return; $("accRow").setAttribute("data-v", b.getAttribute("data-v")); lsSet("hisobchi_lastacc_v1", b.getAttribute("data-v")); renderAccRow(); });
+
   function renderAll() {
-    renderBalance(); renderReminders(); renderQuick(); renderChart(); renderCats(); renderRecent();
+    renderAccts(); renderAccRow(); renderBalance(); renderReminders(); renderQuick(); renderChart(); renderCats(); renderRecent();
     renderLedger(); renderRecurring(); renderDebts(); renderGoals(); renderSettings(); renderBadges();
   }
 
@@ -1869,6 +2012,7 @@
     if (!amount) { $("err").textContent = _t("Summani kiriting."); return; }
     if (!date) { $("err").textContent = _t("Sanani tanlang."); return; }
     const x = withRate({ id: uid(), type: type, amount: amount, cur: $("cur").value, cat: $("cat").value, note: $("note").value.trim(), date: date });
+    if (S.accts.length) { const av = $("accRow").getAttribute("data-v"); if (av && av !== "cash" && acctById(av)) x.acc = av; }
     if ($("recur").checked) {
       const r = { id: uid(), type: x.type, amount: x.amount, cur: x.cur, cat: x.cat, note: x.note, day: parseISO(date).getDate(), last: date.slice(0, 7) };
       S.recurring.push(r); x.rid = r.id;
@@ -2726,6 +2870,7 @@
   function backStep() {
     if ($("secret").hidden) return false;                 // qulf ekrani: oddiy chiqish
     if (!$("form").hidden) { closeForm(); return true; }
+    if (!$("acctOv").hidden) { closeAcct(); return true; }
     if (!$("dform").hidden) { closeDForm(); return true; }
     if (!$("gform").hidden) { closeGForm(); return true; }
     if (!$("limForm").hidden) { $("limClose").onclick(); return true; }
