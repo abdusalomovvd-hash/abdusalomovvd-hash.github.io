@@ -30,7 +30,9 @@ jobs:
 
       - name: Generate Android project
         working-directory: twa
-        run: yes | bubblewrap update --skipVersionUpgrade
+        run: |
+          unset ANDROID_SDK_ROOT
+          yes | bubblewrap update --skipVersionUpgrade
 
       - name: Build signed .aab and .apk
         working-directory: twa
@@ -38,6 +40,7 @@ jobs:
           BUBBLEWRAP_KEYSTORE_PASSWORD: ${{ secrets.KEYSTORE_PASSWORD }}
           BUBBLEWRAP_KEY_PASSWORD: ${{ secrets.KEYSTORE_PASSWORD }}
         run: |
+          unset ANDROID_SDK_ROOT
           yes | bubblewrap build --skipPwaValidation \
             --signingKeyPath="$RUNNER_TEMP/upload.jks" \
             --signingKeyAlias="${{ secrets.KEY_ALIAS }}"
