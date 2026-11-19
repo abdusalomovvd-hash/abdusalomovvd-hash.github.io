@@ -395,6 +395,130 @@
   }
 
   #fx { position: fixed; inset: 0; width: 100%; height: 100%; z-index: 5; pointer-events: none; }
+
+  /* ---------- 1-bosqich: qulf ekrani va bo'sh holat ---------- */
+  .lockcard { border: 0; box-shadow: none; background: radial-gradient(70% 38% at 50% 30%, rgba(242, 182, 50, 0.17), transparent 72%); }
+  .lockmark { width: 104px; height: 104px; border-radius: 50%; background: transparent; box-shadow: 0 0 0 9px rgba(217, 162, 27, 0.14), 0 18px 36px -12px rgba(15, 39, 71, 0.5); margin-bottom: 24px; }
+  .lockmark svg { width: 104px; height: 104px; }
+  .lockmark svg circle:first-of-type { r: 30; }
+  .lockcard h2 { font: 800 26px/1.2 var(--font-num); letter-spacing: -0.01em; margin-bottom: 8px; }
+  .lockcard .primary { background: var(--gold); color: var(--on-gold); border-radius: 14px; font-weight: 700; }
+  .lockcard .bioBtn { color: var(--ink); }
+  @media (max-height: 640px) { .lockmark, .lockmark svg { width: 76px; height: 76px; } }
+  @media (prefers-reduced-motion: no-preference) {
+    .lockmark { animation: coinFloat 4.2s ease-in-out infinite; }
+    @keyframes coinFloat { 50% { transform: translateY(-6px); } }
+  }
+  .emptyx { display: flex; flex-direction: column; align-items: center; text-align: center; padding: 14px 4px 6px; }
+  .emptyx .ill { width: 96px; height: 96px; border-radius: 50%; background: var(--gold-soft); display: grid; place-items: center; margin-bottom: 10px; }
+  .emptyx .ill svg { width: 52px; height: 52px; }
+  .emptyx h4 { font: 800 18px/1.25 var(--font-num); margin: 4px 0 6px; }
+  .emptyx p { margin: 0 0 14px; color: var(--muted); font-size: 13px; max-width: 280px; }
+  .emptyx .primary { flex: none; width: 100%; max-width: 280px; background: var(--gold); color: var(--on-gold); border-radius: 12px; font-weight: 700; }
+  .emptyx .steps { width: 100%; text-align: start; font-size: 13px; margin-top: 14px; }
+  .emptyx .steps div { display: flex; gap: 10px; align-items: center; padding: 8px 0; border-top: 1px solid var(--line); }
+  .emptyx .steps i { width: 22px; height: 22px; flex: none; border-radius: 50%; background: var(--gold); color: var(--on-gold); display: grid; place-items: center; font: 800 11px var(--font-num); font-style: normal; }
+
+  /* Bayram rasmlari: balans kartasi orqasida blur rasm */
+  .hgreet { font: 800 15px/1.3 var(--font-num); margin-bottom: 8px; position: relative; }
+  .hero[data-hol] { background-size: cover; background-position: center; }
+  :root[data-hol="snow"] .hero { background-image: linear-gradient(180deg, rgba(8,18,50,0.3), rgba(8,18,50,0.62)), url("img/holiday/snow.jpg") !important; }
+  :root[data-hol="tulip"] .hero { background-image: linear-gradient(180deg, rgba(70,20,50,0.5), rgba(70,20,50,0.78)), url("img/holiday/tulip.jpg") !important; }
+  :root[data-hol="nav"] .hero { background-image: linear-gradient(180deg, rgba(10,40,70,0.5), rgba(10,40,70,0.78)), url("img/holiday/nav.jpg") !important; }
+  :root[data-hol="carn"] .hero { background-image: linear-gradient(180deg, rgba(8,30,22,0.3), rgba(8,30,22,0.62)), url("img/holiday/carn.jpg") !important; }
+  :root[data-hol="indep"] .hero { background-image: linear-gradient(180deg, rgba(6,30,60,0.3), rgba(6,30,60,0.62)), url("img/holiday/indep.jpg") !important; }
+  :root[data-hol="teach"] .hero { background-image: linear-gradient(180deg, rgba(40,25,80,0.5), rgba(40,25,80,0.78)), url("img/holiday/teach.jpg") !important; }
+  :root[data-hol="const"] .hero { background-image: linear-gradient(180deg, rgba(8,30,70,0.3), rgba(8,30,70,0.62)), url("img/holiday/const.jpg") !important; }
+  :root[data-hol="eid"] .hero { background-image: linear-gradient(180deg, rgba(30,15,5,0.3), rgba(30,15,5,0.62)), url("img/holiday/eid.jpg") !important; }
+
+  /* ---------- Sozlamalar: yangi uslub ---------- */
+  .subpg.panel { background: transparent; border: 0; box-shadow: none; padding: 0; }
+  .sset { background: var(--surface); border: 1px solid var(--line); border-radius: 18px; padding: 14px; margin-bottom: 12px; box-shadow: var(--shadow); }
+  .sset .sh { display: flex; align-items: center; gap: 10px; margin-bottom: 12px; }
+  .sset .sh b { font: 800 14px var(--font-num); display: block; }
+  .sset .sh small { display: block; color: var(--muted); font-size: 11.5px; }
+  .sic { width: 30px; height: 30px; border-radius: 10px; display: grid; place-items: center; flex: none; background: var(--gold-soft); }
+  .sic svg { width: 17px; height: 17px; stroke: var(--gold); fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+  .slab { font-size: 10.5px; letter-spacing: .1em; text-transform: uppercase; color: var(--muted); font-weight: 600; margin: 12px 0 6px; }
+  .snote { margin-top: 8px; font-size: 11.5px; color: var(--muted); }
+  .srow { display: flex; align-items: center; gap: 12px; padding: 11px 0; }
+  .srow + .srow { border-top: 1px solid var(--line); }
+  .srow.flat { padding: 4px 0 0; }
+  .srow .st { flex: 1; min-width: 0; }
+  .srow .st b { display: block; font-weight: 600; font-size: 14px; }
+  .srow .st small { color: var(--muted); font-size: 12px; }
+  .sw { width: 46px; height: 28px; border-radius: 14px; background: var(--line); position: relative; border: 0; padding: 0; flex: none; transition: background .2s; }
+  .sw::after { content: ""; position: absolute; left: 3px; top: 3px; width: 22px; height: 22px; border-radius: 50%; background: #fff; transition: transform .2s; box-shadow: 0 1px 3px rgba(0, 0, 0, .3); }
+  .sw.on { background: var(--gold); } .sw.on::after { transform: translateX(18px); }
+  [dir="rtl"] .sw::after { left: auto; right: 3px; } [dir="rtl"] .sw.on::after { transform: translateX(-18px); }
+  .snow { display: flex; align-items: center; gap: 8px; background: var(--soft); border-radius: 12px; padding: 9px 11px; font-size: 12.5px; color: var(--muted); margin-top: 8px; }
+  .lg { display: flex; align-items: center; gap: 12px; width: 100%; border: 2px solid var(--line); border-radius: 14px; padding: 9px 12px; background: var(--soft); margin-bottom: 8px; text-align: start; }
+  .lg.on { border-color: var(--gold); background: var(--surface); box-shadow: 0 0 0 3px color-mix(in srgb, var(--gold) 22%, transparent); }
+  .lcode { width: 40px; height: 40px; border-radius: 50%; display: grid; place-items: center; font: 800 13px var(--font-num); color: #fff; flex: none; }
+  .lg .lt { flex: 1; min-width: 0; } .lg .lt b { display: block; font: 700 15px var(--font-num); } .lg .lt small { color: var(--muted); font-size: 12px; }
+  .lg .lh { font: 700 13px var(--font-num); color: var(--muted); }
+  .lg .lck { width: 22px; height: 22px; border-radius: 50%; background: var(--gold); color: var(--on-gold); display: none; place-items: center; font: 800 12px var(--font-num); flex: none; }
+  .lg.on .lck { display: grid; } .lg.on .lh { display: none; }
+  #langRows.dim .lg { opacity: .5; }
+  .pv { background: linear-gradient(150deg, #0f2747, #143a63); color: #fff; border-radius: 16px; padding: 12px 14px; }
+  .pv .l1 { font-size: 10px; letter-spacing: .1em; text-transform: uppercase; color: #f2c75a; }
+  .pv .l2 { font: 800 22px var(--font-num); margin: 2px 0 6px; direction: ltr; text-align: start; }
+  .pv .l3 { display: flex; justify-content: space-between; gap: 10px; font: 700 12px var(--font-num); }
+  .pv .l3 small { display: block; font: 500 10px var(--font-body); opacity: .75; text-transform: uppercase; letter-spacing: .08em; }
+  .pv .l3 bdi { direction: ltr; }
+  .pv .inc2 { color: #7fd9a4; } .pv .exp2 { color: #f5a583; }
+  .themes { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; }
+  .th { border: 2px solid var(--line); border-radius: 14px; padding: 6px 6px 8px; background: var(--soft); text-align: center; font-size: 12px; font-weight: 500; }
+  .th.on { border-color: var(--gold); box-shadow: 0 0 0 3px color-mix(in srgb, var(--gold) 22%, transparent); }
+  .mini { display: block; height: 62px; border-radius: 9px; margin-bottom: 6px; position: relative; overflow: hidden; border: 1px solid rgba(0, 0, 0, .08); }
+  .mini::before { content: ""; position: absolute; left: 6px; right: 6px; top: 8px; height: 18px; border-radius: 6px; background: linear-gradient(150deg, #0f2747, #143a63); }
+  .mini::after { content: ""; position: absolute; left: 6px; right: 6px; top: 32px; height: 10px; border-radius: 4px; background: var(--m2); }
+  .m-l { background: #eceff1; --m2: #fff; } .m-d { background: #0a1216; --m2: #18262d; } .m-a { background: linear-gradient(90deg, #eceff1 50%, #0a1216 50%); --m2: #aab5bb; }
+  /* birinchi ochilish: til tanlash */
+  .langfirst { position: fixed; inset: 0; z-index: 60; overflow-y: auto; color: #fff; background: radial-gradient(120% 60% at 50% 0%, #1b4f7a 0%, #0f2747 62%); padding: calc(36px + env(safe-area-inset-top, 0px)) max(20px, env(safe-area-inset-left, 0px)) calc(24px + env(safe-area-inset-bottom, 0px)); }
+  .langfirst .lfin { max-width: 420px; margin: 0 auto; min-height: 100%; display: flex; flex-direction: column; align-items: center; text-align: center; }
+  .langfirst .coin { width: 84px; height: 84px; border-radius: 50%; background: radial-gradient(circle at 35% 30%, #ffe08a, #e2a923 55%, #a8760d); display: grid; place-items: center; font: 800 46px var(--font-num); color: #0f2747; box-shadow: 0 0 0 8px rgba(242, 182, 50, .15), 0 16px 34px rgba(0, 0, 0, .4); }
+  .langfirst h2 { font: 800 24px var(--font-num); margin: 18px 0 4px; color: #fff; text-transform: none; letter-spacing: 0; } .langfirst h2 b { color: #f2b632; }
+  .langfirst p { color: #b9c9dd; font-size: 13px; margin: 0 0 16px; }
+  .langfirst .lg { background: rgba(255, 255, 255, .08); border-color: rgba(255, 255, 255, .14); color: #fff; }
+  .langfirst .lg .lt small, .langfirst .lg .lh { color: #b9c9dd; }
+  .langfirst .lg.on { background: rgba(242, 182, 50, .16); border-color: #f2b632; box-shadow: none; }
+  .langfirst .lfgo { margin-top: auto; border: 0; border-radius: 14px; padding: 14px; width: 100%; font: 800 15px var(--font-num); background: #f2b632; color: #0f2747; }
+  .langfirst .lfmore { margin: 14px 0 12px; font-size: 11.5px; color: #8fa6c4; }
+  @media (prefers-reduced-motion: no-preference) { .langfirst .coin { animation: coinFloat 4.2s ease-in-out infinite; } }
+
+  /* ---------- 5-6 bosqich: profil va sozlamalar sahifalari ---------- */
+  .subpg h2 { display: none; }
+  .subpg .body { background: var(--surface); border: 1px solid var(--line); border-radius: 18px; padding: 14px; box-shadow: var(--shadow); }
+  .stcard { display: flex; align-items: center; gap: 12px; padding: 14px; border-radius: 18px; margin-bottom: 12px; background: linear-gradient(150deg, #0f2747, #143a63); color: #fff; }
+  .stcard b { display: block; font: 800 15px var(--font-num); } .stcard small { color: #b9c9dd; font-size: 12px; }
+  .stic { width: 36px; height: 36px; border-radius: 50%; background: #f2b632; flex: none; position: relative; }
+  .stic::after { content: ""; position: absolute; left: 13px; top: 8px; width: 7px; height: 14px; border: solid #0f2747; border-width: 0 3px 3px 0; transform: rotate(40deg); }
+  .stcard.off .stic { background: rgba(255, 255, 255, .2); } .stcard.off .stic::after { display: none; }
+  .chips { display: flex; gap: 6px; flex-wrap: wrap; margin-top: 6px; }
+  .chips button { border: 1.5px solid var(--line); background: var(--soft); border-radius: 12px; padding: 8px 12px; font: 600 13px var(--font-num); color: var(--ink); }
+  .chips button.on { border-color: var(--gold); background: var(--gold-soft); }
+  .ghost.danger { color: #c0483f; border-color: color-mix(in srgb, #c0483f 40%, var(--line)); }
+  .ratehero { border-radius: 18px; padding: 16px; margin-bottom: 12px; color: #fff; background: linear-gradient(150deg, #0f2747, #143a63); }
+  .ratehero small { font-size: 10.5px; letter-spacing: .1em; text-transform: uppercase; color: #f2c75a; display: block; }
+  .ratehero b { display: block; font: 800 30px var(--font-num); margin: 3px 0 2px; direction: ltr; text-align: start; } .ratehero span { font-size: 12px; color: #b9c9dd; }
+  .check.swl { display: flex; align-items: center; justify-content: space-between; gap: 12px; }
+  input.swc { appearance: none; -webkit-appearance: none; width: 46px; height: 28px; border-radius: 14px; background: var(--line); position: relative; flex: none; margin: 0; transition: background .2s; }
+  input.swc::after { content: ""; position: absolute; left: 3px; top: 3px; width: 22px; height: 22px; border-radius: 50%; background: #fff; transition: transform .2s; box-shadow: 0 1px 3px rgba(0, 0, 0, .3); }
+  input.swc:checked { background: var(--gold); } input.swc:checked::after { transform: translateX(18px); }
+  [dir="rtl"] input.swc::after { left: auto; right: 3px; } [dir="rtl"] input.swc:checked::after { transform: translateX(-18px); }
+  .benef { list-style: none; margin: 0 0 12px; padding: 14px; background: var(--surface); border: 1px solid var(--line); border-radius: 18px; box-shadow: var(--shadow); }
+  .benef li { padding: 6px 0 6px 26px; position: relative; font-size: 13.5px; }
+  .benef li::before { content: "\2713"; position: absolute; left: 0; top: 6px; width: 18px; height: 18px; border-radius: 50%; background: var(--gold-soft); color: var(--gold); font: 800 11px/18px var(--font-num); text-align: center; }
+  [dir="rtl"] .benef li { padding: 6px 26px 6px 0; } [dir="rtl"] .benef li::before { left: auto; right: 0; }
+  .ghost.act { display: inline-flex; align-items: center; justify-content: center; gap: 8px; }
+  .ghost.act svg { width: 18px; height: 18px; stroke: var(--gold); fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; flex: none; }
+  .abt { text-align: center; padding: 20px 0 14px; }
+  .abt .coin2 { width: 76px; height: 76px; margin: 0 auto 10px; border-radius: 50%; display: grid; place-items: center; font: 800 40px var(--font-num); color: #0f2747; background: radial-gradient(circle at 35% 30%, #ffe08a, #e2a923 55%, #a8760d); box-shadow: 0 0 0 7px var(--gold-soft); }
+  .abt b { display: block; font: 800 20px var(--font-num); } .abt small { color: var(--muted); }
+  .abnote { color: var(--gold); font-weight: 600; }
+  .avatar { background: linear-gradient(150deg, #f2b632, #d9a21b) !important; color: #0f2747 !important; box-shadow: 0 0 0 4px var(--gold-soft); font-weight: 800; }
+  #menuWrap.menu { border-radius: 18px; overflow: hidden; }
 </style>
 <meta name="theme-color" media="(prefers-color-scheme: light)" content="#eceff1">
 <meta name="theme-color" media="(prefers-color-scheme: dark)" content="#0a1216">
@@ -461,6 +585,7 @@
 </head>
 <body>
 <canvas id="fx" aria-hidden="true"></canvas>
+<div id="langFirst" class="langfirst" hidden></div>
 <div class="app">
   <header class="top">
     <h1 class="brand"><svg viewBox="0 0 64 64" width="28" height="28" aria-hidden="true"><rect width="64" height="64" rx="15" fill="#0f2747"/><defs><linearGradient id="gh" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#ffd36b"/><stop offset="1" stop-color="#f0a830"/></linearGradient></defs><circle cx="32" cy="32" r="21" fill="url(#gh)"/><circle cx="32" cy="32" r="17" fill="none" stroke="#0f2747" stroke-width="1.6" opacity=".28"/><path d="M23 24.5h18M32 24.5v17.5" fill="none" stroke="#0f2747" stroke-width="5.8" stroke-linecap="round"/></svg><span class="wm">Tejam<span>kor</span></span></h1>
@@ -516,6 +641,7 @@
     <!-- Bosh -->
     <div class="tab" id="tab-home">
       <section class="hero" aria-live="polite">
+        <div class="hgreet" id="hgreet" hidden></div>
         <span class="hlabel">Oy balansi</span>
         <div class="balance" id="balance"></div>
         <svg class="spark" id="spark" viewBox="0 0 320 48" aria-hidden="true" hidden></svg>
@@ -758,24 +884,38 @@
 
       <section class="panel subpg" data-pg="look">
         <h2>Ko'rinish</h2>
-        <div class="body">
-          <div class="field">
-            <label for="langSel">Ilova tili</label>
-            <select id="langSel"><option value="uz">O'zbekcha</option><option value="ru">Русский</option><option value="en">English</option><option value="ar">العربية</option><option value="tr">Türkçe</option></select>
+        <div class="sset" id="secLang">
+          <div class="sh"><span class="sic"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 12a9 9 0 1018 0 9 9 0 10-18 0zM3 12h18M12 3a14 14 0 010 18M12 3a14 14 0 000 18"/></svg></span><div><b>Til</b><small>Ilova tili</small></div></div>
+          <div id="langRows"></div>
+          <div class="srow flat"><div class="st"><b>Qurilma tiliga qarab</b></div><button type="button" class="sw" id="langAuto" role="switch" aria-label="Qurilma tiliga qarab"></button></div>
+          <div class="slab">Ko'rinishi</div>
+          <div class="pv" id="langPv"></div>
+          <div class="snote" id="rtlNote" hidden>Ilova o'ngdan chapga yo'nalishga o'tadi</div>
+        </div>
+        <div class="sset" id="secTheme">
+          <div class="sh"><span class="sic"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M21 12.8A9 9 0 1111.2 3a7 7 0 009.8 9.8z"/></svg></span><div><b>Mavzu</b><small>Yorug' yoki qorong'u ko'rinish</small></div></div>
+          <div class="themes" id="themeCards">
+            <button type="button" class="th" data-t=""><i class="mini m-a"></i>Avtomatik</button>
+            <button type="button" class="th" data-t="light"><i class="mini m-l"></i>Yorug'</button>
+            <button type="button" class="th" data-t="dark"><i class="mini m-d"></i>Qorong'i</button>
           </div>
-          <div class="field">
-            <label for="themeSel">Mavzu</label>
-            <select id="themeSel"><option value="">Avtomatik</option><option value="light">Yorug'</option><option value="dark">Qorong'i</option></select>
-          </div>
-          <div class="field">
-            <label for="fxSel">Fon animatsiyasi</label>
-            <select id="fxSel"><option value="">Avtomatik</option><option value="off">O'chiq</option></select>
-          </div>
+        </div>
+        <div class="sset" id="secFx">
+          <div class="sh"><span class="sic"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3l2.1 5.2L20 9l-4.4 3.7L17 18.5 12 15.5 7 18.5l1.4-5.8L4 9l5.9-.8z"/></svg></span><div><b>Animatsiya</b><small>Fasl va bayram ko'rinishi</small></div></div>
+          <div class="srow"><div class="st"><b>Fon animatsiyasi</b><small>Yaprog'lar, qor, gul barglari</small></div><button type="button" class="sw" id="fxSw" role="switch" aria-label="Fon animatsiyasi"></button></div>
+          <div class="srow"><div class="st"><b>Bayram rasmlari va tabriklar</b><small>Bayram kunlarida balans kartasida</small></div><button type="button" class="sw" id="holSw" role="switch" aria-label="Bayram rasmlari va tabriklar"></button></div>
+          <div class="snow" id="fxNow"></div>
+        </div>
+        <div hidden>
+          <select id="langSel"><option value="uz">O'zbekcha</option><option value="ru">Русский</option><option value="en">English</option><option value="ar">العربية</option><option value="tr">Türkçe</option></select>
+          <select id="themeSel"><option value="">Avtomatik</option><option value="light">Yorug'</option><option value="dark">Qorong'i</option></select>
+          <select id="fxSel"><option value="">Avtomatik</option><option value="off">O'chiq</option></select>
         </div>
       </section>
 
       <section class="panel subpg" data-pg="security">
         <h2>Xavfsizlik</h2>
+        <div class="stcard" id="secState"><span class="stic"></span><div><b id="secStT"></b><small id="secStS"></small></div></div>
         <div class="body">
           <p>Sahifa ochilganda ma'lumotlar yashirin turadi. PIN kod qo'ysangiz, ko'rsatish uchun PIN kod so'raladi. Tanlangan vaqt ichida sahifani yangilasangiz yoki ilovadan chiqib qaytsangiz, qayta PIN so'ralmaydi. Vaqt o'tsa yoki tegmasangiz, ma'lumotlar yana yashirinadi.</p>
           <div class="field">
@@ -784,11 +924,12 @@
           </div>
           <div class="row">
             <button class="ghost" id="savePw" type="button">PIN kodni saqlash</button>
-            <button class="ghost" id="removePw" type="button">PIN kodni olib tashlash</button>
+            <button class="ghost danger" id="removePw" type="button">PIN kodni olib tashlash</button>
           </div>
           <div class="field">
             <label for="lockDelay">Avtomatik qulflash</label>
-            <select id="lockDelay"><option value="0">Darhol (har safar)</option><option value="1">1 daqiqadan keyin</option><option value="5">5 daqiqadan keyin</option><option value="15">15 daqiqadan keyin</option></select>
+            <div class="chips" id="lockChips"></div>
+            <select id="lockDelay" hidden><option value="0">Darhol (har safar)</option><option value="1">1 daqiqadan keyin</option><option value="5">5 daqiqadan keyin</option><option value="15">15 daqiqadan keyin</option></select>
           </div>
           <div class="row">
             <button class="ghost" id="bioToggle" type="button" hidden>Barmoq izi bilan ochishni yoqish</button>
@@ -800,6 +941,7 @@
 
       <section class="panel subpg" data-pg="calc">
         <h2>Hisob-kitob</h2>
+        <div class="ratehero"><small>Dollar kursi</small><b id="rateBig">—</b><span id="rateSub"></span></div>
         <div class="body">
           <div class="field">
             <label for="rate">Dollar kursi (1 $ necha so'm)</label>
@@ -809,7 +951,7 @@
             <button class="ghost" id="rateFetch" type="button">Markaziy bank kursini olish</button>
           </div>
           <div class="status" id="rateStatus" role="status"></div>
-          <label class="check"><input type="checkbox" id="rateAuto"> Kursni har kuni avtomatik yangilash</label>
+          <label class="check swl"><span>Kursni har kuni avtomatik yangilash</span><input type="checkbox" id="rateAuto" class="swc"></label>
           <p>Har bir dollarli amal kiritilgan paytdagi kursda saqlanadi. Keyin kurs o'zgarsa, oldingi amallar summasi o'zgarmaydi.</p>
           <div>
             <div class="label">Valyuta kalkulyatori</div>
@@ -831,6 +973,7 @@
 
       <section class="panel subpg" data-pg="sync" id="syncDetails" hidden>
         <h2>Sinxronlash</h2>
+        <ul class="benef"><li>Telefon va kompyuterda bir xil ma'lumot</li><li>Faqat sizga ko'rinadi</li><li>Istalgan vaqt o'chirish mumkin</li></ul>
         <div class="body">
           <p>Yoqsangiz, Google hisobingiz orqali ma'lumotlaringizning nusxasi shaxsiy joyda saqlanadi, boshqalar uni ko'ra olmaydi. Shunda telefon va kompyuteringizda bir xil ma'lumot ko'rinadi. Parol va yashirish sozlamalari har qurilmada alohida qoladi.</p>
           <div class="status" id="syncStatus" role="status"></div>
@@ -842,24 +985,25 @@
             </div>
           </div>
           <div class="row">
-            <button class="ghost" id="syncToggle" type="button">Sinxronlashni yoqish</button>
-            <button class="ghost" id="syncWipe" type="button" hidden>Serverdagi nusxani o'chirish</button>
+            <button class="primary" id="syncToggle" type="button">Sinxronlashni yoqish</button>
+            <button class="ghost danger" id="syncWipe" type="button" hidden>Serverdagi nusxani o'chirish</button>
           </div>
         </div>
       </section>
 
       <section class="panel subpg" data-pg="backup" id="backupDetails">
         <h2>Zaxira nusxa</h2>
+        <div class="stcard" id="bkState"><span class="stic"></span><div><b id="bkStT"></b><small id="bkStS"></small></div></div>
         <div class="body">
           <p>Barcha ma'lumotlarni matn sifatida nusxalab saqlab qo'yishingiz va kerak bo'lganda qayta tiklashingiz mumkin.</p>
           <textarea id="backup" aria-label="Zaxira ma'lumotlari" placeholder="Tiklash uchun zaxira matnini shu yerga qo'ying"></textarea>
           <div class="row">
-            <button class="ghost" id="copyBackup" type="button">Nusxa olish</button>
-            <button class="ghost" id="restore" type="button">Matndan tiklash</button>
+            <button class="ghost act" id="copyBackup" type="button"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 8h11v12H8zM5 16V4h11"/></svg>Nusxa olish</button>
+            <button class="ghost act" id="restore" type="button"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 12a8 8 0 108-8M4 4v5h5"/></svg>Matndan tiklash</button>
           </div>
           <div class="row">
-            <button class="ghost" id="saveFile" type="button">Fayl sifatida saqlash</button>
-            <button class="ghost" id="saveCsv" type="button">Amallarni CSV qilish</button>
+            <button class="ghost act" id="saveFile" type="button"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 4v11M7 11l5 5 5-5M5 20h14"/></svg>Fayl sifatida saqlash</button>
+            <button class="ghost act" id="saveCsv" type="button"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 3h9l4 4v14H6zM9 12h7M9 16h7"/></svg>Amallarni CSV qilish</button>
           </div>
           <div class="status" id="status" role="status"></div>
         </div>
@@ -867,8 +1011,10 @@
 
       <section class="panel subpg" data-pg="about">
         <h2>Ilova haqida</h2>
+        <div class="abt"><div class="coin2">T</div><b>Tejamkor</b><small>v1.0</small></div>
         <div class="body">
           <p>Tejamkor · shaxsiy moliya hisobchisi</p>
+          <p class="abnote">Ma'lumotlaringiz sizniki. Reklama yo'q.</p>
           <p><a href="privacy-policy.html" target="_blank" rel="noopener">Maxfiylik siyosati</a> · abdusalomovv.d@gmail.com</p>
         </div>
       </section>
@@ -964,14 +1110,16 @@
   const isoRe = /^\d{4}-\d{2}-\d{2}$/;
 
   /* ---------- Til tizimi (kalit = o'zbekcha matn; tarjimalar i18n.js faylida) ---------- */
-  const LANG_KEY = "hisobchi_lang_v1";
+  const LANG_KEY = "hisobchi_lang_v1", AUTOL_KEY = "hisobchi_langauto_v1", SEEN_KEY = "hisobchi_langseen_v1", HOL_KEY = "hisobchi_hol_v1", FX_KEY = "hisobchi_fx_v1";
+  let FIRSTRUN = false;
   const LANGS = { uz: "O'zbekcha", ru: "Русский", en: "English", ar: "العربية", tr: "Türkçe" };
   const I18N = window.HISOBCHI_I18N || {};
   let LANG = "uz";
   try {
     const sv = localStorage.getItem(LANG_KEY), nl = String(navigator.language || "").slice(0, 2).toLowerCase();
-    if (sv && LANGS[sv]) LANG = sv;
-    else if (!localStorage.getItem("hisobchi_state_v3") && LANGS[nl]) { LANG = nl; localStorage.setItem(LANG_KEY, nl); } // yangi o'rnatishda telefon tili; mavjud foydalanuvchilarda o'zbekcha qoladi
+    if (localStorage.getItem(AUTOL_KEY) === "1" && LANGS[nl]) LANG = nl;
+    else if (sv && LANGS[sv]) LANG = sv;
+    else if ((!localStorage.getItem("hisobchi_state_v3") && !localStorage.getItem(SEEN_KEY)) || location.hash === "#til") { FIRSTRUN = true; if (LANGS[nl]) LANG = nl; } // yangi o'rnatishda til tanlash oynasi; mavjud foydalanuvchilarda o'zbekcha qoladi
   } catch (e) {}
   const MISS = (window.HISOBCHI_MISS = []);
   function pluralIdx(n) {
@@ -1296,7 +1444,7 @@
     const inc = sumUZS(items, "inc"), exp = sumUZS(items, "exp");
     $("ledgerInfo").textContent = items.length ? _t("{n} ta amal · daromad +{i} · xarajat −{e}", { n: items.length, i: fmt(inc), e: fmt(exp) }) : "";
     if (!items.length) {
-      $("list").innerHTML = '<div class="empty">' + _t(S.tx.length ? "Mos amal topilmadi." : "Hali amal yo'q. “+” tugmasini bosing.") + "</div>";
+      $("list").innerHTML = S.tx.length ? '<div class="empty">' + _t("Mos amal topilmadi.") + "</div>" : emptyTx();
       return;
     }
     let html = "", last = "";
@@ -1313,7 +1461,7 @@
   }
   function renderRecent() {
     const rows = S.tx.slice().reverse().sort((a, b) => (a.date < b.date ? 1 : a.date > b.date ? -1 : 0)).slice(0, 5);
-    $("recent").innerHTML = rows.length ? rows.map((x) => txRow(x, false, true)).join("") : '<div class="empty">' + _t("Hali amal yo'q. “+” tugmasini bosing.") + '</div>';
+    $("recent").innerHTML = rows.length ? rows.map((x) => txRow(x, false, true)).join("") : (S.tx.length ? '<div class="empty">' + _t("Hali amal yo'q. “+” tugmasini bosing.") + "</div>" : emptyTx());
     $("recentAll").hidden = !rows.length;
   }
 
@@ -1459,6 +1607,13 @@
   }
 
   /* ---------- Maqsadlar ---------- */
+  function emptyTx() {
+    return '<div class="emptyx"><div class="ill"><svg viewBox="0 0 64 64" aria-hidden="true"><circle cx="32" cy="32" r="22" fill="#d9a21b"/><circle cx="32" cy="32" r="17" fill="none" stroke="#fff" stroke-opacity=".5" stroke-width="2"/><path d="M23 24.5h18M32 24.5v17.5" stroke="#0f2747" stroke-width="5" stroke-linecap="round"/></svg></div>' +
+      "<h4>" + _t("Birinchi amalingizni qo'shing") + "</h4><p>" + _t("Pul qayerga ketayotganini ko'rish uchun xarajat yoki daromadni yozing.") + "</p>" +
+      '<button type="button" class="primary emptyAdd">+ ' + _t("Amal qo'shish") + "</button>" +
+      '<div class="steps"><div><i>1</i>' + _t("Daromadingizni yozing") + "</div><div><i>2</i>" + _t("Xarajatlarni toifalang") + "</div><div><i>3</i>" + _t("Limit va maqsad qo'ying") + "</div></div></div>";
+  }
+  document.addEventListener("click", (e) => { if (e.target.closest && e.target.closest(".emptyAdd")) $("fab").click(); });
   function renderGoals() {
     if (!S.goals.length) { $("glist").innerHTML = '<div class="empty">' + _t('Hali maqsad yo\'q. "Qo\'shish" tugmasini bosing.') + '</div>'; return; }
     $("glist").innerHTML = S.goals.map((g) => {
@@ -1477,6 +1632,7 @@
     $("rate").value = S.rate ? fmt(S.rate) : "";
     renderRateInfo();
     $("themeSel").value = lsGet(THEME_KEY) || "";
+    renderLook();
   }
   const TABS = ["home", "ledger", "debts", "goals", "settings"];
   function updateChrome() {
@@ -1913,6 +2069,8 @@
     $("profCard").hidden = true; $("menuGroup").hidden = true; $("subHead").hidden = false;
     $("subTitle").textContent = _t(PAGES[name]);
     Array.prototype.forEach.call(document.querySelectorAll(".subpg"), (s) => s.classList.toggle("on", s.getAttribute("data-pg") === name));
+    if (name === "look" && typeof renderLook === "function") renderLook();
+    if (typeof renderPg56 === "function") renderPg56();
     try { window.scrollTo(0, 0); } catch (e) {}
   }
   function closePg() {
@@ -2297,6 +2455,7 @@
     if (!outArmed) $("acctOutT").textContent = _t("Akkauntdan chiqish");
     if (!wipeArmed) $("syncWipe").textContent = _t("Serverdagi nusxani o'chirish");
     $("toastUndo").textContent = _t("Bekor qilish");
+    renderLook();
   }
   $("langSel").addEventListener("change", () => { const v = $("langSel").value; if (LANGS[v]) { LANG = v; try { localStorage.setItem(LANG_KEY, v); } catch (e) {} applyLang(); } });
 
@@ -2322,6 +2481,112 @@
 
   /* ---------- Orqaga tugmasi (Android) ---------- */
   // Tarixda doim bitta "qo'riqchi" yozuv turadi; Orqaga bosilganda avval ichki qatlamlar yopiladi.
+  /* ---------- Xavfsizlik / Hisob-kitob / Zaxira: yangi ko'rinish ---------- */
+  function renderPg56() {
+    if (!$("lockChips")) return;
+    const on = !!lockInfo;
+    $("secState").classList.toggle("off", !on);
+    $("secStT").textContent = _t(on ? "Himoya yoqilgan" : "Himoya o'chiq");
+    $("secStS").textContent = _t(on ? "PIN kod o'rnatilgan" : "PIN kod qo'yilmagan");
+    const cur = $("lockDelay").value, nm = { "0": "Darhol", "1": "1 daqiqa", "5": "5 daqiqa", "15": "15 daqiqa" };
+    $("lockChips").innerHTML = Object.keys(nm).map((k) => '<button type="button" data-v="' + k + '" class="' + (k === cur ? "on" : "") + '">' + _t(nm[k]) + "</button>").join("");
+    $("rateBig").textContent = S.rate > 0 ? "1 $ = " + fmt(S.rate) : "\u2014";
+    $("rateSub").textContent = S.rate > 0 ? _t("so'm") : _t("Kurs yo'q");
+    const bt = +lsGet(BACKUP_KEY) || 0, days = bt ? Math.floor((Date.now() - bt) / 86400000) : -1;
+    $("bkState").classList.toggle("off", bt === 0);
+    $("bkStT").textContent = bt ? _t("Zaxira nusxa bor") : _t("Zaxira hali olinmagan");
+    $("bkStS").textContent = bt ? (days < 1 ? _t("Bugun") : _t("{n} kun oldin", { n: days })) : _t("Ma'lumotlarni saqlab qo'ying");
+  }
+  $("lockChips").addEventListener("click", (e) => { const b = e.target.closest ? e.target.closest("button") : null; if (!b) return; $("lockDelay").value = b.getAttribute("data-v"); $("lockDelay").dispatchEvent(new Event("change")); renderPg56(); });
+  ["savePw", "removePw", "rateFetch", "copyBackup", "saveFile", "restore", "saveCsv"].forEach((id) => $(id).addEventListener("click", () => setTimeout(renderPg56, 400)));
+  $("rate").addEventListener("input", () => setTimeout(renderPg56, 50));
+  try { renderPg56(); } catch (e) {}
+
+  /* ---------- Til, mavzu, animatsiya (Ko'rinish sahifasi) ---------- */
+  var LCODE = { uz: "UZ", ru: "RU", en: "EN", ar: "AR", tr: "TR" }, LCOL = { uz: "#2f9e6b", ru: "#4a78c0", en: "#c0483f", ar: "#8a5ab5", tr: "#c9822b" },
+    LHELLO = { uz: "Salom!", ru: "Привет!", en: "Hello!", ar: "مرحبًا", tr: "Merhaba!" },
+    LSUB = { uz: "O'zbek tili", ru: "Rus tili", en: "Ingliz tili", ar: "Arab tili", tr: "Turk tili" };
+  function langRows(sel) {
+    return Object.keys(LANGS).map((k) => '<button type="button" class="lg' + (k === sel ? " on" : "") + '" data-l="' + k + '"><span class="lcode" style="background:' + LCOL[k] + '">' + LCODE[k] + '</span><span class="lt"><b>' + LANGS[k] + "</b><small>" + _t(LSUB[k]) + '</small></span><span class="lh">' + LHELLO[k] + '</span><i class="lck">\u2713</i></button>').join("");
+  }
+  function nowFxText() {
+    if (lsGet(FX_KEY) === "off") return _t("Animatsiya o'chiq");
+    if (window.tjHoliday && window.tjHoliday()) return _t("Hozir: bayram animatsiyasi");
+    const m = new Date().getMonth();
+    return _t(m === 11 || m < 2 ? "Hozir: Qish · qor yog'adi" : m < 5 ? "Hozir: Bahor · gul barglari uchadi" : m < 8 ? "Hozir: Yoz · nur zarralari suzadi" : "Hozir: Kuz · yaprog'lar tushadi");
+  }
+  function renderLook() {
+    if (!$("langRows") || !LCOL) return;
+    const auto = lsGet(AUTOL_KEY) === "1";
+    $("langRows").innerHTML = langRows(LANG); $("langRows").classList.toggle("dim", auto);
+    $("langAuto").classList.toggle("on", auto); $("langAuto").setAttribute("aria-checked", auto ? "true" : "false");
+    $("langPv").innerHTML = '<div class="l1">' + _t("Oy balansi") + '</div><div class="l2">4 562 000</div><div class="l3"><span class="inc2"><small>' + _t("Daromad") + "</small><bdi>+6 900 000</bdi></span><span class=\"exp2\"><small>" + _t("Xarajat") + "</small><bdi>\u22122 338 000</bdi></span></div>";
+    $("rtlNote").hidden = LANG !== "ar";
+    const th = lsGet(THEME_KEY) || "";
+    Array.prototype.forEach.call(document.querySelectorAll("#themeCards .th"), (b) => b.classList.toggle("on", b.getAttribute("data-t") === th));
+    const fx = lsGet(FX_KEY) !== "off", hol = lsGet(HOL_KEY) !== "off";
+    $("fxSw").classList.toggle("on", fx); $("fxSw").setAttribute("aria-checked", fx ? "true" : "false");
+    $("holSw").classList.toggle("on", hol); $("holSw").setAttribute("aria-checked", hol ? "true" : "false");
+    $("fxNow").textContent = nowFxText();
+  }
+  renderLook();
+  function pickLang(v) { $("langSel").value = v; $("langSel").dispatchEvent(new Event("change")); }
+  $("secLang").addEventListener("click", (e) => {
+    const b = e.target.closest ? e.target.closest(".lg") : null;
+    if (b) { lsDel(AUTOL_KEY); pickLang(b.getAttribute("data-l")); return; }
+    if (e.target.closest && e.target.closest("#langAuto")) {
+      if (lsGet(AUTOL_KEY) === "1") { lsDel(AUTOL_KEY); renderLook(); return; }
+      lsSet(AUTOL_KEY, "1");
+      const nl = String(navigator.language || "").slice(0, 2).toLowerCase();
+      if (LANGS[nl] && nl !== LANG) pickLang(nl); else renderLook();
+    }
+  });
+  $("themeCards").addEventListener("click", (e) => { const b = e.target.closest ? e.target.closest(".th") : null; if (!b) return; $("themeSel").value = b.getAttribute("data-t"); $("themeSel").dispatchEvent(new Event("change")); renderLook(); renderMenu(); });
+  $("fxSw").onclick = () => { $("fxSel").value = lsGet(FX_KEY) === "off" ? "" : "off"; $("fxSel").dispatchEvent(new Event("change")); renderLook(); };
+  $("holSw").onclick = () => { if (lsGet(HOL_KEY) === "off") lsDel(HOL_KEY); else lsSet(HOL_KEY, "off"); applyHoliday(); $("fxSel").dispatchEvent(new Event("change")); renderLook(); };
+
+  /* ---------- Birinchi ochilish: til tanlash ---------- */
+  function renderLangFirst() {
+    const el = $("langFirst");
+    el.dir = LANG === "ar" ? "rtl" : "ltr";
+    el.innerHTML = '<div class="lfin"><div class="coin">T</div><h2>Tejam<b>kor</b></h2><p>' + _t("Tilni tanlang") + '</p><div style="width:100%">' + langRows(LANG) + '</div><div class="lfmore">' + _t("Keyinroq Sozlamalardan o'zgartirishingiz mumkin") + '</div><button type="button" class="lfgo">' + _t("Davom etish") + "</button></div>";
+  }
+  function showLangFirst() {
+    const el = $("langFirst"); el.hidden = false; renderLangFirst();
+    el.onclick = (e) => {
+      const b = e.target.closest ? e.target.closest(".lg") : null;
+      if (b) { LANG = b.getAttribute("data-l"); applyLang(); renderLangFirst(); return; }
+      if (e.target.closest && e.target.closest(".lfgo")) { try { localStorage.setItem(LANG_KEY, LANG); localStorage.setItem(SEEN_KEY, "1"); } catch (x) {} el.hidden = true; if (location.hash === "#til") { try { history.replaceState(null, "", location.pathname); } catch (x) {} } applyLang(); }
+    };
+  }
+
+  /* ---------- Bayramlar ---------- */
+  const HOL = { snow: "Yangi yil bilan!", tulip: "8-mart muborak!", nav: "Navro'z muborak!", carn: "Xotira va qadrlash kuni", indep: "Mustaqillik kuni muborak!", teach: "Ustozlar kuni muborak!", const: "Konstitutsiya kuni muborak!", eid: "Hayit muborak!" };
+  function holidayNow() {
+    if (lsGet(HOL_KEY) === "off") return "";
+    const d = new Date(), m = d.getMonth() + 1, day = d.getDate();
+    if ((m === 12 && day >= 25) || (m === 1 && day <= 2)) return "snow";
+    if (m === 3 && (day === 7 || day === 8)) return "tulip";
+    if (m === 3 && day >= 20 && day <= 22) return "nav";
+    if (m === 5 && (day === 8 || day === 9)) return "carn";
+    if ((m === 8 && day === 31) || (m === 9 && day === 1)) return "indep";
+    if ((m === 9 && day === 30) || (m === 10 && day === 1)) return "teach";
+    if (m === 12 && (day === 7 || day === 8)) return "const";
+    try {
+      const o = {}; new Intl.DateTimeFormat("en-u-ca-islamic-umalqura", { day: "numeric", month: "numeric" }).formatToParts(d).forEach((p) => { o[p.type] = +p.value; });
+      if ((o.month === 10 && o.day <= 3) || (o.month === 12 && o.day >= 9 && o.day <= 12)) return "eid";
+    } catch (e) {}
+    return "";
+  }
+  window.tjHoliday = holidayNow;
+  function applyHoliday() {
+    const h = holidayNow(), g = $("hgreet");
+    if (h) document.documentElement.setAttribute("data-hol", h); else document.documentElement.removeAttribute("data-hol");
+    g.hidden = !h; if (h) g.textContent = _t(HOL[h]);
+  }
+  applyHoliday(); document.addEventListener("visibilitychange", () => { if (!document.hidden) applyHoliday(); });
+  if (FIRSTRUN) showLangFirst();
+
   let exitArmed = false, exitT = null;
   function backStep() {
     if ($("secret").hidden) return false;                 // qulf ekrani: oddiy chiqish
@@ -2349,7 +2614,7 @@
 })();
 </script>
 <script>
-/* Fasl animatsiyasi: sanaga qarab kuzda yaprog'lar, qishda qor, bahorda gul barglari, yozda nur zarralari. */
+/* Fasl va bayram animatsiyasi: sanaga qarab kuzda yaprog'lar, qishda qor, bahorda gul barglari, yozda nur zarralari; bayram kunlarida bayramga xos zarralar. */
 (function () {
   const cv = document.getElementById("fx"), sel = document.getElementById("fxSel");
   if (!cv || !cv.getContext) return;
@@ -2357,14 +2622,18 @@
   let W = 0, H = 0, dpr = 1, ps = [], raf = 0, last = 0, season = "";
   const get = () => { try { return localStorage.getItem(KEY) || ""; } catch (e) { return ""; } };
   const isOn = () => get() !== "off" && !(mq && mq.matches) && !document.hidden;
-  const seasonNow = () => { const m = new Date().getMonth(); return m === 11 || m < 2 ? "winter" : m < 5 ? "spring" : m < 8 ? "summer" : "autumn"; };
+  const seasonNow = () => { const h = window.tjHoliday ? window.tjHoliday() : ""; if (h) return h; const m = new Date().getMonth(); return m === 11 || m < 2 ? "winter" : m < 5 ? "spring" : m < 8 ? "summer" : "autumn"; };
   const isDark = () => { const t = document.documentElement.getAttribute("data-theme"); return t === "dark" || (t !== "light" && window.matchMedia && matchMedia("(prefers-color-scheme: dark)").matches); };
-  const PAL = { autumn: ["#d9822b", "#b8501f", "#e0a526", "#9c3d1a"], spring: ["#f4a6b8", "#f8c8d4", "#f2b8c6"], winter: ["#ffffff"], summer: ["#f2b632"] };
+  const PAL = { autumn: ["#d9822b", "#b8501f", "#e0a526", "#9c3d1a"], spring: ["#f4a6b8", "#f8c8d4", "#f2b8c6"], winter: ["#ffffff"], summer: ["#f2b632"],
+    snow: ["#ffffff"], tulip: ["#f4a6b8", "#f8c8d4", "#e86a92"], nav: ["#8fd16b", "#c9e87a", "#f2b632"], carn: ["#c0283a", "#d9485a"], indep: ["#ffffff", "#2f9fe0", "#2fbf7a"], teach: ["#f2b632", "#ffffff", "#c9a6f0"], const: ["#ffffff", "#f2b632", "#6fb6e8"], eid: ["#f2b632", "#fff3c4"] };
   const rnd = (a, b) => a + Math.random() * (b - a);
   function make(initial) {
-    const c = PAL[season], p = { x: rnd(0, W), s: rnd(7, 14), col: c[Math.floor(Math.random() * c.length)], rot: rnd(0, 6.28), vr: rnd(-1, 1), ph: rnd(0, 6.28), sw: rnd(10, 28), a: rnd(0.35, 0.6) };
-    if (season === "summer") { p.vy = -rnd(8, 18); p.y = initial ? rnd(0, H) : H + 20; p.s = rnd(4, 9); p.a = rnd(0.25, 0.5); }
-    else { p.vy = rnd(18, 38); p.y = initial ? rnd(0, H) : -20; if (season === "winter") { p.s = rnd(2, 4.5); p.vy = rnd(14, 30); p.a = rnd(0.5, 0.85); } }
+    const c = PAL[season], p = { x: rnd(0, W), s: rnd(7, 14), col: c[Math.floor(Math.random() * c.length)], rot: rnd(0, 6.28), vr: rnd(-1, 1), ph: rnd(0, 6.28), sw: rnd(10, 28), a: rnd(0.35, 0.6), up: false };
+    p.vy = rnd(18, 38); p.y = initial ? rnd(0, H) : -20;
+    if (season === "summer") { p.vy = -rnd(8, 18); p.y = initial ? rnd(0, H) : H + 20; p.s = rnd(4, 9); p.a = rnd(0.25, 0.5); p.up = true; }
+    else if (season === "winter" || season === "snow") { p.s = rnd(1.8, 4.5); p.vy = rnd(14, 30); p.a = rnd(0.5, 0.85); }
+    else if ((season === "nav" || season === "eid") && Math.random() < 0.5) { p.vy = -rnd(8, 18); p.y = initial ? rnd(0, H) : H + 20; p.up = true; p.a = rnd(0.4, 0.8); }
+    else if (season !== "autumn" && season !== "spring") { p.a = rnd(0.5, 0.85); p.vy = rnd(14, 32); if (season === "carn") p.s = rnd(7, 11); }
     return p;
   }
   function resize() {
@@ -2373,13 +2642,20 @@
     const n = Math.max(8, Math.min(16, Math.round(W * H / 32000)));
     ps = []; for (let i = 0; i < n; i++) ps.push(make(true));
   }
+  function star(r) { ctx.beginPath(); for (let i = 0; i < 10; i++) { const a = i * Math.PI / 5 - Math.PI / 2, rr = i % 2 ? r * 0.45 : r; ctx.lineTo(Math.cos(a) * rr, Math.sin(a) * rr); } ctx.closePath(); ctx.fill(); }
+  function glow(p, k) { const g = ctx.createRadialGradient(0, 0, 0, 0, 0, p.s * k); g.addColorStop(0, p.col); g.addColorStop(1, "rgba(242,182,50,0)"); ctx.fillStyle = g; ctx.beginPath(); ctx.arc(0, 0, p.s * k, 0, 6.283); ctx.fill(); }
   function draw(p, dark) {
-    ctx.globalAlpha = p.a; ctx.fillStyle = season === "winter" && !dark ? "#9db4c8" : p.col;
-    ctx.save(); ctx.translate(p.x, p.y);
-    if (season === "winter") { ctx.beginPath(); ctx.arc(0, 0, p.s, 0, 6.283); ctx.fill(); }
-    else if (season === "summer") { const g = ctx.createRadialGradient(0, 0, 0, 0, 0, p.s * 2); g.addColorStop(0, p.col); g.addColorStop(1, "rgba(242,182,50,0)"); ctx.fillStyle = g; ctx.beginPath(); ctx.arc(0, 0, p.s * 2, 0, 6.283); ctx.fill(); }
-    else if (season === "spring") { ctx.rotate(p.rot); ctx.beginPath(); ctx.ellipse(0, 0, p.s * 0.8, p.s * 0.45, 0, 0, 6.283); ctx.fill(); }
-    else { ctx.rotate(p.rot); const L = p.s * 1.2; ctx.beginPath(); ctx.moveTo(-L, 0); ctx.quadraticCurveTo(0, -L * 0.8, L, 0); ctx.quadraticCurveTo(0, L * 0.8, -L, 0); ctx.fill(); ctx.globalAlpha = p.a * 0.7; ctx.strokeStyle = "rgba(60,25,10,.6)"; ctx.lineWidth = 0.8; ctx.beginPath(); ctx.moveTo(-L, 0); ctx.lineTo(L, 0); ctx.stroke(); }
+    ctx.globalAlpha = p.a; ctx.fillStyle = (season === "winter" || season === "snow") && !dark ? "#9db4c8" : p.col;
+    ctx.save(); ctx.translate(p.x, p.y); const s = p.s;
+    if (season === "winter" || season === "snow") { ctx.beginPath(); ctx.arc(0, 0, s, 0, 6.283); ctx.fill(); }
+    else if (season === "summer") glow(p, 2);
+    else if (season === "spring" || season === "tulip") { ctx.rotate(p.rot); ctx.beginPath(); ctx.ellipse(0, 0, s * 0.8, s * 0.45, 0, 0, 6.283); ctx.fill(); }
+    else if (season === "nav") { if (p.up) glow(p, 1.6); else { ctx.rotate(p.rot); ctx.beginPath(); ctx.moveTo(-s, 0); ctx.quadraticCurveTo(0, -s * 0.7, s, 0); ctx.quadraticCurveTo(0, s * 0.7, -s, 0); ctx.fill(); } }
+    else if (season === "carn") { ctx.rotate(p.rot); for (let i = 0; i < 5; i++) { ctx.rotate(6.283 / 5); ctx.beginPath(); ctx.arc(s * 0.45, 0, s * 0.45, 0, 6.283); ctx.fill(); } ctx.fillStyle = "#7a1220"; ctx.beginPath(); ctx.arc(0, 0, s * 0.25, 0, 6.283); ctx.fill(); }
+    else if (season === "indep" || season === "const") { ctx.rotate(p.rot); star(s * 0.9); }
+    else if (season === "teach") { ctx.rotate(p.rot); if (s > 9) ctx.fillRect(-s * 0.7, -s * 0.5, s * 1.4, s); else ctx.fillRect(-1.5, -s, 3, s * 2); }
+    else if (season === "eid") { ctx.rotate(p.rot); if (s > 10) { ctx.beginPath(); ctx.arc(0, 0, s * 0.9, 0, 6.283); ctx.fill(); ctx.globalCompositeOperation = "destination-out"; ctx.beginPath(); ctx.arc(s * 0.4, -s * 0.1, s * 0.8, 0, 6.283); ctx.fill(); ctx.globalCompositeOperation = "source-over"; } else star(s * 0.7); }
+    else { ctx.rotate(p.rot); const L = s * 1.2; ctx.beginPath(); ctx.moveTo(-L, 0); ctx.quadraticCurveTo(0, -L * 0.8, L, 0); ctx.quadraticCurveTo(0, L * 0.8, -L, 0); ctx.fill(); ctx.globalAlpha = p.a * 0.7; ctx.strokeStyle = "rgba(60,25,10,.6)"; ctx.lineWidth = 0.8; ctx.beginPath(); ctx.moveTo(-L, 0); ctx.lineTo(L, 0); ctx.stroke(); }
     ctx.restore();
   }
   function frame(t) {
