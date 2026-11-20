@@ -477,6 +477,35 @@
   .mini::after { content: ""; position: absolute; left: 6px; right: 6px; top: 32px; height: 10px; border-radius: 4px; background: var(--m2); }
   .m-l { background: #eceff1; --m2: #fff; } .m-d { background: #0a1216; --m2: #18262d; } .m-a { background: linear-gradient(90deg, #eceff1 50%, #0a1216 50%); --m2: #aab5bb; }
   /* birinchi ochilish: til tanlash */
+  .authgate { position: fixed; inset: 0; z-index: 58; overflow-y: auto; color: #e8f0f6; background: radial-gradient(120% 60% at 50% 0%, #1b4f7a 0%, #0f2747 62%, #0a1b33 100%); padding: calc(28px + env(safe-area-inset-top, 0px)) max(20px, env(safe-area-inset-left, 0px)) calc(24px + env(safe-area-inset-bottom, 0px)); }
+  .authgate[hidden] { display: none; }
+  .authgate .ain { max-width: 400px; margin: 0 auto; min-height: 100%; display: flex; flex-direction: column; }
+  .authgate .alogo { display: flex; flex-direction: column; align-items: center; margin: 4px 0 14px; text-align: center; }
+  .authgate .acoin { width: 68px; height: 68px; border-radius: 50%; background: radial-gradient(circle at 35% 30%, #ffe08a, #e2a923 55%, #a8760d); display: grid; place-items: center; font: 800 36px var(--font-num); color: #0f2747; box-shadow: 0 0 0 7px rgba(242, 182, 50, .15), 0 12px 26px rgba(0, 0, 0, .4); }
+  .authgate h2 { font: 800 22px var(--font-num); margin: 12px 0 2px; color: #fff; text-transform: none; letter-spacing: 0; }
+  .authgate .asub { color: #8fa6bb; font-size: 12.5px; margin: 0; }
+  .authgate .atabs { display: flex; background: #14233d; border-radius: 12px; padding: 3px; margin: 8px 0 14px; }
+  .authgate .atabs button { flex: 1; border: 0; background: transparent; color: #8fa6bb; padding: 9px 0; border-radius: 9px; font: 600 13.5px var(--font-body); cursor: pointer; }
+  .authgate .atabs button.on { background: #f2b632; color: #0f2747; }
+  .authgate .agoogle { width: 100%; display: flex; align-items: center; justify-content: center; gap: 10px; background: #fff; color: #1f2933; border: 0; border-radius: 12px; padding: 12px; font: 600 14.5px var(--font-body); cursor: pointer; }
+  .authgate .aor { display: flex; align-items: center; gap: 10px; color: #8fa6bb; font-size: 12px; margin: 14px 0 2px; }
+  .authgate .aor::before, .authgate .aor::after { content: ""; flex: 1; height: 1px; background: #243b5a; }
+  .authgate label { display: block; font-size: 12px; color: #8fa6bb; margin: 10px 0 4px; }
+  .authgate input[type=email], .authgate input[type=password], .authgate input[type=text] { width: 100%; background: #14233d; border: 1px solid #243b5a; color: #e8f0f6; border-radius: 12px; padding: 12px 13px; font: 15px var(--font-body); }
+  .authgate input:focus { outline: 2px solid #f2b632; outline-offset: 1px; }
+  .authgate .apw { position: relative; } .authgate .apw input { padding-right: 78px; }
+  .authgate .apw button { position: absolute; right: 6px; top: 50%; transform: translateY(-50%); border: 0; background: transparent; color: #f2b632; font: 600 12px var(--font-body); padding: 8px; cursor: pointer; }
+  .authgate .abar { height: 5px; border-radius: 3px; background: #243b5a; margin-top: 8px; overflow: hidden; } .authgate .abar u { display: block; height: 100%; width: 0; background: #f2b632; transition: width .2s; }
+  .authgate .ahint { font-size: 11.5px; color: #8fa6bb; margin-top: 4px; }
+  .authgate .achk { display: flex; gap: 9px; font-size: 12px; color: #b9c9dd; margin-top: 12px; align-items: flex-start; line-height: 1.4; }
+  .authgate .achk input { margin-top: 2px; accent-color: #f2b632; width: 17px; height: 17px; flex: none; } .authgate .achk a { color: #f2b632; }
+  .authgate .amain { width: 100%; background: #f2b632; color: #0f2747; border: 0; border-radius: 12px; padding: 13px; margin-top: 16px; font: 800 15px var(--font-body); cursor: pointer; }
+  .authgate .amain:disabled, .authgate .agoogle:disabled { opacity: .55; cursor: default; }
+  .authgate .alink { background: none; border: 0; color: #f2b632; font: 600 13px var(--font-body); padding: 8px 0 0; cursor: pointer; align-self: flex-end; }
+  .authgate .amsg { font-size: 12.5px; margin-top: 12px; padding: 10px 12px; border-radius: 12px; line-height: 1.4; background: rgba(242, 182, 50, .14); border: 1px solid rgba(242, 182, 50, .4); color: #ffe3a0; }
+  .authgate .amsg.err { background: rgba(240, 139, 114, .12); border-color: rgba(240, 139, 114, .5); color: #f7b19f; }
+  .authgate .afoot { margin-top: auto; padding-top: 18px; color: #8fa6bb; font-size: 11.5px; text-align: center; line-height: 1.5; }
+  .authgate .afoot a { color: #b9c9dd; }
   .langfirst { position: fixed; inset: 0; z-index: 60; overflow-y: auto; color: #fff; background: radial-gradient(120% 60% at 50% 0%, #1b4f7a 0%, #0f2747 62%); padding: calc(36px + env(safe-area-inset-top, 0px)) max(20px, env(safe-area-inset-left, 0px)) calc(24px + env(safe-area-inset-bottom, 0px)); }
   .langfirst .lfin { max-width: 420px; margin: 0 auto; min-height: 100%; display: flex; flex-direction: column; align-items: center; text-align: center; }
   .langfirst .coin { width: 84px; height: 84px; border-radius: 50%; background: radial-gradient(circle at 35% 30%, #ffe08a, #e2a923 55%, #a8760d); display: grid; place-items: center; font: 800 46px var(--font-num); color: #0f2747; box-shadow: 0 0 0 8px rgba(242, 182, 50, .15), 0 16px 34px rgba(0, 0, 0, .4); }
@@ -688,6 +717,7 @@
 <body>
 <canvas id="fx" aria-hidden="true"></canvas>
 <div id="langFirst" class="langfirst" hidden></div>
+<div id="authGate" class="authgate" hidden></div>
 <div class="app">
   <header class="top">
     <h1 class="brand"><svg viewBox="0 0 64 64" width="28" height="28" aria-hidden="true"><rect width="64" height="64" rx="15" fill="#0f2747"/><defs><linearGradient id="gh" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#ffd36b"/><stop offset="1" stop-color="#f0a830"/></linearGradient></defs><circle cx="32" cy="32" r="21" fill="url(#gh)"/><circle cx="32" cy="32" r="17" fill="none" stroke="#0f2747" stroke-width="1.6" opacity=".28"/><path d="M23 24.5h18M32 24.5v17.5" fill="none" stroke="#0f2747" stroke-width="5.8" stroke-linecap="round"/></svg><span class="wm">Tejam<span>kor</span></span></h1>
@@ -994,6 +1024,10 @@
         <button type="button" class="mrow out" id="acctOut" hidden>
           <span class="mico" style="--c:#c0483f"><svg viewBox="0 0 24 24" aria-hidden="true"><path stroke="#fff" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" fill="none" fill="#fff" fill-opacity=".30" d="M10 4H7a3 3 0 0 0-3 3v10a3 3 0 0 0 3 3h3z"/><path stroke="#fff" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" fill="none" d="M11 12h9M17 8.5l3.5 3.5-3.5 3.5"/></svg></span>
           <span class="mt" id="acctOutT">Akkauntdan chiqish</span>
+        </button>
+        <button type="button" class="mrow out" id="acctDel" hidden>
+          <span class="mico" style="--c:#8f2a22"><svg viewBox="0 0 24 24" aria-hidden="true"><path stroke="#fff" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" fill="none" d="M5 7h14M10 11v6M14 11v6M6 7l1 12a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2l1-12M9 7V4h6v3"/></svg></span>
+          <span class="mt" id="acctDelT">Hisobni o'chirish</span>
         </button>
       </section>
       <p class="menunote" id="acctInfo"></p>
@@ -2516,6 +2550,7 @@
   function renderAccount() {
     $("acctIn").hidden = !!acctEmail || syncOn;
     $("acctOut").hidden = !(acctEmail || syncOn);
+    $("acctDel").hidden = !(acctEmail || syncOn);
     $("acctInfo").textContent = acctEmail ? _t("Google hisobi:") + " " + acctEmail : (syncOn ? _t("Ulanmoqda...") : "");
     renderProfile(); renderMenu();
   }
@@ -2620,12 +2655,13 @@
     } else if (FB_CONFIG) {
       try { syncRef = await fbRef(!!interactive); }
       catch (e) {
+        if (e && e.message === "load") { setSync(_t("Internetga ulanib bo'lmadi. Ma'lumotlar shu qurilmada saqlanmoqda.")); return; }
         syncOn = false; lsSet(SYNC_KEY, "0"); renderSyncUI();
         setSync(e && e.code === "auth/popup-closed-by-user" ? _t("Kirish bekor qilindi.") : _t("Ulanib bo'lmadi ({c}). Internetni tekshiring.", { c: (e && (e.code || e.message)) || _t("xato") }));
         return;
       }
-      if (!syncRef) { setSync(_t("Sinxronlash uchun Google bilan kiring. Tugmani bosing.")); syncOn = false; lsSet(SYNC_KEY, "0"); renderSyncUI(); return; }
-      email = syncRef.email; acctEmail = email; adoptName(syncRef.name); renderAccount();
+      if (!syncRef) { setSync(_t("Sinxronlash uchun Google bilan kiring. Tugmani bosing.")); syncOn = false; lsSet(SYNC_KEY, "0"); renderSyncUI(); if (needAuth() || lsGet(AUTH_KEY) === "1") { lsDel(AUTH_KEY); showAuth(); } return; }
+      email = syncRef.email; acctEmail = email; lsSet(AUTH_KEY, "1"); adoptName(syncRef.name); renderAccount();
     } else { setSync(_t("Sinxronlash bu ko'rinishda mavjud emas.")); return; }
     const timer = setTimeout(() => setSync(_t("Serverga hali ulanib bo'lmadi. Ma'lumotlar shu qurilmada saqlanmoqda.")), 10000);
     reconciled = false;
@@ -2645,7 +2681,7 @@
   let outArmed = false;
   $("acctOut").onclick = () => {
     if (!outArmed) { outArmed = true; $("acctOutT").textContent = _t("Chiqilsinmi? Ma'lumotlar telefonda qoladi."); setTimeout(() => { outArmed = false; $("acctOutT").textContent = _t("Akkauntdan chiqish"); }, 4000); return; }
-    outArmed = false; $("acctOutT").textContent = _t("Akkauntdan chiqish"); signOutSync(); setSync(_t("Akkauntdan chiqildi. Ma'lumotlar shu qurilmada qoldi."));
+    outArmed = false; $("acctOutT").textContent = _t("Akkauntdan chiqish"); signOutSync(); lsDel(AUTH_KEY); setSync(_t("Akkauntdan chiqildi. Ma'lumotlar shu qurilmada qoldi.")); showAuth();
   };
   $("acctIn").onclick = () => { syncOn = true; lsSet(SYNC_KEY, "1"); renderSyncUI(); startSync(true); renderReminders(); };
   $("syncToggle").onclick = () => {
@@ -2666,6 +2702,116 @@
     try { if (window.firebase && firebase.apps.length) firebase.auth().signOut(); } catch (e) {}
     renderSyncUI(); setSync(_t("Serverdagi nusxa o'chirildi. Ma'lumotlar shu qurilmada qoldi."));
     renderReminders();
+  };
+
+
+  /* ---------- Kirish / ro'yxatdan o'tish (majburiy) ---------- */
+  const AUTH_KEY = "hisobchi_authed_v1", REDIR_KEY = "hisobchi_authredir";
+  if (lsGet(SYNC_KEY) === "1" && lsGet(AUTH_KEY) !== "1") lsSet(AUTH_KEY, "1");   // avval Google bilan kirganlar qayta so'ralmaydi
+  const needAuth = () => !!FB_CONFIG && !(window.claude && window.claude.use) && lsGet(AUTH_KEY) !== "1";
+  const AU = { mode: "in", busy: false, msg: "", err: false, email: "", name: "", show: false };
+  const GLOGO = '<svg width="18" height="18" viewBox="0 0 48 48" aria-hidden="true"><path fill="#ea4335" d="M24 9.5c3.5 0 6.6 1.2 9.1 3.6l6.8-6.8C35.8 2.4 30.3 0 24 0 14.6 0 6.5 5.4 2.6 13.2l7.9 6.1C12.4 13.6 17.7 9.5 24 9.5z"/><path fill="#4285f4" d="M46.5 24.5c0-1.6-.1-3.1-.4-4.5H24v9h12.7c-.6 3-2.3 5.5-4.8 7.2l7.6 5.9c4.4-4.1 7-10.1 7-17.6z"/><path fill="#fbbc05" d="M10.5 28.7A14.5 14.5 0 019.5 24c0-1.6.3-3.2.8-4.7l-7.9-6.1A24 24 0 000 24c0 3.9.9 7.5 2.6 10.8l7.9-6.1z"/><path fill="#34a853" d="M24 48c6.5 0 11.9-2.1 15.9-5.8l-7.6-5.9c-2.1 1.4-4.9 2.3-8.3 2.3-6.3 0-11.6-4.1-13.5-9.8l-7.9 6.1C6.5 42.6 14.6 48 24 48z"/></svg>';
+  function authErr(e) {
+    const c = (e && e.code) || "";
+    if (c === "auth/invalid-credential" || c === "auth/wrong-password" || c === "auth/user-not-found" || c === "auth/invalid-login-credentials") return _t("Email yoki parol noto'g'ri. Qaytadan urinib ko'ring.");
+    if (c === "auth/email-already-in-use") return _t("Bu email bilan hisob bor. «Kirish» bo'limidan kiring.");
+    if (c === "auth/invalid-email") return _t("Email noto'g'ri yozilgan.");
+    if (c === "auth/weak-password") return _t("Parol juda oddiy. Kamida 8 belgi, harf va raqam bo'lsin.");
+    if (c === "auth/too-many-requests") return _t("Juda ko'p urinish. Birozdan keyin qayta urining.");
+    if (c === "auth/network-request-failed" || (e && e.message === "load")) return _t("Internetga ulanib bo'lmadi. Ulanishni tekshiring.");
+    if (c === "auth/popup-closed-by-user" || c === "auth/cancelled-popup-request") return _t("Kirish bekor qilindi.");
+    if (c === "auth/operation-not-allowed") return _t("Email bilan kirish hali yoqilmagan. Google orqali kiring.");
+    return _t("Xatolik yuz berdi. Qayta urinib ko'ring.");
+  }
+  function pwScore(v) { let n = 0; if (v.length >= 8) n++; if (/[A-Za-z]/.test(v) && /\d/.test(v)) n++; if (v.length >= 12 || /[^A-Za-z0-9]/.test(v)) n++; return v.length ? Math.max(1, n) : 0; }
+  function renderAuth() {
+    const el = $("authGate"), m = AU.mode, up = m === "up", rs = m === "reset", pwT = AU.show ? "text" : "password";
+    const esc = (x) => String(x).replace(/[&<>"]/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
+    el.innerHTML = '<div class="ain"><div class="alogo"><div class="acoin">T</div><h2>Tejam<b style="color:#f2b632">kor</b></h2><p class="asub">' + _t(up ? "Hisob ochish 30 soniya oladi" : rs ? "Parolni tiklash" : "Pulingizni nazoratda ushlang") + '</p></div>' +
+      (rs ? "" : '<div class="atabs"><button type="button" data-m="in" class="' + (m === "in" ? "on" : "") + '">' + _t("Kirish") + '</button><button type="button" data-m="up" class="' + (up ? "on" : "") + '">' + _t("Ro'yxatdan o'tish") + '</button></div>' +
+        '<button type="button" class="agoogle" id="auG"' + (AU.busy ? " disabled" : "") + '>' + GLOGO + _t(up ? "Google bilan ro'yxatdan o'tish" : "Google bilan davom etish") + '</button><div class="aor">' + _t("yoki email bilan") + '</div>') +
+      '<form id="auForm" novalidate>' +
+      (up ? '<label for="auName">' + _t("Ismingiz") + '</label><input id="auName" type="text" autocomplete="name" maxlength="40" value="' + esc(AU.name) + '">' : "") +
+      '<label for="auEmail">Email</label><input id="auEmail" type="email" autocomplete="email" inputmode="email" autocapitalize="none" value="' + esc(AU.email) + '">' +
+      (rs ? "" : '<label for="auPw">' + _t("Parol") + '</label><div class="apw"><input id="auPw" type="' + pwT + '" autocomplete="' + (up ? "new-password" : "current-password") + '"><button type="button" id="auShow">' + _t(AU.show ? "yashirish" : "ko'rsatish") + '</button></div>') +
+      (up ? '<div class="abar"><u id="auBar"></u></div><div class="ahint" id="auHint">' + _t("Kamida 8 belgi, harf va raqam") + '</div><label class="achk"><input type="checkbox" id="auTerms"><span>' + _t("Maxfiylik siyosatiga roziman") + ' (<a href="privacy-policy.html" target="_blank" rel="noopener">' + _t("o'qish") + '</a>)</span></label>' : "") +
+      (m === "in" ? '<button type="button" class="alink" id="auForgot">' + _t("Parolni unutdingizmi?") + '</button>' : "") +
+      '<div class="amsg' + (AU.err ? " err" : "") + '" id="auMsg" role="status"' + (AU.msg ? "" : " hidden") + '>' + esc(AU.msg) + '</div>' +
+      '<button type="submit" class="amain" id="auGo"' + (AU.busy ? " disabled" : "") + '>' + _t(up ? "Hisob ochish" : rs ? "Tiklash havolasini yuborish" : "Kirish") + '</button>' +
+      (rs ? '<button type="button" class="alink" id="auBack" style="align-self:center">' + _t("Orqaga") + '</button>' : "") + '</form>' +
+      '<div class="afoot">' + _t("Ma'lumotlaringiz sizning hisobingizda saqlanadi. Telefondagi eski ma'lumotlar yo'qolmaydi.") + '<br><a href="privacy-policy.html" target="_blank" rel="noopener">' + _t("Maxfiylik siyosati") + '</a></div></div>';
+  }
+  function authSet(msg, err) { AU.msg = msg || ""; AU.err = !!err; const b = $("auMsg"); if (b) { b.textContent = AU.msg; b.className = "amsg" + (AU.err ? " err" : ""); b.hidden = !AU.msg; } }
+  function authBusy(v) { AU.busy = v; ["auG", "auGo"].forEach((i) => { const b = $(i); if (b) b.disabled = v; }); }
+  function showAuth(note) {
+    const el = $("authGate"); el.hidden = false; AU.msg = note || ""; AU.err = false; renderAuth();
+    try { loadFirebase().catch(() => {}); } catch (e) {}
+    if (lsGet(REDIR_KEY) === "1") { lsDel(REDIR_KEY); loadFirebase().then((fb) => fb.auth().getRedirectResult()).then((r) => { if (r && r.user) authDone(); }).catch((e) => authSet(authErr(e), true)); }
+  }
+  function authDone() {
+    lsSet(AUTH_KEY, "1"); lsSet(SYNC_KEY, "1"); syncOn = true;
+    $("authGate").hidden = true; AU.show = false;
+    renderSyncUI(); renderReminders(); startSync(false);
+  }
+  async function authGoogle() {
+    authBusy(true); authSet("");
+    try {
+      const fb = await loadFirebase(), prov = new fb.auth.GoogleAuthProvider();
+      try { await fb.auth().signInWithPopup(prov); }
+      catch (e) {
+        const c = (e && e.code) || "";
+        if (c === "auth/popup-blocked" || c === "auth/operation-not-supported-in-this-environment" || c === "auth/web-storage-unsupported") { lsSet(REDIR_KEY, "1"); await fb.auth().signInWithRedirect(prov); return; }
+        throw e;
+      }
+      authDone();
+    } catch (e) { authSet(authErr(e), true); }
+    authBusy(false);
+  }
+  async function authSubmit() {
+    const m = AU.mode, email = ($("auEmail").value || "").trim(), pw = $("auPw") ? $("auPw").value : "";
+    AU.email = email; if ($("auName")) AU.name = $("auName").value.trim();
+    if (!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(email)) { authSet(_t("Email noto'g'ri yozilgan."), true); return; }
+    if (m !== "reset" && !pw) { authSet(_t("Parolni kiriting."), true); return; }
+    if (m === "up") {
+      if (!AU.name) { authSet(_t("Ismingizni yozing."), true); return; }
+      if (pwScore(pw) < 2) { authSet(_t("Parol juda oddiy. Kamida 8 belgi, harf va raqam bo'lsin."), true); return; }
+      if (!$("auTerms").checked) { authSet(_t("Davom etish uchun Maxfiylik siyosatiga rozi bo'ling."), true); return; }
+    }
+    authBusy(true); authSet("");
+    try {
+      const fb = await loadFirebase(), au = fb.auth();
+      if (m === "reset") { await au.sendPasswordResetEmail(email); authSet(_t("Havola emailingizga yuborildi. Spam papkasini ham tekshiring."), false); authBusy(false); return; }
+      if (m === "up") { const cr = await au.createUserWithEmailAndPassword(email, pw); try { await cr.user.updateProfile({ displayName: AU.name }); } catch (e) {} }
+      else await au.signInWithEmailAndPassword(email, pw);
+      authDone();
+    } catch (e) { authSet(authErr(e), true); }
+    authBusy(false);
+  }
+  $("authGate").addEventListener("click", (e) => {
+    const t = e.target.closest ? e.target.closest("button") : null; if (!t) return;
+    if (t.getAttribute("data-m")) { AU.email = ($("auEmail") || {}).value || AU.email; AU.mode = t.getAttribute("data-m"); AU.msg = ""; renderAuth(); return; }
+    if (t.id === "auG") authGoogle();
+    else if (t.id === "auShow") { const i = $("auPw"); AU.show = !AU.show; i.type = AU.show ? "text" : "password"; t.textContent = _t(AU.show ? "yashirish" : "ko'rsatish"); }
+    else if (t.id === "auForgot") { AU.email = ($("auEmail") || {}).value || ""; AU.mode = "reset"; AU.msg = ""; renderAuth(); }
+    else if (t.id === "auBack") { AU.mode = "in"; AU.msg = ""; renderAuth(); }
+  });
+  $("authGate").addEventListener("submit", (e) => { e.preventDefault(); if (!AU.busy) authSubmit(); });
+  $("authGate").addEventListener("input", (e) => { if (e.target.id === "auPw" && AU.mode === "up") { const n = pwScore(e.target.value); $("auBar").style.width = (n * 33.4) + "%"; $("auHint").textContent = _t(n >= 2 ? "Yaxshi" : "Kamida 8 belgi, harf va raqam"); } });
+  let delArmed = false;
+  $("acctDel").onclick = async () => {
+    if (!delArmed) { delArmed = true; $("acctDelT").textContent = _t("Aniq o'chirilsinmi? Hisob va serverdagi ma'lumot o'chadi."); setTimeout(() => { delArmed = false; $("acctDelT").textContent = _t("Hisobni o'chirish"); }, 5000); return; }
+    delArmed = false; $("acctDelT").textContent = _t("Hisobni o'chirish");
+    try {
+      const fb = await loadFirebase(), u = fb.auth().currentUser;
+      if (!u) { signOutSync(); lsDel(AUTH_KEY); showAuth(_t("Hisobni o'chirish uchun avval kiring.")); return; }
+      try { await fb.firestore().doc("users/" + u.uid).delete(); } catch (e) {}
+      await u.delete();
+    } catch (e) {
+      if (e && e.code === "auth/requires-recent-login") { signOutSync(); lsDel(AUTH_KEY); showAuth(_t("Xavfsizlik uchun qayta kiring, keyin hisobni o'chiring.")); return; }
+      setSync(_t("Hisobni o'chirib bo'lmadi. Internetni tekshiring.")); return;
+    }
+    stopSync(); syncOn = false; lsSet(SYNC_KEY, "0"); lsDel(LINK_KEY); lsDel(AUTH_KEY); acctEmail = "";
+    renderSyncUI(); renderReminders(); toast(_t("Hisob o'chirildi. Ma'lumotlar telefonda qoldi.")); showAuth();
   };
 
   /* ---------- Yashirish va parol ---------- */
@@ -2882,6 +3028,7 @@
     if (!wipeArmed) $("syncWipe").textContent = _t("Serverdagi nusxani o'chirish");
     $("toastUndo").textContent = _t("Bekor qilish");
     renderLook();
+    if (!$("authGate").hidden) renderAuth();
   }
   $("langSel").addEventListener("change", () => { const v = $("langSel").value; if (LANGS[v]) { LANG = v; try { localStorage.setItem(LANG_KEY, v); } catch (e) {} applyLang(); } });
 
@@ -3014,6 +3161,7 @@
   }
   applyHoliday(); document.addEventListener("visibilitychange", () => { if (!document.hidden) applyHoliday(); });
   if (FIRSTRUN) showLangFirst();
+  if (needAuth()) showAuth();
 
   let exitArmed = false, exitT = null;
   function backStep() {
