@@ -1,6 +1,6 @@
-// Oflayn qo'llab-quvvatlash: ilova fayllari avval tarmoqdan, bo'lmasa saqlangan nusxadan.
+// Tez ochilish: ilova fayllari darhol saqlangan nusxadan beriladi, yangisi orqada yuklanadi (keyingi ochilishda ishlaydi).
 // Shriftlar (Google Fonts) birinchi yuklanganda saqlanadi va keyin internetsiz ham ishlaydi.
-const CACHE = "hisobchi-v21";
+const CACHE = "hisobchi-v22";
 const FONTS = "hisobchi-fonts-v1";
 const CORE = ["./", "index.html", "firebase-config.js", "i18n.js", "manifest.webmanifest", "icons/icon-192.png", "icons/icon-512.png", "icons/apple-touch-icon.png", "icons/favicon.svg"];
 self.addEventListener("install", (e) => {
@@ -21,11 +21,9 @@ self.addEventListener("fetch", (e) => {
     return;
   }
   if (url.origin !== location.origin) return;
-  e.respondWith(
-    fetch(req).then((res) => {
-      const copy = res.clone();
-      caches.open(CACHE).then((c) => c.put(req, copy));
-      return res;
-    }).catch(() => caches.match(req).then((r) => r || caches.match("./")))
-  );
+  e.respondWith(caches.open(CACHE).then((c) => c.match(req, { ignoreSearch: true }).then((hit) => {
+    const net = fetch(req).then((res) => { if (res && res.ok) c.put(req, res.clone()); return res; });
+    if (hit) { net.catch(() => {}); return hit; }
+    return net.catch(() => c.match("./"));
+  })));
 });
