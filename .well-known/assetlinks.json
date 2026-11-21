@@ -3,6 +3,9 @@
   "target": {
     "namespace": "android_app",
     "package_name": "uz.tejamkor.app",
-    "sha256_cert_fingerprints": ["6A:CC:30:C5:DE:FA:35:79:B3:39:B9:E9:EA:3B:E7:4D:E9:28:7C:E4:02:09:CF:EB:71:74:8A:81:E7:3B:92:CF"]
+    "sha256_cert_fingerprints": [
+      "2D:30:35:6B:9F:5F:F0:7D:19:A5:C5:6A:25:3E:E5:6C:9A:73:AE:04:67:D6:45:E4:01:A2:AE:2A:93:C9:C3:2E",
+      "6A:CC:30:C5:DE:FA:35:79:B3:39:B9:E9:EA:3B:E7:4D:E9:28:7C:E4:02:09:CF:EB:71:74:8A:81:E7:3B:92:CF"
+    ]
   }
 }]
