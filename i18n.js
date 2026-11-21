@@ -490,6 +490,9 @@ window.HISOBCHI_I18N = {
   "Xavfsizlik uchun qayta kiring, keyin hisobni o'chiring.": "Для безопасности войдите заново, затем удалите аккаунт.",
   "Hisobni o'chirib bo'lmadi. Internetni tekshiring.": "Не удалось удалить аккаунт. Проверьте интернет.",
   "Internetga ulanib bo'lmadi. Ma'lumotlar shu qurilmada saqlanmoqda.": "Нет подключения. Данные сохраняются на этом устройстве.",
+  "Hisob bloklangan": "Аккаунт заблокирован",
+  "Savollar uchun yozing:": "По вопросам пишите:",
+  "Chiqish": "Выйти",
   "months": [
    "Январь",
    "Февраль",
@@ -1032,6 +1035,9 @@ window.HISOBCHI_I18N = {
   "Xavfsizlik uchun qayta kiring, keyin hisobni o'chiring.": "For security, sign in again, then delete the account.",
   "Hisobni o'chirib bo'lmadi. Internetni tekshiring.": "Couldn't delete the account. Check your internet.",
   "Internetga ulanib bo'lmadi. Ma'lumotlar shu qurilmada saqlanmoqda.": "Can't connect. Your data is being kept on this device.",
+  "Hisob bloklangan": "Account blocked",
+  "Savollar uchun yozing:": "For questions, write to:",
+  "Chiqish": "Sign out",
   "months": [
    "January",
    "February",
@@ -1560,6 +1566,9 @@ window.HISOBCHI_I18N = {
   "Xavfsizlik uchun qayta kiring, keyin hisobni o'chiring.": "لأجل الأمان، سجّل الدخول مجددًا ثم احذف الحساب.",
   "Hisobni o'chirib bo'lmadi. Internetni tekshiring.": "تعذّر حذف الحساب. تحقق من الإنترنت.",
   "Internetga ulanib bo'lmadi. Ma'lumotlar shu qurilmada saqlanmoqda.": "لا يوجد اتصال. تُحفظ البيانات على هذا الجهاز.",
+  "Hisob bloklangan": "الحساب محظور",
+  "Savollar uchun yozing:": "للاستفسار راسل:",
+  "Chiqish": "خروج",
   "months": [
    "يناير",
    "فبراير",
@@ -2088,6 +2097,9 @@ window.HISOBCHI_I18N = {
   "Xavfsizlik uchun qayta kiring, keyin hisobni o'chiring.": "Güvenlik için yeniden giriş yapın, sonra hesabı silin.",
   "Hisobni o'chirib bo'lmadi. Internetni tekshiring.": "Hesap silinemedi. İnterneti kontrol edin.",
   "Internetga ulanib bo'lmadi. Ma'lumotlar shu qurilmada saqlanmoqda.": "Bağlanılamadı. Veriler bu cihazda saklanıyor.",
+  "Hisob bloklangan": "Hesap engellendi",
+  "Savollar uchun yozing:": "Sorularınız için yazın:",
+  "Chiqish": "Çıkış",
   "months": [
    "Ocak",
    "Şubat",

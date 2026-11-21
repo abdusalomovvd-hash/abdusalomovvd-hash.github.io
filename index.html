@@ -2634,11 +2634,35 @@
     if (!user) return null;
     const doc = fb.firestore().doc("users/" + user.uid);
     return {
-      email: user.email || "", name: user.displayName || "",
+      email: user.email || "", name: user.displayName || "", uid: user.uid,
+      prov: ((user.providerData && user.providerData[0] && user.providerData[0].providerId) || "").indexOf("google") === 0 ? "google" : "password",
+      created: Date.parse(user.metadata && user.metadata.creationTime) || 0,
+      profSet: (b) => fb.firestore().doc("profiles/" + user.uid).set(b),
+      blockWatch: (cb) => fb.firestore().doc("blocked/" + user.uid).onSnapshot((sn) => cb(!!sn.exists), () => {}),
       onSnapshot: (ok, bad) => doc.onSnapshot({ includeMetadataChanges: true }, ok, bad),
       set: (b) => doc.set(JSON.parse(JSON.stringify(b))),
       delete: () => doc.delete()
     };
+  }
+  /* Hisob profili (admin panel uchun) va bloklash holati. Pul ma'lumotlari yozilmaydi. */
+  let blockedNow = false, blockUnsub = null;
+  function adminHooks(ref) {
+    if (!ref || !ref.profSet) return;
+    const last = +lsGet("hisobchi_prof_at") || 0;
+    if (Date.now() - last > 6 * 3600 * 1000) {
+      ref.profSet({ email: ref.email || "", name: ref.name || "", created: ref.created || 0, seen: Date.now(), lang: LANG, ver: "1.1", txn: (S.tx || []).length, prov: ref.prov || "" })
+        .then(() => lsSet("hisobchi_prof_at", String(Date.now()))).catch(() => {});
+    }
+    if (blockUnsub) { try { blockUnsub(); } catch (e) {} }
+    blockUnsub = ref.blockWatch((b) => { blockedNow = b; showBlocked(b); });
+  }
+  function showBlocked(b) {
+    let el = $("blockedOv");
+    if (!b) { if (el) el.hidden = true; return; }
+    if (!el) { el = document.createElement("div"); el.id = "blockedOv"; el.className = "authgate"; el.style.zIndex = "59"; document.body.appendChild(el); }
+    el.hidden = false;
+    el.innerHTML = '<div class="ain" style="justify-content:center;text-align:center"><div class="alogo"><div class="acoin">!</div><h2>' + _t("Hisob bloklangan") + '</h2><p class="asub">' + _t("Savollar uchun yozing:") + ' abdusalomovv.d@gmail.com</p></div><button type="button" class="amain" id="blkOut">' + _t("Chiqish") + '</button></div>';
+    $("blkOut").onclick = () => { signOutSync(); lsDel(AUTH_KEY); el.hidden = true; showAuth(); };
   }
   async function startSync(interactive) {
     if (unsub || !syncOn) return;
@@ -2668,10 +2692,12 @@
     if (email) setSync(_t("Ulandi:") + " " + email);
     unsub = syncRef.onSnapshot((snap) => { if (!snap.metadata.fromCache) clearTimeout(timer); onRemote(snap); },
       (err) => { clearTimeout(timer); unsub = null; setSync(_t("Sinxronlash to'xtadi ({c}).", { c: (err && err.code) || _t("xato") })); });
+    try { adminHooks(syncRef); } catch (e) {}
   }
   function stopSync() {
     if (unsub) { try { unsub(); } catch (e) {} }
     unsub = null; syncRef = null; reconciled = false; choicePending = null; clearTimeout(pushTimer);
+    if (blockUnsub) { try { blockUnsub(); } catch (e) {} blockUnsub = null; }
   }
   function signOutSync() {
     stopSync(); syncOn = false; lsSet(SYNC_KEY, "0"); lsDel(LINK_KEY); acctEmail = "";

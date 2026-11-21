@@ -1,8 +1,37 @@
 rules_version = '2';
 service cloud.firestore {
   match /databases/{database}/documents {
+
+    // Ilova egasi (admin): faqat tasdiqlangan Google emaili
+    function isAdmin() {
+      return request.auth != null
+        && request.auth.token.email == "abdusalomovv.d@gmail.com"
+        && request.auth.token.email_verified == true;
+    }
+    function isOwner(uid) { return request.auth != null && request.auth.uid == uid; }
+    function isBlocked(uid) { return exists(/databases/$(database)/documents/blocked/$(uid)); }
+
+    // Foydalanuvchining shaxsiy ma'lumoti (pul, qarz va h.k.): faqat egasi. Admin faqat o'chira oladi.
     match /users/{uid} {
-      allow read, write: if request.auth != null && request.auth.uid == uid;
+      allow read: if isOwner(uid);
+      allow create, update: if isOwner(uid) && !isBlocked(uid);
+      allow delete: if isAdmin() || (isOwner(uid) && !isBlocked(uid));
+    }
+
+    // Hisob profili (email, ism, sana...): egasi yozadi, egasi va admin o'qiydi
+    match /profiles/{uid} {
+      allow read: if isOwner(uid) || isAdmin();
+      allow create, update: if isOwner(uid)
+        && request.resource.data.keys().hasOnly(['email', 'name', 'created', 'seen', 'lang', 'ver', 'txn', 'prov'])
+        && request.resource.data.email is string && request.resource.data.email.size() < 200
+        && request.resource.data.name is string && request.resource.data.name.size() < 100;
+      allow delete: if isOwner(uid) || isAdmin();
+    }
+
+    // Bloklangan foydalanuvchilar: faqat admin yozadi, egasi o'z holatini o'qiydi
+    match /blocked/{uid} {
+      allow read: if isOwner(uid) || isAdmin();
+      allow write: if isAdmin();
     }
   }
 }

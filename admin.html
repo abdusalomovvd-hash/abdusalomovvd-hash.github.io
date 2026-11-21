@@ -1,0 +1,111 @@
+<!doctype html>
+<html lang="uz"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="robots" content="noindex,nofollow"><title>Tejamkor Admin</title>
+<script src="firebase-config.js"></script>
+<style>
+:root{--bg:#eceff1;--card:#fff;--ink:#0f1b22;--mut:#566872;--line:#d9e0e4;--soft:#f0f3f5;--navy:#0f2747;--gold:#f2b632;--ok:#14703c;--bad:#b4361b}
+@media (prefers-color-scheme:dark){:root{--bg:#0a1216;--card:#101b21;--ink:#e3edf0;--mut:#86a0a8;--line:#1f333b;--soft:#152329}}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink);font:15px/1.5 "IBM Plex Sans",system-ui,sans-serif}
+.top{background:var(--navy);color:#fff;padding:12px 16px;display:flex;justify-content:space-between;align-items:center;gap:10px;position:sticky;top:0;z-index:5}
+.top b{font:800 16px system-ui}.top small{color:#9fb6cc;font-size:12px}.top button{background:transparent;border:1px solid #3b557a;color:#cfe0f0;border-radius:8px;padding:6px 10px;cursor:pointer}
+main{max-width:980px;margin:0 auto;padding:16px}
+.card{background:var(--card);border-radius:16px;padding:14px 16px;box-shadow:0 2px 12px rgba(15,39,71,.1);margin-bottom:16px}
+h2{font:700 13px system-ui;color:var(--mut);margin:0 0 10px;text-transform:uppercase;letter-spacing:.05em}
+.kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px}.kpi{background:var(--soft);border-radius:12px;padding:10px 12px}.kpi b{display:block;font:800 24px system-ui}.kpi span{font-size:12px;color:var(--mut)}
+.bars{display:flex;align-items:flex-end;gap:5px;height:80px;margin:6px 0 4px}.bars i{flex:1;background:var(--navy);border-radius:4px 4px 0 0;min-height:2px}.bars i:last-child{background:var(--gold)}
+.lbl{display:flex;justify-content:space-between;font-size:11px;color:var(--mut)}
+.row{display:flex;justify-content:space-between;gap:12px;padding:8px 0;border-top:1px solid var(--line);font-size:14px}.row span:first-child{color:var(--mut)}.row b{text-align:right;word-break:break-all}
+input[type=search]{width:100%;border:1px solid var(--line);background:var(--card);color:var(--ink);border-radius:10px;padding:10px 12px;font:15px system-ui;margin-bottom:8px}
+.u{display:flex;align-items:center;gap:10px;padding:10px 0;border-top:1px solid var(--line);cursor:pointer}.u:hover{background:var(--soft)}
+.av{width:36px;height:36px;border-radius:50%;background:var(--navy);color:var(--gold);display:grid;place-items:center;font-weight:800;flex:none}
+.u div{flex:1;min-width:0}.u b{display:block;font-size:14px;overflow:hidden;text-overflow:ellipsis}.u small{color:var(--mut);font-size:12px}
+.pill{font-size:11px;border-radius:8px;padding:2px 8px;font-weight:700;white-space:nowrap}.on{background:#dff3e6;color:var(--ok)}.off{background:#fbe3dc;color:var(--bad)}
+.btn{display:block;width:100%;border:0;border-radius:10px;padding:12px;font:700 14px system-ui;margin-top:10px;cursor:pointer}.b1{background:#fbe3dc;color:var(--bad)}.b2{background:var(--soft);color:var(--ink)}.b3{background:var(--gold);color:var(--navy)}
+.lock{background:#eef6ff;color:#1d4a7a;border-left:4px solid #2f6fb5;padding:8px 12px;border-radius:8px;font-size:12.5px;margin-top:10px}
+.center{max-width:380px;margin:12vh auto;text-align:center;padding:0 16px}.center h1{font:800 22px system-ui}.center p{color:var(--mut)}
+.msg{margin-top:10px;font-size:13px;color:var(--bad)}[hidden]{display:none!important}
+.pager{display:flex;justify-content:space-between;align-items:center;margin-top:8px;font-size:12px;color:var(--mut)}.pager button{border:1px solid var(--line);background:var(--card);color:var(--ink);border-radius:8px;padding:6px 12px;cursor:pointer}
+</style></head><body>
+<div id="gate" class="center"><h1>Tejamkor Admin</h1><p>Faqat ilova egasi uchun.</p><button class="btn b3" id="signin">Google bilan kirish</button><div class="msg" id="gmsg"></div></div>
+<div id="app" hidden>
+ <div class="top"><div><b>Tejamkor Admin</b><br><small id="who"></small></div><button id="out">Chiqish</button></div>
+ <main id="list">
+  <div class="card"><div class="kpis" id="kpis"></div></div>
+  <div class="card"><h2>Yangi foydalanuvchilar (14 kun)</h2><div class="bars" id="bars"></div><div class="lbl"><span id="l1"></span><span>bugun</span></div></div>
+  <div class="card"><h2>Tillar</h2><div id="langs"></div></div>
+  <div class="card"><h2>Foydalanuvchilar</h2><input type="search" id="q" placeholder="Email yoki ism bo'yicha qidirish"><div id="users"></div><div class="pager"><button id="pv">← Oldingi</button><span id="pg"></span><button id="nx">Keyingi →</button></div></div>
+ </main>
+ <main id="detail" hidden></main>
+</div>
+<script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore-compat.js"></script>
+<script>
+(function () {
+  const ADMIN = "abdusalomovv.d@gmail.com", $ = (i) => document.getElementById(i), PAGE = 25;
+  const esc = (x) => String(x == null ? "" : x).replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
+  const LN = { uz: "O'zbekcha", ru: "Русский", en: "English", ar: "العربية", tr: "Türkçe" };
+  let P = [], B = {}, page = 0, flt = [], auth, db;
+  function ago(t) { if (!t) return "—"; const d = Date.now() - t, m = 60000, h = 60 * m, dd = 24 * h; if (d < m) return "hozir"; if (d < h) return Math.floor(d / m) + " daq oldin"; if (d < dd) return Math.floor(d / h) + " soat oldin"; return Math.floor(d / dd) + " kun oldin"; }
+  const dt = (t) => t ? new Date(t).toLocaleDateString("uz-UZ", { day: "numeric", month: "long", year: "numeric" }) : "—";
+  function init() {
+    if (!window.HISOBCHI_FIREBASE) { $("gmsg").textContent = "Firebase sozlanmagan."; return; }
+    firebase.initializeApp(window.HISOBCHI_FIREBASE); auth = firebase.auth(); db = firebase.firestore();
+    auth.onAuthStateChanged(check);
+    $("signin").onclick = () => auth.signInWithPopup(new firebase.auth.GoogleAuthProvider()).catch((e) => { $("gmsg").textContent = "Kirib bo'lmadi: " + (e.code || e.message); });
+    $("out").onclick = () => auth.signOut();
+  }
+  function check(u) {
+    if (!u) { $("gate").hidden = false; $("app").hidden = true; return; }
+    if ((u.email || "").toLowerCase() !== ADMIN || !u.emailVerified) { $("gmsg").textContent = "Ruxsat yo'q: " + (u.email || "") + ". Admin hisobi bilan kiring."; $("gate").hidden = false; $("app").hidden = true; auth.signOut(); return; }
+    $("gate").hidden = true; $("app").hidden = false; $("who").textContent = u.email; load();
+  }
+  async function load() {
+    try {
+      const [a, b] = await Promise.all([db.collection("profiles").orderBy("seen", "desc").limit(2000).get(), db.collection("blocked").get()]);
+      P = a.docs.map((d) => Object.assign({ id: d.id }, d.data())); B = {}; b.docs.forEach((d) => { B[d.id] = 1; });
+      draw();
+    } catch (e) { $("users").innerHTML = '<div class="msg">Ma\'lumotni o\'qib bo\'lmadi: ' + esc(e.code || e.message) + '. Firestore qoidalari joylanganmi?</div>'; }
+  }
+  function draw() {
+    const now = Date.now(), d0 = new Date(); d0.setHours(0, 0, 0, 0); const t0 = d0.getTime(), D = 86400000;
+    const k = (n, l) => '<div class="kpi"><b>' + n + "</b><span>" + l + "</span></div>";
+    $("kpis").innerHTML = k(P.length, "Jami foydalanuvchi") + k(P.filter((p) => p.created >= t0).length, "Bugun yangi") + k(P.filter((p) => p.seen >= now - 7 * D).length, "Haftada faol") + k(Object.keys(B).length, "Bloklangan");
+    const days = []; for (let i = 13; i >= 0; i--) days.push(t0 - i * D);
+    const cnt = days.map((t) => P.filter((p) => p.created >= t && p.created < t + D).length), mx = Math.max(1, ...cnt);
+    $("bars").innerHTML = cnt.map((n) => '<i title="' + n + '" style="height:' + Math.max(3, n / mx * 100) + '%"></i>').join("");
+    $("l1").textContent = new Date(days[0]).toLocaleDateString("uz-UZ", { day: "numeric", month: "short" });
+    const L = {}; P.forEach((p) => { L[p.lang || "?"] = (L[p.lang || "?"] || 0) + 1; });
+    $("langs").innerHTML = Object.keys(L).sort((a, b) => L[b] - L[a]).map((l) => '<div class="row"><span>' + esc(LN[l] || l) + "</span><b>" + L[l] + "</b></div>").join("") || '<div class="row"><span>Hozircha ma\'lumot yo\'q</span></div>';
+    filter();
+  }
+  function filter() {
+    const q = ($("q").value || "").trim().toLowerCase();
+    flt = P.filter((p) => !q || (p.email || "").toLowerCase().includes(q) || (p.name || "").toLowerCase().includes(q));
+    const pages = Math.max(1, Math.ceil(flt.length / PAGE)); if (page >= pages) page = pages - 1;
+    $("users").innerHTML = flt.slice(page * PAGE, page * PAGE + PAGE).map((p) => '<div class="u" data-id="' + esc(p.id) + '"><span class="av">' + esc((p.name || p.email || "?").charAt(0).toUpperCase()) + "</span><div><b>" + esc(p.name || p.email) + "</b><small>" + esc(p.email) + " · " + esc(ago(p.seen)) + '</small></div><span class="pill ' + (B[p.id] ? "off" : "on") + '">' + (B[p.id] ? "bloklangan" : "faol") + "</span></div>").join("") || '<div class="row"><span>Hech narsa topilmadi</span></div>';
+    $("pg").textContent = (page + 1) + " / " + pages + " · " + flt.length + " ta"; $("pv").disabled = page === 0; $("nx").disabled = page >= pages - 1;
+  }
+  function open(id) {
+    const p = P.find((x) => x.id === id); if (!p) return; const bl = !!B[id];
+    const r = (a, b) => '<div class="row"><span>' + a + "</span><b>" + esc(b) + "</b></div>";
+    $("list").hidden = true; $("detail").hidden = false; window.scrollTo(0, 0);
+    $("detail").innerHTML = '<div class="card"><button class="btn b2" id="back" style="margin:0 0 10px">← Orqaga</button><h2>' + esc(p.name || "Foydalanuvchi") + "</h2>" +
+      r("Email", p.email) + r("Ro'yxatdan o'tgan", dt(p.created)) + r("Oxirgi kirish", ago(p.seen)) + r("Til", LN[p.lang] || p.lang || "—") + r("Ilova versiyasi", p.ver || "—") + r("Amallar soni", p.txn == null ? "—" : p.txn) + r("Kirish usuli", p.prov === "google" ? "Google" : "Email va parol") + r("Holat", bl ? "Bloklangan" : "Faol") + r("ID", p.id) +
+      '<div class="lock">🔒 Pul summalari, qarz va maqsadlar bu yerda ko\'rsatilmaydi, faqat hisob ma\'lumoti.</div>' +
+      '<button class="btn b2" id="blk">' + (bl ? "Blokdan chiqarish" : "Bloklash") + '</button><button class="btn b1" id="del">Serverdagi ma\'lumotni o\'chirish</button><div class="msg" id="dmsg"></div></div>';
+    $("back").onclick = () => { $("detail").hidden = true; $("list").hidden = false; };
+    $("blk").onclick = async () => { try { if (bl) { await db.doc("blocked/" + id).delete(); delete B[id]; } else { await db.doc("blocked/" + id).set({ at: Date.now() }); B[id] = 1; } draw(); open(id); } catch (e) { $("dmsg").textContent = "Xato: " + (e.code || e.message); } };
+    let armed = false;
+    $("del").onclick = async () => {
+      if (!armed) { armed = true; $("del").textContent = "Aniq o'chirilsinmi? Bosing."; setTimeout(() => { armed = false; if ($("del")) $("del").textContent = "Serverdagi ma'lumotni o'chirish"; }, 4000); return; }
+      try { await db.doc("users/" + id).delete(); await db.doc("profiles/" + id).delete(); P = P.filter((x) => x.id !== id); delete B[id]; draw(); $("detail").hidden = true; $("list").hidden = false; }
+      catch (e) { $("dmsg").textContent = "Xato: " + (e.code || e.message); }
+    };
+  }
+  $("users").addEventListener("click", (e) => { const u = e.target.closest(".u"); if (u) open(u.getAttribute("data-id")); });
+  $("q").addEventListener("input", () => { page = 0; filter(); });
+  $("pv").onclick = () => { page--; filter(); }; $("nx").onclick = () => { page++; filter(); };
+  init();
+})();
+</script></body></html>
