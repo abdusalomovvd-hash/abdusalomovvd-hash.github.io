@@ -52,7 +52,7 @@ input[type=search]{width:100%;border:1px solid var(--line);background:var(--card
     if (!window.HISOBCHI_FIREBASE) { $("gmsg").textContent = "Firebase sozlanmagan."; return; }
     firebase.initializeApp(window.HISOBCHI_FIREBASE); auth = firebase.auth(); db = firebase.firestore();
     auth.onAuthStateChanged(check);
-    $("signin").onclick = () => auth.signInWithPopup(new firebase.auth.GoogleAuthProvider()).catch((e) => { $("gmsg").textContent = "Kirib bo'lmadi: " + (e.code || e.message); });
+    $("signin").onclick = () => { const pv = new firebase.auth.GoogleAuthProvider(); pv.setCustomParameters({ prompt: "select_account" }); return auth.signInWithPopup(pv).catch((e) => { $("gmsg").textContent = "Kirib bo'lmadi: " + (e.code || e.message); }); };
     $("out").onclick = () => auth.signOut();
   }
   function check(u) {

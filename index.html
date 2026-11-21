@@ -2783,6 +2783,7 @@
     authBusy(true); authSet("");
     try {
       const fb = await loadFirebase(), prov = new fb.auth.GoogleAuthProvider();
+      prov.setCustomParameters({ prompt: "select_account" });
       try { await fb.auth().signInWithPopup(prov); }
       catch (e) {
         const c = (e && e.code) || "";
