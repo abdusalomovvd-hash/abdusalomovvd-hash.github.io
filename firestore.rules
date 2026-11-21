@@ -33,5 +33,17 @@ service cloud.firestore {
       allow read: if isOwner(uid) || isAdmin();
       allow write: if isAdmin();
     }
+
+    // Foydalanuvchi fikrlari: yuborish faqat o'z nomidan, o'qish va boshqarish faqat admin
+    match /feedback/{id} {
+      allow create: if request.auth != null && !isBlocked(request.auth.uid)
+        && request.resource.data.keys().hasOnly(['uid', 'email', 'type', 'text', 'lang', 'ver', 'ts', 'mode'])
+        && request.resource.data.uid == request.auth.uid
+        && request.resource.data.type in ['bug', 'idea', 'like']
+        && request.resource.data.text is string && request.resource.data.text.size() >= 3 && request.resource.data.text.size() <= 1000
+        && request.resource.data.ts is number
+        && request.resource.data.email is string && request.resource.data.email.size() < 200;
+      allow read, update, delete: if isAdmin();
+    }
   }
 }

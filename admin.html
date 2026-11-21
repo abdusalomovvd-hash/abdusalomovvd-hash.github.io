@@ -31,6 +31,7 @@ input[type=search]{width:100%;border:1px solid var(--line);background:var(--card
  <div class="top"><div><b>Tejamkor Admin</b><br><small id="who"></small></div><div style="display:flex;gap:8px"><button id="home">← Ilovaga</button><button id="out">Chiqish</button></div></div>
  <main id="list">
   <div class="card"><div class="kpis" id="kpis"></div></div>
+  <div class="card"><h2>Fikrlar <span id="fbCnt" class="pill on" style="margin-left:6px"></span></h2><div id="fbTabs" style="display:flex;gap:6px;flex-wrap:wrap;margin-bottom:10px"></div><div id="fbList"></div></div>
   <div class="card"><h2>Yangi foydalanuvchilar (14 kun)</h2><div class="bars" id="bars"></div><div class="lbl"><span id="l1"></span><span>bugun</span></div></div>
   <div class="card"><h2>Tillar</h2><div id="langs"></div></div>
   <div class="card"><h2>Foydalanuvchilar</h2><input type="search" id="q" placeholder="Email yoki ism bo'yicha qidirish"><div id="users"></div><div class="pager"><button id="pv">← Oldingi</button><span id="pg"></span><button id="nx">Keyingi →</button></div></div>
@@ -64,9 +65,29 @@ input[type=search]{width:100%;border:1px solid var(--line);background:var(--card
     try {
       const [a, b] = await Promise.all([db.collection("profiles").orderBy("seen", "desc").limit(2000).get(), db.collection("blocked").get()]);
       P = a.docs.map((d) => Object.assign({ id: d.id }, d.data())); B = {}; b.docs.forEach((d) => { B[d.id] = 1; });
-      draw();
+      draw(); loadFb();
     } catch (e) { $("users").innerHTML = '<div class="msg">Ma\'lumotni o\'qib bo\'lmadi: ' + esc(e.code || e.message) + '. Firestore qoidalari joylanganmi?</div>'; }
   }
+  let F = [], fbF = "open";
+  const FT = { bug: "🐛 Xato", idea: "💡 Taklif", like: "❤ Yoqqani" };
+  async function loadFb() {
+    try { const s = await db.collection("feedback").orderBy("ts", "desc").limit(300).get(); F = s.docs.map((d) => Object.assign({ id: d.id }, d.data())); drawFb(); }
+    catch (e) { $("fbList").innerHTML = '<div class="msg">Fikrlarni o\'qib bo\'lmadi: ' + esc(e.code || e.message) + '. Firestore qoidalari yangilanganmi?</div>'; }
+  }
+  function drawFb() {
+    const open = F.filter((x) => !x.done).length; $("fbCnt").textContent = open + " ta yangi";
+    const tabs = [["open", "Ochiq"], ["bug", "Xato"], ["idea", "Taklif"], ["like", "Yoqqani"], ["done", "Hal qilingan"]];
+    $("fbTabs").innerHTML = tabs.map((t) => '<button class="btn ' + (fbF === t[0] ? "b3" : "b2") + '" data-f="' + t[0] + '" style="margin:0;padding:6px 12px;width:auto">' + t[1] + "</button>").join("");
+    const L2 = F.filter((x) => fbF === "open" ? !x.done : fbF === "done" ? x.done : x.type === fbF && !x.done);
+    $("fbList").innerHTML = L2.map((x) => '<div class="row" style="display:block;padding:10px 0;border-bottom:1px solid var(--line)"><div style="display:flex;justify-content:space-between;gap:8px;font-size:12px;color:var(--mut)"><span>' + esc(FT[x.type] || x.type) + " · " + esc(x.email) + '</span><span>' + esc(ago(x.ts)) + '</span></div><div style="margin:6px 0;white-space:pre-wrap;word-break:break-word">' + esc(x.text) + '</div><div style="font-size:12px;color:var(--mut)">' + esc((LN[x.lang] || x.lang || "") + " · v" + (x.ver || "?") + " · " + (x.mode === "app" ? "ilova" : "brauzer")) + ' <button class="btn b2" data-d="' + esc(x.id) + '" style="margin:0 0 0 8px;padding:4px 10px;width:auto">' + (x.done ? "Qayta ochish" : "Hal qilindi") + '</button><button class="btn b1" data-x="' + esc(x.id) + '" style="margin:0 0 0 6px;padding:4px 10px;width:auto">O\'chirish</button></div></div>').join("") || '<div class="row"><span>Bu yerda hozircha fikr yo\'q</span></div>';
+  }
+  $("fbTabs").addEventListener("click", (e) => { const b = e.target.closest("button[data-f]"); if (b) { fbF = b.getAttribute("data-f"); drawFb(); } });
+  $("fbList").addEventListener("click", async (e) => {
+    const d = e.target.closest("button[data-d]"), x = e.target.closest("button[data-x]"), id = d ? d.getAttribute("data-d") : x ? x.getAttribute("data-x") : null; if (!id) return;
+    const it = F.find((z) => z.id === id); if (!it) return;
+    try { if (d) { await db.doc("feedback/" + id).update({ done: !it.done }); it.done = !it.done; } else { if (!x.dataset.arm) { x.dataset.arm = 1; x.textContent = "Aniqmi?"; setTimeout(() => { if (x) { x.dataset.arm = ""; x.textContent = "O'chirish"; } }, 3000); return; } await db.doc("feedback/" + id).delete(); F = F.filter((z) => z.id !== id); } drawFb(); }
+    catch (er) { $("fbCnt").textContent = "Xato: " + (er.code || er.message); }
+  });
   function draw() {
     const now = Date.now(), d0 = new Date(); d0.setHours(0, 0, 0, 0); const t0 = d0.getTime(), D = 86400000;
     const k = (n, l) => '<div class="kpi"><b>' + n + "</b><span>" + l + "</span></div>";

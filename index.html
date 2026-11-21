@@ -609,6 +609,25 @@
   .cc .chp { width: 34px; height: 25px; border-radius: 6px; background: linear-gradient(135deg, #f6d36b, #c89418); display: block; }
   .cc .lg2 { font: 800 10.5px var(--font-num); letter-spacing: .06em; background: rgba(255, 255, 255, .2); border-radius: 8px; padding: 3px 7px; flex: none; }
   .cc.add { background: var(--surface); color: var(--gold); border: 2px dashed var(--line); box-shadow: none; align-items: center; justify-content: center; font: 700 13px var(--font-num); gap: 6px; width: 120px; } .cc.add::after { display: none; } .cc.add i { font-style: normal; font-size: 28px; line-height: 1; }
+  /* Tanishtiruv (tour) va baholash */
+  .tour { position: fixed; inset: 0; z-index: 57; overflow: hidden; }
+  .tour .tspot { position: fixed; border-radius: 16px; box-shadow: 0 0 0 100vmax rgba(9, 22, 40, .74), 0 0 0 3px var(--gold); transition: top .28s ease, left .28s ease, width .28s ease, height .28s ease, border-radius .28s ease; pointer-events: none; }
+  .tour .tdim { position: fixed; inset: 0; background: rgba(9, 22, 40, .74); }
+  .tour .tcard { position: fixed; left: 50%; width: min(92vw, 360px); transform: translateX(-50%); background: var(--surface); color: var(--ink); border-radius: 24px; padding: 20px 20px 16px; box-shadow: 0 20px 50px rgba(0, 0, 0, .38); }
+  .tour .tcard b.tt { display: block; font: 800 19px/1.2 var(--font-num); letter-spacing: -.2px; margin-bottom: 6px; }
+  .tour .tcard p { font-size: 14.5px; line-height: 1.45; color: var(--muted); margin: 0; }
+  .tour .trow { display: flex; justify-content: space-between; align-items: center; margin-top: 14px; gap: 10px; }
+  .tour .tdots { display: flex; gap: 6px; } .tour .tdots i { width: 8px; height: 8px; border-radius: 50%; background: var(--line); } .tour .tdots i.on { width: 22px; border-radius: 5px; background: var(--ink); }
+  .tour .tnext { background: var(--gold); color: var(--on-gold); border: 0; border-radius: 16px; padding: 11px 22px; font-weight: 800; }
+  .tour .tskip { background: none; border: 0; color: var(--muted); font-weight: 700; padding: 8px 6px; }
+  .tour .tcard.welcome { top: 50%; transform: translate(-50%, -50%); text-align: center; padding: 28px 22px 16px; }
+  .tour .tcoin { width: 84px; height: 84px; border-radius: 28%; margin: 0 auto 12px; background: #0f2848; display: grid; place-items: center; }
+  .tour .tcoin i { width: 62px; height: 62px; border-radius: 50%; background: radial-gradient(circle at 35% 30%, #ffe08a, #e2a923 55%, #a8760d); display: grid; place-items: center; font: 800 34px var(--font-num); color: #0f2747; font-style: normal; }
+  .tour .tcard.welcome .tnext { width: 100%; margin-top: 18px; padding: 14px; }
+  .tour .tcard.welcome .tskip { display: block; margin: 8px auto 0; }
+  .rvw .stars { display: flex; justify-content: center; gap: 6px; margin: 12px 0 6px; }
+  .rvw .stars button { background: none; border: 0; font-size: 40px; line-height: 1; color: color-mix(in srgb, var(--muted) 40%, transparent); padding: 2px 4px; }
+  .rvw .stars button.on { color: var(--gold); }
   .acov { position: fixed; inset: 0; z-index: 70; background: rgba(8, 18, 26, .55); display: flex; align-items: flex-end; justify-content: center; }
   .acsheet { background: var(--bg); width: 100%; max-width: 560px; max-height: 92vh; overflow-y: auto; border-radius: 22px 22px 0 0; padding: 14px 16px calc(20px + env(safe-area-inset-bottom, 0px)); }
   .acsheet .grab { width: 40px; height: 4px; border-radius: 2px; background: var(--line); margin: 0 auto 12px; }
@@ -1014,6 +1033,11 @@
           <span class="mt">Zaxira va eksport</span>
           <span class="mv" id="vBack"></span><svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 6l6 6-6 6"/></svg>
         </button>
+        <button type="button" class="mrow" data-go="fb" id="row_fb">
+          <span class="mico" style="--c:#c9812b"><svg viewBox="0 0 24 24" aria-hidden="true"><path stroke="#fff" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" fill="none" fill="#fff" fill-opacity=".30" d="M4.5 5.5h15a1.5 1.5 0 0 1 1.5 1.5v8.5a1.5 1.5 0 0 1-1.5 1.5H10l-4.5 3.500V17H4.500A1.500 1.500 0 0 1 3 15.500V7a1.500 1.500 0 0 1 1.500-1.500z"/><path stroke="#fff" stroke-width="1.8" stroke-linecap="round" d="M8 10.500h8M8 13.500h5"/></svg></span>
+          <span class="mt">Fikr qoldirish</span>
+          <span class="mv"></span><svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 6l6 6-6 6"/></svg>
+        </button>
         <button type="button" class="mrow" data-go="about" id="row_about">
           <span class="mico" style="--c:#66788a"><svg viewBox="0 0 24 24" aria-hidden="true"><circle stroke="#fff" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" fill="none" fill="#fff" fill-opacity=".30" cx="12" cy="12" r="9"/><path stroke="#fff" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" fill="none" d="M12 11v5.2"/><circle cx="12" cy="7.9" r="1.15" fill="#fff"/></svg></span>
           <span class="mt">Ilova haqida</span>
@@ -1169,6 +1193,21 @@
         </div>
       </section>
 
+      <section class="panel subpg" data-pg="fb">
+        <h2>Fikr qoldirish</h2>
+        <div class="body">
+          <p class="abnote">Ilova sinov bosqichida. Xato yoki kamchilikni yozing, tez orada tuzatamiz.</p>
+          <div class="seg three" id="fbType" role="group" aria-label="Fikr turi" style="margin:12px 0">
+            <button type="button" data-t="bug" aria-pressed="true">Xato</button>
+            <button type="button" data-t="idea" aria-pressed="false">Taklif</button>
+            <button type="button" data-t="like" aria-pressed="false">Yoqqani</button>
+          </div>
+          <div class="field wide"><label for="fbText" id="fbLbl">Nima bo'ldi? Qaysi bo'limda?</label><textarea id="fbText" maxlength="1000" rows="6" style="font:15px/1.4 var(--font-ui, inherit);min-height:140px"></textarea></div>
+          <p class="menunote" id="fbNote" style="margin:8px 2px 12px;display:block">Yuborilganda ilova versiyasi va tili avtomatik qo'shiladi.</p>
+          <div class="actions"><button class="primary" type="button" id="fbSend">Yuborish</button></div>
+          <p class="menunote" id="fbMsg" style="margin:10px 2px 0"></p>
+        </div>
+      </section>
       <section class="panel subpg" data-pg="about">
         <h2>Ilova haqida</h2>
         <div class="abt"><div class="coin2">T</div><b>Tejamkor</b><small>v1.0</small></div>
@@ -1176,6 +1215,7 @@
           <p>Tejamkor · shaxsiy moliya hisobchisi</p>
           <p class="abnote">Ma'lumotlaringiz sizniki. Reklama yo'q.</p>
           <p><a href="privacy-policy.html" target="_blank" rel="noopener">Maxfiylik siyosati</a> · abdusalomovv.d@gmail.com</p>
+          <button class="ghost act" type="button" id="tourAgain" style="margin-top:10px">Ilovani qayta ko'rsatish</button>
         </div>
       </section>
     </div>
@@ -2514,7 +2554,7 @@
   }
 
   /* ---------- Profil menyusi ---------- */
-  const PAGES = { look: "Ko'rinish", security: "Xavfsizlik", calc: "Hisob-kitob", sync: "Sinxronlash", backup: "Zaxira va eksport", about: "Ilova haqida" };
+  const PAGES = { look: "Ko'rinish", security: "Xavfsizlik", calc: "Hisob-kitob", sync: "Sinxronlash", backup: "Zaxira va eksport", fb: "Fikr qoldirish", about: "Ilova haqida" };
   let curPg = null;
   function setVal(id, text, pill) { const e = $(id); e.textContent = text; e.classList.toggle("pill", !!pill); }
   function renderMenu() {
@@ -2534,6 +2574,7 @@
     $("profCard").hidden = true; $("menuGroup").hidden = true; $("subHead").hidden = false;
     $("subTitle").textContent = _t(PAGES[name]);
     Array.prototype.forEach.call(document.querySelectorAll(".subpg"), (s) => s.classList.toggle("on", s.getAttribute("data-pg") === name));
+    if (name === "fb") { $("fbMsg").textContent = ""; fbLabel(); }
     if (name === "look" && typeof renderLook === "function") renderLook();
     if (typeof renderPg56 === "function") renderPg56();
     try { window.scrollTo(0, 0); } catch (e) {}
@@ -2548,6 +2589,45 @@
   $("row_admin").addEventListener("click", () => { location.href = "admin.html"; });
   $("menuWrap").addEventListener("click", (e) => { const b = e.target.closest ? e.target.closest("button[data-go]") : null; if (b) { const g = b.getAttribute("data-go"); if (g === "ledger") showTab("ledger"); else openPg(g); } });
   $("subBack").onclick = closePg;
+
+  /* ---------- Fikr qoldirish ---------- */
+  const FB_Q = "hisobchi_fb_q", FB_DAY = "hisobchi_fb_day", APP_VER = "1.1";
+  let fbType = "bug", fbBusy = false;
+  const fbQueue = () => { try { const q = JSON.parse(lsGet(FB_Q)); return Array.isArray(q) ? q.slice(0, 10) : []; } catch (e) { return []; } };
+  const withTimeout = (p, ms) => Promise.race([p, new Promise((_, rej) => setTimeout(() => rej(new Error("timeout")), ms))]);
+  async function fbFlush() {
+    const q = fbQueue();
+    if (!q.length || !FB_CONFIG) return;
+    let ref = null;
+    try { ref = await fbRef(false); } catch (e) { return; }
+    if (!ref || !ref.fbAdd) return;
+    const rest = [];
+    for (const it of q) { try { await withTimeout(ref.fbAdd(it), 8000); } catch (e) { rest.push(it); } }
+    lsSet(FB_Q, JSON.stringify(rest));
+  }
+  window.addEventListener("online", () => { fbFlush(); });
+  function fbLabel() { $("fbLbl").textContent = _t(fbType === "bug" ? "Nima bo'ldi? Qaysi bo'limda?" : fbType === "idea" ? "Qanday imkoniyat kerak?" : "Nima yoqdi?"); }
+  $("fbType").addEventListener("click", (e) => {
+    const b = e.target.closest ? e.target.closest("button[data-t]") : null; if (!b) return;
+    fbType = b.getAttribute("data-t");
+    Array.prototype.forEach.call($("fbType").querySelectorAll("button"), (x) => x.setAttribute("aria-pressed", x === b ? "true" : "false"));
+    fbLabel();
+  });
+  function fbDayCount() { try { const o = JSON.parse(lsGet(FB_DAY)); const d = new Date().toDateString(); return o && o.d === d ? o.n : 0; } catch (e) { return 0; } }
+  $("fbSend").onclick = async () => {
+    if (fbBusy) return;
+    const text = $("fbText").value.trim(), msg = $("fbMsg");
+    if (text.length < 3) { msg.textContent = _t("Iltimos, fikringizni yozing."); $("fbText").focus(); return; }
+    if (fbDayCount() >= 5) { msg.textContent = _t("Bugun ko'p fikr yuborildi. Ertaga yana yozing."); return; }
+    fbBusy = true; $("fbSend").disabled = true; msg.textContent = _t("Yuborilmoqda...");
+    const item = { type: fbType, text: text.slice(0, 1000), lang: LANG, ver: APP_VER, ts: Date.now(), mode: (window.matchMedia && matchMedia("(display-mode: standalone)").matches) ? "app" : "web" };
+    let ok = false;
+    try { const ref = await withTimeout(fbRef(false), 8000); if (ref && ref.fbAdd) { await withTimeout(ref.fbAdd(item), 10000); ok = true; } } catch (e) {}
+    if (!ok) { const q = fbQueue(); q.push(item); lsSet(FB_Q, JSON.stringify(q.slice(-10))); }
+    lsSet(FB_DAY, JSON.stringify({ d: new Date().toDateString(), n: fbDayCount() + 1 }));
+    $("fbText").value = ""; fbBusy = false; $("fbSend").disabled = false;
+    msg.textContent = ok ? _t("Rahmat! Fikringiz yuborildi.") : _t("Internet yo'q. Fikringiz saqlandi, ulanganda yuboriladi.");
+  };
 
   /* ---------- Sinxronlash ---------- */
   let syncOn = lsGet(SYNC_KEY) === "1", syncRef = null, unsub = null, reconciled = false, choicePending = null,
@@ -2646,6 +2726,7 @@
       prov: ((user.providerData && user.providerData[0] && user.providerData[0].providerId) || "").indexOf("google") === 0 ? "google" : "password",
       created: Date.parse(user.metadata && user.metadata.creationTime) || 0,
       profSet: (b) => fb.firestore().doc("profiles/" + user.uid).set(b),
+      fbAdd: (b) => fb.firestore().collection("feedback").add(Object.assign({}, b, { uid: user.uid, email: user.email || "" })),
       blockWatch: (cb) => fb.firestore().doc("blocked/" + user.uid).onSnapshot((sn) => cb(!!sn.exists), () => {}),
       onSnapshot: (ok, bad) => doc.onSnapshot({ includeMetadataChanges: true }, ok, bad),
       set: (b) => doc.set(JSON.parse(JSON.stringify(b))),
@@ -2701,6 +2782,7 @@
     unsub = syncRef.onSnapshot((snap) => { if (!snap.metadata.fromCache) clearTimeout(timer); onRemote(snap); },
       (err) => { clearTimeout(timer); unsub = null; setSync(_t("Sinxronlash to'xtadi ({c}).", { c: (err && err.code) || _t("xato") })); });
     try { adminHooks(syncRef); } catch (e) {}
+    setTimeout(fbFlush, 3000);
   }
   function stopSync() {
     if (unsub) { try { unsub(); } catch (e) {} }
@@ -2786,6 +2868,7 @@
     lsSet(AUTH_KEY, "1"); lsSet(SYNC_KEY, "1"); syncOn = true;
     $("authGate").hidden = true; AU.show = false;
     renderSyncUI(); renderReminders(); startSync(false);
+    tourTries = 0; setTimeout(tourMaybe, 1000);
   }
   async function authGoogle() {
     authBusy(true); authSet("");
@@ -3085,7 +3168,86 @@
   renderAccount();
   if (syncOn) { const go = () => setTimeout(() => startSync(false), 800); if (document.readyState === "complete") go(); else window.addEventListener("load", go, { once: true }); }
   autoRate();
+  setTimeout(tourMaybe, 1200);
   document.addEventListener("visibilitychange", () => { if (!document.hidden) autoRate(); });
+
+  /* ---------- Birinchi kirish tanishtiruvi ---------- */
+  const TOUR_KEY = "hisobchi_tour_v1";
+  let tourEl = null, tourI = 0, tourTries = 0, tourSteps = [];
+  function tourReady() {
+    return $("authGate").hidden && !$("secret").hidden && !document.querySelector(".langfirst:not([hidden])") && !($("blockedOv") && !$("blockedOv").hidden) && !$("nav").hidden && tab === "home" && !$("fab").hidden && $("acctOv").hidden && $("form").hidden;
+  }
+  function tourMaybe() {
+    if (lsGet(TOUR_KEY) === "1" || tourEl) return;
+    if ((S.tx || []).length > 30) { lsSet(TOUR_KEY, "1"); return; }
+    if (tourReady()) { tourStart(); return; }
+    if (++tourTries < 40) setTimeout(tourMaybe, 1500);
+  }
+  function tourStart() {
+    lsSet(TOUR_KEY, "1");
+    if (tab !== "home") showTab("home");
+    tourSteps = [
+      { w: 1 },
+      { sel: "#fab", t: "Xarajat va daromad", d: "Shu tugmani bosing: summani kiriting, toifani tanlang, saqlang. 5 soniya yetadi.", r: "50%" },
+      { sel: '#nav [data-tab="debts"]', t: "Qarzlar va kartalar", d: "Kim kimga qarz ekanini yozing, muddati yaqinlashganda ilova eslatadi.", r: "18px" },
+      { sel: '#nav [data-tab="settings"]', t: "Sozlamalar", d: "Bu yerda PIN kod, zaxira nusxa, til va fikr bildirish bor.", r: "18px" }
+    ];
+    tourI = 0;
+    tourEl = document.createElement("div"); tourEl.className = "tour"; tourEl.id = "tour";
+    document.body.appendChild(tourEl);
+    tourDraw();
+  }
+  function tourEnd() { if (tourEl) { tourEl.remove(); tourEl = null; } }
+  function tourDraw() {
+    if (!tourEl) return;
+    const st = tourSteps[tourI];
+    if (st.w) {
+      tourEl.innerHTML = '<div class="tdim"></div><div class="tcard welcome"><div class="tcoin"><i>T</i></div><b class="tt">' + _t("Tejamkorga xush kelibsiz!") + "</b><p>" + _t("30 soniyada asosiy tugmalar bilan tanishib chiqamiz.") + '</p><button type="button" class="tnext" id="tNext">' + _t("Boshlash") + '</button><button type="button" class="tskip" id="tSkip">' + _t("O'tkazib yuborish") + "</button></div>";
+    } else {
+      const el = document.querySelector(st.sel);
+      if (!el || el.hidden || !el.getBoundingClientRect().width) { tourI++; if (tourI >= tourSteps.length) { tourEnd(); return; } tourDraw(); return; }
+      const r = el.getBoundingClientRect(), pad = 6, last = tourI === tourSteps.length - 1;
+      const dots = tourSteps.slice(1).map((x, i) => "<i" + (i === tourI - 1 ? ' class="on"' : "") + "></i>").join("");
+      tourEl.innerHTML = '<div class="tspot" style="top:' + (r.top - pad) + "px;left:" + (r.left - pad) + "px;width:" + (r.width + pad * 2) + "px;height:" + (r.height + pad * 2) + "px;border-radius:" + st.r + '"></div><div class="tcard" id="tCard"><b class="tt">' + _t(st.t) + "</b><p>" + _t(st.d) + '</p><div class="trow"><div class="tdots">' + dots + '</div><div><button type="button" class="tskip" id="tSkip">' + _t("O'tkazib yuborish") + '</button><button type="button" class="tnext" id="tNext">' + _t(last ? "Tayyor" : "Keyingi") + "</button></div></div></div>";
+      const card = $("tCard"), ch = card.offsetHeight, below = r.top < window.innerHeight / 2;
+      card.style.top = Math.max(12, Math.min(window.innerHeight - ch - 12, below ? r.bottom + 16 : r.top - ch - 16)) + "px";
+    }
+    $("tNext").onclick = () => { tourI++; if (tourI >= tourSteps.length) tourEnd(); else tourDraw(); };
+    $("tSkip").onclick = tourEnd;
+  }
+  window.addEventListener("resize", () => { if (tourEl) tourDraw(); });
+  $("tourAgain").onclick = () => { closePg(); showTab("home"); setTimeout(tourStart, 250); };
+
+  /* ---------- Baholash so'rovi (Play'da to'liq chiqqandan keyin yoqiladi) ---------- */
+  const RVW_ON = false, RVW_LINK = "https://play.google.com/store/apps/details?id=uz.tejamkor.app", FIRST_KEY = "hisobchi_first_v1", RVW_KEY = "hisobchi_rvw_v1";
+  if (!lsGet(FIRST_KEY)) lsSet(FIRST_KEY, String(Date.now()));
+  let rvwStar = 0;
+  function rvwMaybe() {
+    if (!(RVW_ON || lsGet("hisobchi_rvw_on") === "1") || $("rvwOv") || tourEl) return;
+    let st = {}; try { st = JSON.parse(lsGet(RVW_KEY)) || {}; } catch (e) {}
+    if (st.done) return;
+    const days = (Date.now() - (+lsGet(FIRST_KEY) || Date.now())) / 86400000;
+    if (days < 7 || (S.tx || []).length < 5) return;
+    if (st.at && Date.now() - st.at < 30 * 86400000) return;
+    if (!tourReady()) return;
+    rvwOpen();
+  }
+  function rvwSave(o) { let st = {}; try { st = JSON.parse(lsGet(RVW_KEY)) || {}; } catch (e) {} lsSet(RVW_KEY, JSON.stringify(Object.assign(st, o))); }
+  function rvwOpen() {
+    rvwSave({ at: Date.now() }); rvwStar = 0;
+    const ov = document.createElement("div"); ov.className = "acov rvw"; ov.id = "rvwOv";
+    ov.innerHTML = '<div class="acsheet"><div class="grab"></div><b style="display:block;text-align:center;font:800 20px var(--font-num)">' + _t("Tejamkor yoqdimi?") + '</b><p style="text-align:center;color:var(--muted);font-size:14.5px;margin:8px 0 0;line-height:1.4">' + _t("Baho bersangiz, boshqalar ilovani tezroq topadi.") + '</p><div class="stars" id="rvwStars">' + [1, 2, 3, 4, 5].map((n) => '<button type="button" data-n="' + n + '" aria-label="' + n + '">\u2605</button>').join("") + '</div><div class="actions" style="margin-top:10px"><button class="primary" type="button" id="rvwGo" disabled>' + _t("Baholash") + '</button></div><button type="button" class="tskip" id="rvwLater" style="display:block;margin:10px auto 0;background:none;border:0;color:var(--muted);font-weight:700">' + _t("Keyinroq") + "</button></div>";
+    document.body.appendChild(ov);
+    $("rvwStars").onclick = (e) => { const b = e.target.closest ? e.target.closest("button[data-n]") : null; if (!b) return; rvwStar = +b.getAttribute("data-n"); Array.prototype.forEach.call($("rvwStars").children, (x, i) => x.classList.toggle("on", i < rvwStar)); $("rvwGo").disabled = false; };
+    $("rvwLater").onclick = () => ov.remove();
+    $("rvwGo").onclick = () => {
+      ov.remove(); rvwSave({ done: true, star: rvwStar });
+      if (rvwStar >= 4) { try { window.open(RVW_LINK, "_blank", "noopener"); } catch (e) { location.href = RVW_LINK; } }
+      else { showTab("settings"); openPg("fb"); $("fbMsg").textContent = _t("Rahmat! Nima yoqmaganini yozing, tuzatamiz."); }
+    };
+  }
+  document.addEventListener("visibilitychange", () => { if (!document.hidden) setTimeout(rvwMaybe, 1500); });
+  setTimeout(rvwMaybe, 4000);
 
   /* ---------- Orqaga tugmasi (Android) ---------- */
   // Tarixda doim bitta "qo'riqchi" yozuv turadi; Orqaga bosilganda avval ichki qatlamlar yopiladi.
@@ -3182,11 +3344,15 @@
     if ((m === 8 && day === 31) || (m === 9 && day === 1)) return "indep";
     if ((m === 9 && day === 30) || (m === 10 && day === 1)) return "teach";
     if (m === 12 && (day === 7 || day === 8)) return "const";
+    const ck = m + "-" + day, cc = lsGet("hisobchi_eid_v1");   // Intl ancha og'ir: natijani kunlik saqlaymiz
+    if (cc && cc.split("|")[0] === ck) return cc.split("|")[1] || "";
+    let res = "";
     try {
       const o = {}; new Intl.DateTimeFormat("en-u-ca-islamic-umalqura", { day: "numeric", month: "numeric" }).formatToParts(d).forEach((p) => { o[p.type] = +p.value; });
-      if ((o.month === 10 && o.day <= 3) || (o.month === 12 && o.day >= 9 && o.day <= 12)) return "eid";
+      if ((o.month === 10 && o.day <= 3) || (o.month === 12 && o.day >= 9 && o.day <= 12)) res = "eid";
     } catch (e) {}
-    return "";
+    lsSet("hisobchi_eid_v1", ck + "|" + res);
+    return res;
   }
   window.tjHoliday = holidayNow;
   function applyHoliday() {
@@ -3201,6 +3367,8 @@
   let exitArmed = false, exitT = null;
   function backStep() {
     if ($("secret").hidden) return false;                 // qulf ekrani: oddiy chiqish
+    if (tourEl) { tourEnd(); return true; }
+    if ($("rvwOv")) { $("rvwOv").remove(); return true; }
     if (!$("form").hidden) { closeForm(); return true; }
     if (!$("acctOv").hidden) { closeAcct(); return true; }
     if (!$("dform").hidden) { closeDForm(); return true; }
@@ -3290,7 +3458,7 @@
   document.addEventListener("visibilitychange", sync);
   if (mq && mq.addEventListener) mq.addEventListener("change", sync);
   if (sel) { sel.value = get(); sel.addEventListener("change", () => { try { if (sel.value) localStorage.setItem(KEY, sel.value); else localStorage.removeItem(KEY); } catch (e) {} sync(); }); }
-  sync();
+  if (document.readyState === "complete") setTimeout(sync, 400); else window.addEventListener("load", () => setTimeout(sync, 400), { once: true });
 })();
 </script>
 <script>
