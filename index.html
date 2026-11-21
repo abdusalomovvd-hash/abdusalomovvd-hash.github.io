@@ -979,6 +979,11 @@
 
       <div id="menuGroup">
       <section class="panel menu" id="menuWrap">
+        <button type="button" class="mrow" id="row_admin" hidden style="outline:1.5px solid #f2b632;outline-offset:-1.5px">
+          <span class="mico" style="--c:#c98f12"><svg viewBox="0 0 24 24" aria-hidden="true"><path stroke="#fff" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" fill="none" d="M12 3l7 3v5c0 4.500-3 8-7 10-4-2-7-5.500-7-10V6z"/><path stroke="#fff" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" fill="none" d="M9 12l2 2 4-4"/></svg></span>
+          <span class="mt">Admin panel</span>
+          <span class="mv"></span><svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 6l6 6-6 6"/></svg>
+        </button>
         <button type="button" class="mrow" data-go="ledger" id="row_ledger">
           <span class="mico" style="--c:#8a6a2b"><svg viewBox="0 0 24 24" aria-hidden="true"><rect stroke="#fff" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" fill="none" x="4.5" y="3.5" width="15" height="17" rx="2.5"/><path stroke="#fff" stroke-width="1.8" stroke-linecap="round" d="M8.5 8.5h7M8.5 12h7M8.5 15.5h4"/></svg></span>
           <span class="mt">Barcha amallar</span>
@@ -2540,6 +2545,7 @@
     renderMenu();
     try { window.scrollTo(0, 0); } catch (e) {}
   }
+  $("row_admin").addEventListener("click", () => { location.href = "admin.html"; });
   $("menuWrap").addEventListener("click", (e) => { const b = e.target.closest ? e.target.closest("button[data-go]") : null; if (b) { const g = b.getAttribute("data-go"); if (g === "ledger") showTab("ledger"); else openPg(g); } });
   $("subBack").onclick = closePg;
 
@@ -2551,6 +2557,8 @@
     $("acctIn").hidden = !!acctEmail || syncOn;
     $("acctOut").hidden = !(acctEmail || syncOn);
     $("acctDel").hidden = !(acctEmail || syncOn);
+    if (acctEmail) { if (acctEmail.toLowerCase() === "abdusalomovv.d@gmail.com") lsSet("hisobchi_adm", "1"); else lsDel("hisobchi_adm"); }
+    $("row_admin").hidden = lsGet("hisobchi_adm") !== "1";
     $("acctInfo").textContent = acctEmail ? _t("Google hisobi:") + " " + acctEmail : (syncOn ? _t("Ulanmoqda...") : "");
     renderProfile(); renderMenu();
   }
@@ -2700,7 +2708,7 @@
     if (blockUnsub) { try { blockUnsub(); } catch (e) {} blockUnsub = null; }
   }
   function signOutSync() {
-    stopSync(); syncOn = false; lsSet(SYNC_KEY, "0"); lsDel(LINK_KEY); acctEmail = "";
+    stopSync(); syncOn = false; lsSet(SYNC_KEY, "0"); lsDel(LINK_KEY); lsDel("hisobchi_adm"); acctEmail = "";
     try { if (window.firebase && firebase.apps.length) firebase.auth().signOut(); } catch (e) {}
     renderSyncUI(); renderReminders();
   }

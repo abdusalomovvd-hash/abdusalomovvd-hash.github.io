@@ -28,7 +28,7 @@ input[type=search]{width:100%;border:1px solid var(--line);background:var(--card
 </style></head><body>
 <div id="gate" class="center"><h1>Tejamkor Admin</h1><p>Faqat ilova egasi uchun.</p><button class="btn b3" id="signin">Google bilan kirish</button><div class="msg" id="gmsg"></div></div>
 <div id="app" hidden>
- <div class="top"><div><b>Tejamkor Admin</b><br><small id="who"></small></div><button id="out">Chiqish</button></div>
+ <div class="top"><div><b>Tejamkor Admin</b><br><small id="who"></small></div><div style="display:flex;gap:8px"><button id="home">← Ilovaga</button><button id="out">Chiqish</button></div></div>
  <main id="list">
   <div class="card"><div class="kpis" id="kpis"></div></div>
   <div class="card"><h2>Yangi foydalanuvchilar (14 kun)</h2><div class="bars" id="bars"></div><div class="lbl"><span id="l1"></span><span>bugun</span></div></div>
@@ -53,7 +53,7 @@ input[type=search]{width:100%;border:1px solid var(--line);background:var(--card
     firebase.initializeApp(window.HISOBCHI_FIREBASE); auth = firebase.auth(); db = firebase.firestore();
     auth.onAuthStateChanged(check);
     $("signin").onclick = () => { const pv = new firebase.auth.GoogleAuthProvider(); pv.setCustomParameters({ prompt: "select_account" }); return auth.signInWithPopup(pv).catch((e) => { $("gmsg").textContent = "Kirib bo'lmadi: " + (e.code || e.message); }); };
-    $("out").onclick = () => auth.signOut();
+    $("out").onclick = () => auth.signOut(); $("home").onclick = () => { location.href = "./"; };
   }
   function check(u) {
     if (!u) { $("gate").hidden = false; $("app").hidden = true; return; }
@@ -83,7 +83,7 @@ input[type=search]{width:100%;border:1px solid var(--line);background:var(--card
     const q = ($("q").value || "").trim().toLowerCase();
     flt = P.filter((p) => !q || (p.email || "").toLowerCase().includes(q) || (p.name || "").toLowerCase().includes(q));
     const pages = Math.max(1, Math.ceil(flt.length / PAGE)); if (page >= pages) page = pages - 1;
-    $("users").innerHTML = flt.slice(page * PAGE, page * PAGE + PAGE).map((p) => '<div class="u" data-id="' + esc(p.id) + '"><span class="av">' + esc((p.name || p.email || "?").charAt(0).toUpperCase()) + "</span><div><b>" + esc(p.name || p.email) + "</b><small>" + esc(p.email) + " · " + esc(ago(p.seen)) + '</small></div><span class="pill ' + (B[p.id] ? "off" : "on") + '">' + (B[p.id] ? "bloklangan" : "faol") + "</span></div>").join("") || '<div class="row"><span>Hech narsa topilmadi</span></div>';
+    $("users").innerHTML = flt.slice(page * PAGE, page * PAGE + PAGE).map((p) => '<div class="u" data-id="' + esc(p.id) + '"><span class="av">' + esc((p.name || p.email || "?").charAt(0).toUpperCase()) + "</span><div><b>" + esc(p.name || p.email) + "</b><small>" + esc(p.email) + " · " + esc(ago(p.seen)) + '</small></div><span class="pill" style="background:var(--soft);color:var(--mut);margin-right:6px">' + (p.prov === "google" ? "Google" : "Email") + '</span><span class="pill ' + (B[p.id] ? "off" : "on") + '">' + (B[p.id] ? "bloklangan" : "faol") + "</span></div>").join("") || '<div class="row"><span>Hech narsa topilmadi</span></div>';
     $("pg").textContent = (page + 1) + " / " + pages + " · " + flt.length + " ta"; $("pv").disabled = page === 0; $("nx").disabled = page >= pages - 1;
   }
   function open(id) {

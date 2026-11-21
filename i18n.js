@@ -493,6 +493,7 @@ window.HISOBCHI_I18N = {
   "Hisob bloklangan": "Аккаунт заблокирован",
   "Savollar uchun yozing:": "По вопросам пишите:",
   "Chiqish": "Выйти",
+  "Admin panel": "Админ-панель",
   "months": [
    "Январь",
    "Февраль",
@@ -1038,6 +1039,7 @@ window.HISOBCHI_I18N = {
   "Hisob bloklangan": "Account blocked",
   "Savollar uchun yozing:": "For questions, write to:",
   "Chiqish": "Sign out",
+  "Admin panel": "Admin panel",
   "months": [
    "January",
    "February",
@@ -1569,6 +1571,7 @@ window.HISOBCHI_I18N = {
   "Hisob bloklangan": "الحساب محظور",
   "Savollar uchun yozing:": "للاستفسار راسل:",
   "Chiqish": "خروج",
+  "Admin panel": "لوحة الإدارة",
   "months": [
    "يناير",
    "فبراير",
@@ -2100,6 +2103,7 @@ window.HISOBCHI_I18N = {
   "Hisob bloklangan": "Hesap engellendi",
   "Savollar uchun yozing:": "Sorularınız için yazın:",
   "Chiqish": "Çıkış",
+  "Admin panel": "Yönetim paneli",
   "months": [
    "Ocak",
    "Şubat",
