@@ -857,6 +857,29 @@
   .keys button:active { box-shadow: 0 0 0 2px var(--accent), 0 0 16px color-mix(in srgb, var(--accent) var(--ng), transparent); transform: scale(.95); }
   .lockcard #forgot { color: var(--ink); opacity: .75; text-decoration: underline; text-underline-offset: 3px; }
   #secret.privblur { filter: blur(26px); }
+
+  /* Qulf ekrani telefon ekraniga sig'sin (surilmasin) */
+  @media (max-height: 880px) {
+    .lockcard { padding-bottom: 10px; }
+    .lockcard .lockmark { width: 58px; height: 58px; margin-bottom: 8px; }
+    .lockcard .lockmark svg { width: 42px; height: 42px; }
+    .lockcard h2 { font-size: 19px; margin-bottom: 3px; }
+    .lockcard .lockp { margin-bottom: 8px; }
+    .lockq { margin: 2px auto 8px; padding: 8px 12px; font-size: 13px; line-height: 1.4; }
+    .pindots { margin: 2px 0 6px; }
+    .lockcard .err { min-height: 18px; margin: 0 0 4px; }
+    .keys { grid-template-columns: repeat(3, 66px); gap: 10px 22px; margin: 6px 0 6px; }
+    .keys button { width: 66px; height: 66px; font-size: 27px; }
+    .keys .aux svg { width: 27px; height: 27px; }
+    .lockcard #forgot { padding: 6px; }
+  }
+  @media (max-height: 700px) {
+    .lockcard .lockmark { display: none; }
+    .lockq { display: none; }
+    .keys { grid-template-columns: repeat(3, 58px); gap: 8px 20px; }
+    .keys button { width: 58px; height: 58px; font-size: 24px; }
+  }
+  body:has(#lockCard:not([hidden])) { padding-bottom: calc(8px + env(safe-area-inset-bottom, 0px)); }
 </style>
 </head>
 <body>
