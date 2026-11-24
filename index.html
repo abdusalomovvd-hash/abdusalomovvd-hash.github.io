@@ -841,6 +841,22 @@
   .pcard .avatar { width: 46px; height: 46px; font-size: 17px; box-shadow: 0 0 0 3px var(--gold-soft); }
   .pinfo b { font-size: 16px; } .pinfo span { font-size: 12.5px; overflow-wrap: break-word; word-break: normal; }
   #tab-settings { padding-bottom: calc(96px + env(safe-area-inset-bottom, 0px)); }
+
+  /* ---------- Qulf ekrani va kunlik gap ---------- */
+  .lockq, .daycard { border-radius: 16px; background: color-mix(in srgb, var(--accent) 9%, transparent); border: 1px solid color-mix(in srgb, var(--accent) 30%, var(--line)); box-shadow: inset 0 -2px 0 var(--accent), 0 6px 14px -8px color-mix(in srgb, var(--accent) var(--ng), transparent); }
+  .lockq { margin: 4px auto 16px; max-width: 300px; padding: 11px 14px; font-size: 14px; line-height: 1.5; color: var(--ink); }
+  .daycard { margin: 12px 0; padding: 12px 14px 8px; }
+  .daycard.warn { --accent: #f08a24; } .daycard.ok { --accent: #2fae6b; }
+  .daycard .dg { font-weight: 800; font-size: 15px; }
+  .daycard small { display: block; color: var(--muted); font-size: 10.5px; letter-spacing: .12em; text-transform: uppercase; font-weight: 700; margin: 6px 0 3px; }
+  .daycard p { margin: 0; font-size: 14.5px; line-height: 1.5; color: var(--ink); }
+  .daycard .dact { display: flex; gap: 16px; justify-content: flex-end; margin-top: 4px; }
+  .daycard .dact .link { font-size: 12.5px; padding: 6px 2px; color: var(--muted); }
+  .pindots.bad i { border-color: var(--exp); background: var(--exp); }
+  .keys.dis { opacity: .35; pointer-events: none; }
+  .keys button:active { box-shadow: 0 0 0 2px var(--accent), 0 0 16px color-mix(in srgb, var(--accent) var(--ng), transparent); transform: scale(.95); }
+  .lockcard #forgot { color: var(--ink); opacity: .75; text-decoration: underline; text-underline-offset: 3px; }
+  #secret.privblur { filter: blur(26px); }
 </style>
 </head>
 <body>
@@ -860,6 +876,7 @@
     <div class="lockmark"><svg viewBox="0 0 64 64" aria-hidden="true"><defs><linearGradient id="gl" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#ffd36b"/><stop offset="1" stop-color="#f0a830"/></linearGradient></defs><circle cx="32" cy="32" r="21" fill="url(#gl)"/><circle cx="32" cy="32" r="17" fill="none" stroke="#0f2747" stroke-width="1.6" opacity=".28"/><path d="M23 24.5h18M32 24.5v17.5" fill="none" stroke="#0f2747" stroke-width="5.8" stroke-linecap="round"/></svg></div>
     <h2 id="lockTitle">Ma'lumotlar yashirilgan</h2>
     <p class="lockp" id="lockSub">Balans, xarajatlar, qarzlar va kreditlar ko'rinmaydi.</p>
+    <div class="lockq" id="lockQ"></div>
     <div class="pindots" id="pinDots" hidden aria-hidden="true"></div>
     <div class="err" id="lockErr" role="alert"></div>
     <div class="keys" id="pinPad" hidden>
@@ -918,6 +935,13 @@
       <section class="hero hs" id="hs3" aria-live="polite"></section>
       </div>
       <div class="hdots" id="hdots" aria-hidden="true"><i class="on"></i><i></i><i></i></div>
+
+      <section class="daycard" id="dayCard" hidden aria-live="polite">
+        <div class="dg" id="dayG"></div>
+        <small id="dayLab"></small>
+        <p id="dayTxt"></p>
+        <div class="dact"><button type="button" class="link" id="dayCopy"></button><button type="button" class="link" id="dayNext"></button></div>
+      </section>
 
       <section class="panel remind" id="remPanel" hidden aria-live="polite">
         <h2>Eslatmalar</h2>
@@ -1261,9 +1285,17 @@
         <div class="stcard" id="secState"><span class="stic"></span><div><b id="secStT"></b><small id="secStS"></small></div></div>
         <div class="body">
           <p>Sahifa ochilganda ma'lumotlar yashirin turadi. PIN kod qo'ysangiz, ko'rsatish uchun PIN kod so'raladi. Tanlangan vaqt ichida sahifani yangilasangiz yoki ilovadan chiqib qaytsangiz, qayta PIN so'ralmaydi. Vaqt o'tsa yoki tegmasangiz, ma'lumotlar yana yashirinadi.</p>
+          <div class="field" id="curPwF" hidden>
+            <label for="curPw">Joriy PIN kod</label>
+            <input id="curPw" type="password" inputmode="numeric" pattern="[0-9]*" maxlength="6" autocomplete="off">
+          </div>
           <div class="field">
             <label for="newPw">Yangi PIN kod (4–6 raqam)</label>
             <input id="newPw" type="password" inputmode="numeric" pattern="[0-9]*" maxlength="6" autocomplete="off">
+          </div>
+          <div class="field">
+            <label for="newPw2">PIN kodni takrorlang</label>
+            <input id="newPw2" type="password" inputmode="numeric" pattern="[0-9]*" maxlength="6" autocomplete="off">
           </div>
           <div class="row">
             <button class="ghost" id="savePw" type="button">PIN kodni saqlash</button>
@@ -2410,6 +2442,7 @@
 
   function renderAll() {
     renderAccts(); renderAccRow(); renderBalance(); renderHeroExtra(); renderReminders(); renderQuick(); renderChart(); renderCats(); renderRecent();
+    renderDayCard();
     renderLedger(); renderRecurring(); renderDebts(); renderGoals(); renderSettings(); renderBadges();
   }
 
@@ -3426,6 +3459,124 @@
     renderSyncUI(); renderReminders(); toast(_t("Hisob o'chirildi. Ma'lumotlar telefonda qoldi.")); showAuth();
   };
 
+  /* ---------- Kunlik gaplar (har kuni yangi; 4 tur navbatma-navbat) ---------- */
+  const TJQ = {
+    uz: {
+      A: ["Bugun bitta keraksiz xaridni rad eting. Ertaga o'zingizga rahmat aytasiz.", "Daromaddan avval o'zingizga 10% ajrating, keyin sarflang.", "Sotib olishdan oldin 24 soat kuting. Xohish ko'pincha o'tib ketadi.", "Kichik xarajatlarni yozib boring: kuniga 15 000 so'm oyiga 450 000 bo'ladi.", "Oyning boshida limit belgilang, oxirida natijani ko'ring.", "Qarzni muddatidan oldin qaytarish eng yaxshi investitsiyalardan biri.", "Favqulodda holat uchun 3 oylik xarajatingizni jamg'aring.", "Obunalaringizni tekshiring: ishlatmayotganini bekor qiling.", "Do'konga ro'yxat bilan boring va ro'yxatdan tashqari narsa olmang.", "Har kuni 2 daqiqa ajratib, xarajatlaringizni yozib qo'ying."],
+      B: ["Katta boylik kichik odatlardan boshlanadi.", "Bugungi tejamkorlik ertangi erkinlikdir.", "Pul sizning xo'jayiningiz emas, yordamchingiz bo'lsin.", "Yozilgan har bir xarajat nazoratga qo'yilgan bitta qadamdir.", "Maqsadsiz pul suv kabi oqib ketadi, maqsadli pul esa ko'prik bo'ladi.", "Siz allaqachon boshladingiz, bu eng qiyin qismi edi.", "Bugun kichik qadam, bir yildan keyin katta farq.", "Tinch uyqu qarzsiz kechaning sovg'asidir.", "Orzularingiz narxini bilsangiz, ularga yaqinlashasiz.", "Intizom kayfiyat yo'q kunlarda ham davom etishdir."],
+      C: ["Qatra-qatra yig'ilib daryo bo'lar.", "Hisobli do'st ayrilmas.", "Yetti o'lchab, bir kes.", "Ko'rpangga qarab oyoq uzat.", "Sabr tagi sariq oltin.", "Mehnatning tagi rohat.", "Oz bo'lsin, soz bo'lsin.", "Bugungi ishni ertaga qoldirma.", "Boylikning boshi tejamkorlikdan.", "Kichik tejamkorlik katta boylikka yetaklaydi."],
+      D: ["Hamyoningiz bugun ham sizga ishonyapti. Uni xafa qilmang 😄", "Ertaga boy bo'lamiz. Faqat bugun kafeni o'tkazib yuboring ☕", "Chegirma tejash emas, boshqa narsa sotib olishga bahona 😅", "Kartangiz aytdi: «Meni ko'proq asrang, men ham charchayman» 💳", "Savat to'ldi, hamyon xafa. Muvozanat topamizmi? 🛒", "Bugun keraksiz narsa olmasangiz, hamyon quvonganidan raqsga tushadi 💃", "Pul daraxtda o'smaydi, lekin yozib borsangiz ko'payadi 🌳", "Ilovaga kirdingiz, demak, siz allaqachon 90% tejamkorsiz 😎", "Taksi chaqirishdan oldin o'ylang: yurib borsa bo'ladimi? 🚶", "Bugun hamyonga ham dam bering, u ham charchagan 😴"],
+      mon: "Haftani rejadan boshlaymiz: bugun bu haftaning xarajatlarini taxminan belgilab qo'ying.",
+      fri: "Hafta oxiri keldi. Xarajatni oldindan rejalang, keyin pushaymon bo'lmaysiz."
+    },
+    ru: {
+      A: ["Откажитесь сегодня от одной ненужной покупки. Завтра скажете себе спасибо.", "Сначала отложите 10% от дохода себе, потом тратьте.", "Перед покупкой подождите 24 часа. Желание часто проходит.", "Записывайте мелкие траты: 15 000 сум в день — это 450 000 в месяц.", "В начале месяца поставьте лимит, в конце посмотрите результат.", "Вернуть долг раньше срока — одна из лучших инвестиций.", "Накопите подушку на 3 месяца расходов.", "Проверьте подписки: отмените те, которыми не пользуетесь.", "Ходите в магазин со списком и не берите ничего сверх него.", "Уделяйте 2 минуты в день, чтобы записывать расходы."],
+      B: ["Большое богатство начинается с маленьких привычек.", "Сегодняшняя бережливость — это завтрашняя свобода.", "Пусть деньги будут вашим помощником, а не хозяином.", "Каждая записанная трата — шаг к контролю.", "Деньги без цели утекают как вода, а с целью становятся мостом.", "Вы уже начали, а это самая трудная часть.", "Маленький шаг сегодня — большая разница через год.", "Спокойный сон — подарок вечера без долгов.", "Узнайте цену своей мечты — и вы станете ближе к ней.", "Дисциплина — это продолжать даже в дни без настроения."],
+      C: ["Капля по капле — и выйдет река.", "Счёт дружбе не помеха.", "Семь раз отмерь, один раз отрежь.", "Протягивай ножки по одёжке.", "Терпение и труд всё перетрут.", "Без труда не вынешь и рыбку из пруда.", "Лучше меньше, да лучше.", "Не откладывай на завтра то, что можно сделать сегодня.", "Начало богатства — в бережливости.", "Маленькая экономия ведёт к большому богатству."],
+      D: ["Ваш кошелёк и сегодня вам доверяет. Не расстраивайте его 😄", "Завтра станем богатыми. Только сегодня пропустите кафе ☕", "Скидка — не экономия, а повод купить что-то ещё 😅", "Карта просит: «Берегите меня, я тоже устаю» 💳", "Корзина полная, кошелёк грустит. Найдём баланс? 🛒", "Не купите сегодня лишнего — кошелёк запляшет от радости 💃", "Деньги не растут на деревьях, но если записывать, то прибавляются 🌳", "Вы зашли в приложение — значит, вы уже на 90% бережливый 😎", "Перед такси подумайте: может, пройтись пешком? 🚶", "Дайте кошельку отдохнуть, он тоже устал 😴"],
+      mon: "Начинаем неделю с плана: прикиньте сегодня расходы на эту неделю.",
+      fri: "Пятница. Спланируйте траты заранее, чтобы потом не жалеть."
+    },
+    en: {
+      A: ["Skip one unnecessary purchase today. Tomorrow you will thank yourself.", "Pay yourself 10% of your income first, then spend.", "Wait 24 hours before buying. The urge often passes.", "Track small expenses: 15,000 a day adds up to 450,000 a month.", "Set a limit at the start of the month and review it at the end.", "Paying a debt early is one of the best investments.", "Build a cushion worth 3 months of expenses.", "Check your subscriptions and cancel the ones you do not use.", "Go shopping with a list and do not buy anything off it.", "Spend 2 minutes a day writing down your expenses."],
+      B: ["Great wealth starts with small habits.", "Today's thrift is tomorrow's freedom.", "Let money be your helper, not your boss.", "Every recorded expense is a step toward control.", "Money without a goal flows away like water; with a goal it becomes a bridge.", "You have already started, and that was the hardest part.", "A small step today, a big difference in a year.", "Peaceful sleep is the gift of a debt-free night.", "Know the price of your dreams and you get closer to them.", "Discipline is carrying on even on days without motivation."],
+      C: ["Drop by drop a river is made.", "A drop in the bucket fills it in time.", "Measure seven times, cut once.", "Cut your coat according to your cloth.", "Patience is golden.", "There is no gain without pain.", "Less but better.", "Never put off until tomorrow what you can do today.", "Wealth begins with thrift.", "Small savings lead to great wealth."],
+      D: ["Your wallet still trusts you today. Do not let it down 😄", "We will be rich tomorrow. Just skip the cafe today ☕", "A discount is not saving, it is an excuse to buy something else 😅", "Your card says: \"Take care of me, I get tired too\" 💳", "The cart is full, the wallet is sad. Shall we find a balance? 🛒", "Skip something unnecessary today and your wallet will dance for joy 💃", "Money does not grow on trees, but it grows if you track it 🌳", "You opened the app, so you are already 90% frugal 😎", "Before calling a taxi, think: could you walk? 🚶", "Give your wallet a rest today, it is tired too 😴"],
+      mon: "Let us start the week with a plan: roughly set this week's spending today.",
+      fri: "It is Friday. Plan the weekend spending ahead so you do not regret it."
+    },
+    tr: {
+      A: ["Bugün gereksiz bir alışverişten vazgeçin. Yarın kendinize teşekkür edeceksiniz.", "Gelirinizin %10'unu önce kendinize ayırın, sonra harcayın.", "Satın almadan önce 24 saat bekleyin. İstek çoğu zaman geçer.", "Küçük harcamaları yazın: günde 15.000 ayda 450.000 eder.", "Ayın başında limit koyun, sonunda sonuca bakın.", "Borcu vadesinden önce ödemek en iyi yatırımlardan biridir.", "3 aylık gideriniz kadar acil durum birikimi yapın.", "Aboneliklerinizi kontrol edin, kullanmadıklarınızı iptal edin.", "Markete listeyle gidin ve listede olmayanı almayın.", "Günde 2 dakika ayırıp harcamalarınızı yazın."],
+      B: ["Büyük servet küçük alışkanlıklarla başlar.", "Bugünün tutumluluğu yarının özgürlüğüdür.", "Para patronunuz değil, yardımcınız olsun.", "Yazılan her harcama kontrole atılmış bir adımdır.", "Hedefsiz para su gibi akıp gider, hedefli para köprü olur.", "Zaten başladınız ve en zor kısım buydu.", "Bugün küçük bir adım, bir yıl sonra büyük fark.", "Huzurlu uyku borçsuz bir gecenin hediyesidir.", "Hayallerinizin bedelini bilirseniz onlara yaklaşırsınız.", "Disiplin, isteksiz günlerde de devam etmektir."],
+      C: ["Damlaya damlaya göl olur.", "Hesap dostluğu bozmaz.", "Yedi ölç, bir biç.", "Ayağını yorganına göre uzat.", "Sabrın sonu selamettir.", "Emeksiz yemek olmaz.", "Az olsun, öz olsun.", "Bugünün işini yarına bırakma.", "Zenginliğin başı tutumluluktur.", "Küçük tasarruf büyük servete götürür."],
+      D: ["Cüzdanınız bugün de size güveniyor. Onu üzmeyin 😄", "Yarın zengin olacağız. Sadece bugün kafeyi atlayın ☕", "İndirim tasarruf değil, başka bir şey almak için bahane 😅", "Kartınız diyor ki: «Beni koru, ben de yorulurum» 💳", "Sepet dolu, cüzdan üzgün. Dengeyi bulalım mı? 🛒", "Bugün gereksiz bir şey almazsanız cüzdan sevinçten dans eder 💃", "Para ağaçta yetişmez ama yazarsanız çoğalır 🌳", "Uygulamaya girdiniz, demek ki zaten %90 tutumlusunuz 😎", "Taksi çağırmadan önce düşünün: yürüsek olmaz mı? 🚶", "Bugün cüzdana da izin verin, o da yoruldu 😴"],
+      mon: "Haftaya planla başlıyoruz: bu haftanın harcamalarını bugün kabaca belirleyin.",
+      fri: "Cuma geldi. Hafta sonu harcamasını önceden planlayın, sonra pişman olmayın."
+    },
+    ar: {
+      A: ["تخلَّ اليوم عن عملية شراء واحدة غير ضرورية. ستشكر نفسك غدًا.", "ادّخر 10% من دخلك لنفسك أولًا ثم أنفق.", "انتظر 24 ساعة قبل الشراء. الرغبة غالبًا ما تزول.", "سجّل المصاريف الصغيرة: 15,000 يوميًا تصبح 450,000 شهريًا.", "ضع حدًّا في بداية الشهر وراجع النتيجة في نهايته.", "سداد الدين قبل موعده من أفضل الاستثمارات.", "كوّن احتياطيًا يعادل مصاريف 3 أشهر.", "راجع اشتراكاتك وألغِ ما لا تستخدمه.", "اذهب إلى المتجر بقائمة ولا تشترِ خارجها.", "خصّص دقيقتين يوميًا لتسجيل مصاريفك."],
+      B: ["الثروة الكبيرة تبدأ بعادات صغيرة.", "تقتير اليوم هو حرية الغد.", "اجعل المال مساعدك لا سيدك.", "كل مصروف تسجّله خطوة نحو السيطرة.", "المال بلا هدف يجري كالماء، ومعه الهدف يصير جسرًا.", "لقد بدأت بالفعل، وهذا أصعب جزء.", "خطوة صغيرة اليوم، فرق كبير بعد سنة.", "النوم الهادئ هدية ليلة بلا ديون.", "اعرف ثمن أحلامك فتقترب منها.", "الانضباط هو أن تستمر حتى في الأيام بلا حماس."],
+      C: ["قطرة قطرة يصير النهر.", "الحساب يُبقي الودّ.", "قِس سبع مرات واقطع مرة واحدة.", "مدّ رجليك على قدر لحافك.", "الصبر مفتاح الفرج.", "من جدّ وجد.", "القليل الجيّد خير من الكثير الرديء.", "لا تؤجّل عمل اليوم إلى الغد.", "رأس الغنى الاقتصاد.", "الادخار الصغير يقود إلى ثروة كبيرة."],
+      D: ["محفظتك ما زالت تثق بك اليوم. لا تخذلها 😄", "غدًا سنصير أغنياء. فقط تخطَّ المقهى اليوم ☕", "الخصم ليس توفيرًا بل عذر لشراء شيء آخر 😅", "بطاقتك تقول: «اعتنِ بي فأنا أتعب أيضًا» 💳", "السلة ممتلئة والمحفظة حزينة. هل نجد التوازن؟ 🛒", "إن لم تشترِ شيئًا لا لزوم له اليوم ستفرح محفظتك 💃", "المال لا ينمو على الشجر، لكنه يزيد إن سجّلته 🌳", "دخلت التطبيق، فأنت مقتصد بنسبة 90% بالفعل 😎", "قبل طلب سيارة أجرة فكّر: هل يمكن المشي؟ 🚶", "أعطِ المحفظة راحة اليوم، فهي متعبة أيضًا 😴"],
+      mon: "نبدأ الأسبوع بخطة: حدّد اليوم تقريبًا مصاريف هذا الأسبوع.",
+      fri: "حلّ يوم الجمعة. خطّط لمصاريف عطلة الأسبوع مسبقًا كي لا تندم."
+    }
+  };
+
+  const GREET = ["Xayrli tong", "Xayrli kun", "Xayrli kech", "Xayrli tun"];
+  function greetText() {
+    const h = new Date().getHours(), n = (prof.first || "").trim();
+    return _t(GREET[h >= 5 && h < 11 ? 0 : h >= 11 && h < 17 ? 1 : h >= 17 && h < 22 ? 2 : 3]) + (n ? ", " + n : "");
+  }
+  function dayNum() { const d = new Date(); return Math.floor(Date.UTC(d.getFullYear(), d.getMonth(), d.getDate()) / 864e5); }
+  function dailyQuote(shift) {
+    const L = TJQ[LANG] || TJQ.uz, dow = new Date().getDay();
+    if (!shift) { if (dow === 1) return L.mon; if (dow === 5) return L.fri; }
+    const n = dayNum() + (shift || 0), arr = L["ABCD".charAt(n % 4)];
+    return arr[Math.floor(n / 4) % arr.length];
+  }
+  function dayStatus() {
+    const t = today0(), key = iso(t).slice(0, 7), es = entries();
+    const late = es.filter((e) => e.due && e.diff < 0)[0];
+    if (late) return { tone: "warn", lab: "Qarz", txt: _t("{name} qarzining muddati o'tgan. Bugun hal qilsangiz, ko'ngil tinch bo'ladi.", { name: late.d.name }) };
+    const soon = es.filter((e) => e.due && e.diff >= 0 && e.diff <= 1)[0];
+    if (soon) return { tone: "warn", lab: "Qarz", txt: _t(soon.diff === 0 ? "Bugun {name} bilan hisob-kitob kuni." : "Ertaga {name} bilan hisob-kitob kuni.", { name: soon.d.name }) };
+    const cur = monthItems(key), spent = {};
+    let curExp = 0;
+    cur.filter((x) => x.type === "exp").forEach((x) => { const v = toUZS(x.amount, x.cur, x.rate); spent[x.cat] = (spent[x.cat] || 0) + v; curExp += v; });
+    const dim = new Date(t.getFullYear(), t.getMonth() + 1, 0).getDate(), left = dim - t.getDate() + 1;
+    let worst = null;
+    Object.keys(S.limits).forEach((k) => { const p = Math.round((spent[k] || 0) / S.limits[k] * 100); if (p >= 80 && (!worst || p > worst.p)) worst = { k: k, p: p }; });
+    if (worst) {
+      if (worst.p > 100) return { tone: "warn", lab: "Limit", txt: _t("{cat} limiti oshdi. Bu oyni qo'ldan bermang, keyingi oyga reja tuzamiz.", { cat: _t(worst.k) }) };
+      const rem = Math.max(0, S.limits[worst.k] - (spent[worst.k] || 0));
+      return { tone: "warn", lab: "Limit", txt: _t("{cat} limitingizning {p}% ga yetdi. Oy oxirigacha {d} kun, kuniga {m} so'm dan to'g'ri keladi.", { cat: _t(worst.k), p: worst.p, d: left, m: fmt(Math.round(rem / left)) }) };
+    }
+    const g = S.goals.filter((x) => x.target > 0 && x.saved < x.target && x.saved / x.target >= 0.9)[0];
+    if (g) return { tone: "ok", lab: "Maqsad", txt: _t("«{name}» maqsadingizning {p}% yig'ildi. Oz qoldi!", { name: g.name, p: Math.round(g.saved / g.target * 100) }) };
+    if (t.getDate() >= 7 && curExp > 0) {
+      const pk = iso(new Date(t.getFullYear(), t.getMonth() - 1, 1)).slice(0, 7);
+      let prevExp = 0; monthItems(pk).filter((x) => x.type === "exp").forEach((x) => { prevExp += toUZS(x.amount, x.cur, x.rate); });
+      const base = prevExp * (t.getDate() / dim);
+      if (prevExp > 0 && curExp <= base * 0.88) return { tone: "ok", lab: "Tejamkorlik", txt: _t("O'tgan oyning shu kuniga qaraganda {p}% kam sarfladingiz. Shunday davom 👏", { p: Math.round((1 - curExp / base) * 100) }) };
+    }
+    if (Object.keys(S.limits).length && t.getDate() >= 5 && curExp > 0) return { tone: "ok", lab: "Tejamkorlik", txt: _t("Bu oy hali limitdan oshmadingiz. Shunday davom 👏") };
+    return null;
+  }
+  let dayShift = 0, dayShiftDay = -1;
+  function renderDayCard() {
+    const el = $("dayCard"); if (!el) return;
+    if (dayShiftDay !== dayNum()) { dayShift = 0; dayShiftDay = dayNum(); }
+    const st = dayShift ? null : dayStatus();
+    el.hidden = false; el.className = "daycard" + (st && st.tone ? " " + st.tone : "");
+    $("dayG").textContent = greetText() + " \u{1F44B}";
+    $("dayLab").textContent = _t(st ? st.lab : "Bugungi gap");
+    $("dayTxt").textContent = st ? st.txt : dailyQuote(dayShift);
+    $("dayCopy").textContent = _t("Nusxalash"); $("dayNext").textContent = _t("Boshqasi");
+  }
+  $("dayNext").onclick = () => { dayShift++; renderDayCard(); };
+  $("dayCopy").onclick = () => { const t = $("dayTxt").textContent; try { navigator.clipboard.writeText(t).then(() => toast(_t("Nusxalandi")), () => toast(t)); } catch (x) { toast(t); } };
+  document.addEventListener("visibilitychange", () => { if (!document.hidden) renderDayCard(); });
+
+  /* ---------- PIN: urinishlar cheklovi ---------- */
+  const LF_KEY = "hisobchi_lockfail_v1";
+  let lf = { n: 0, until: 0 }, lfT = null;
+  try { const o = JSON.parse(lsGet(LF_KEY)); if (o && typeof o.n === "number") lf = { n: o.n | 0, until: +o.until || 0 }; } catch (e) {}
+  const lockRemain = () => Math.max(0, Math.ceil((lf.until - Date.now()) / 1000));
+  function lfFail() { lf.n++; if (lf.n % 5 === 0) lf.until = Date.now() + [30, 60, 300, 900, 1800][Math.min(lf.n / 5 - 1, 4)] * 1000; lsSet(LF_KEY, JSON.stringify(lf)); }
+  function lfOk() { lf = { n: 0, until: 0 }; lsDel(LF_KEY); }
+  function lfTick() {
+    clearInterval(lfT);
+    const r = lockRemain(), dis = r > 0, pad = pinMode();
+    $("pinPad").classList.toggle("dis", dis); $("pinDots").classList.toggle("bad", dis);
+    $("unlockBtn").disabled = dis && !pad; $("lockPw").disabled = dis && !pad;
+    if (!dis) return;
+    pinBuf = ""; renderDots();
+    const say = () => { $("lockErr").textContent = _t("Juda ko'p xato. Yana {s} soniyadan keyin urining.", { s: lockRemain() }); };
+    say();
+    lfT = setInterval(() => { if (lockRemain() <= 0) { clearInterval(lfT); $("lockErr").textContent = ""; lfTick(); } else say(); }, 1000);
+  }
+
   /* ---------- Yashirish va parol ---------- */
   let lockInfo = null;
   try { lockInfo = JSON.parse(lsGet(LOCK_KEY)); } catch (e) {}
@@ -3452,19 +3603,23 @@
     $("pinDots").innerHTML = s;
   }
   function pinKey(k) {
-    if (!pinMode() || pinBusy) return;
+    if (!pinMode() || pinBusy || lockRemain() > 0) return;
     $("lockErr").textContent = "";
+    try { if (k !== "del" && navigator.vibrate) navigator.vibrate(8); } catch (e) {}
     if (k === "del") pinBuf = pinBuf.slice(0, -1);
     else if (pinBuf.length < lockInfo.len) pinBuf += k;
     renderDots();
     if (pinBuf.length !== lockInfo.len) return;
     pinBusy = true;
     hashPw(pinBuf, lockInfo.salt).then((hh) => {
-      if (hh === lockInfo.hash) { pinBuf = ""; pinBusy = false; setLocked(false); return; }
+      if (hh === lockInfo.hash) { lfOk(); pinBuf = ""; pinBusy = false; setLocked(false); return; }
+      lfFail();
+      if (lockRemain() > 0) { pinBusy = false; lfTick(); return; }
       $("lockErr").textContent = _t("PIN kod noto'g'ri.");
+      $("pinDots").classList.add("bad");
       const d = $("pinDots"); d.classList.remove("shake"); void d.offsetWidth; d.classList.add("shake");
       try { if (navigator.vibrate) navigator.vibrate(60); } catch (e) {}
-      setTimeout(() => { pinBuf = ""; renderDots(); pinBusy = false; }, 420);
+      setTimeout(() => { pinBuf = ""; renderDots(); pinBusy = false; $("pinDots").classList.remove("bad"); }, 420);
     });
   }
   $("pinPad").addEventListener("click", (e) => { const b = e.target.closest ? e.target.closest("button") : null; if (!b) return; if (b.id === "bioKey") bioUnlock(false); else if (b.dataset.k) pinKey(b.dataset.k); });
@@ -3533,7 +3688,8 @@
   function closeAllForms() { closeForm(); closeDForm(); closeGForm(); $("limForm").hidden = true; $("limOpen").hidden = false; payOpen = null; $("toast").hidden = true; }
   function lockTexts() {
     const pad = pinMode();
-    $("lockTitle").textContent = _t(lockInfo ? "Tejamkor qulflangan" : "Ma'lumotlar yashirilgan");
+    $("lockTitle").textContent = lockInfo ? greetText() : _t("Ma'lumotlar yashirilgan");
+    $("lockQ").textContent = dailyQuote(0);
     $("lockSub").textContent = _t(lockInfo ? (pad ? "PIN kodni kiriting" : "Davom etish uchun parolni kiriting.") : "Balans, xarajatlar, qarzlar va kreditlar ko'rinmaydi.");
     $("pwEye").setAttribute("aria-label", _t($("lockPw").type === "password" ? "Parolni ko'rsatish" : "Parolni yashirish"));
     if (!forgotArmed) $("forgot").textContent = _t(pad ? "PIN kodni unutdim" : "Parolni unutdim");
@@ -3560,15 +3716,17 @@
       $("bioKey").hidden = !(pad && bioId);
       $("lockPw").type = "password";
       forgotArmed = false;
-      lockTexts();
+      lockTexts(); lfTick();
     } else { markActive(true); bump(); }
   }
   $("unlockForm").addEventListener("submit", (e) => {
     e.preventDefault();
     if (!lockInfo) { setLocked(false); return; }
+    if (lockRemain() > 0) return;
     hashPw($("lockPw").value, lockInfo.salt).then((h) => {
-      if (h === lockInfo.hash) setLocked(false);
+      if (h === lockInfo.hash) { lfOk(); setLocked(false); }
       else {
+        lfFail(); if (lockRemain() > 0) { $("lockPw").value = ""; lfTick(); return; }
         $("lockErr").textContent = _t("Parol noto'g'ri."); $("lockPw").value = ""; $("lockPw").focus();
         const f = $("lockPw").parentNode; f.classList.remove("shake"); void f.offsetWidth; f.classList.add("shake");
         try { if (navigator.vibrate) navigator.vibrate(60); } catch (e) {}
@@ -3578,26 +3736,30 @@
   $("lockBtn").onclick = () => setLocked(true);
   $("forgot").onclick = () => {
     if (!forgotArmed) { forgotArmed = true; $("forgot").textContent = _t("PIN kod va barcha ma'lumotlar o'chadi. Davom etilsinmi?"); return; }
-    S = emptyState(); save();
+    S = emptyState(); save(); lfOk();
     lsDel(LOCK_KEY); lockInfo = null; bioDisable();
     renderAll(); setLocked(true);
   };
-  $("savePw").onclick = () => {
+  $("savePw").onclick = async () => {
     const pw = $("newPw").value;
+    if (lockInfo && (await hashPw($("curPw").value, lockInfo.salt)) !== lockInfo.hash) { $("pwStatus").textContent = _t("Joriy PIN kod noto'g'ri."); return; }
     if (!/^[0-9]{4,6}$/.test(pw)) { $("pwStatus").textContent = _t("PIN kod 4 dan 6 gacha raqamdan iborat bo'lsin."); return; }
+    if (pw !== $("newPw2").value) { $("pwStatus").textContent = _t("PIN kodlar bir xil emas."); return; }
     const salt = uid();
     hashPw(pw, salt).then((h) => {
       lockInfo = { salt: salt, hash: h, len: pw.length };
       lsSet(LOCK_KEY, JSON.stringify(lockInfo));
-      $("newPw").value = "";
+      $("newPw").value = ""; $("newPw2").value = ""; $("curPw").value = ""; renderPg56();
       $("pwStatus").textContent = _t("PIN kod saqlandi. Keyingi safar ma'lumotlarni ochish uchun so'raladi.");
       renderBioUI();
     });
   };
-  $("removePw").onclick = () => {
-    lockInfo = null; lsDel(LOCK_KEY); bioDisable();
+  $("removePw").onclick = async () => {
+    if (lockInfo && (await hashPw($("curPw").value, lockInfo.salt)) !== lockInfo.hash) { $("pwStatus").textContent = _t("Joriy PIN kod noto'g'ri."); return; }
+    lockInfo = null; lsDel(LOCK_KEY); bioDisable(); $("curPw").value = ""; renderPg56();
     $("pwStatus").textContent = _t("PIN kod olib tashlandi. Endi ma'lumotlar tugma bilan ochiladi.");
   };
+  document.addEventListener("visibilitychange", () => { $("secret").classList.toggle("privblur", document.hidden); });
   document.addEventListener("visibilitychange", () => {
     if (document.hidden) {
       if (lockDelay === 0) setLocked(true); else markActive(true);
@@ -3749,6 +3911,7 @@
   function renderPg56() {
     if (!$("lockChips")) return;
     const on = !!lockInfo;
+    $("curPwF").hidden = !on;
     $("secState").classList.toggle("off", !on);
     $("secStT").textContent = _t(on ? "Himoya yoqilgan" : "Himoya o'chiq");
     $("secStS").textContent = _t(on ? "PIN kod o'rnatilgan" : "PIN kod qo'yilmagan");
