@@ -528,6 +528,7 @@ window.HISOBCHI_I18N = {
   "Xarajat va daromad": "Расходы и доходы",
   "Qarzlar va kartalar": "Долги и карты",
   "Sozlamalar": "Настройки",
+  "Instagram'da kuzating": "Подписывайтесь в Instagram",
   "months": [
    "Январь",
    "Февраль",
@@ -1108,6 +1109,7 @@ window.HISOBCHI_I18N = {
   "Xarajat va daromad": "Expenses and income",
   "Qarzlar va kartalar": "Debts and cards",
   "Sozlamalar": "Settings",
+  "Instagram'da kuzating": "Follow on Instagram",
   "months": [
    "January",
    "February",
@@ -1674,6 +1676,7 @@ window.HISOBCHI_I18N = {
   "Xarajat va daromad": "المصروفات والدخل",
   "Qarzlar va kartalar": "الديون والبطاقات",
   "Sozlamalar": "الإعدادات",
+  "Instagram'da kuzating": "تابعنا على إنستغرام",
   "months": [
    "يناير",
    "فبراير",
@@ -2240,6 +2243,7 @@ window.HISOBCHI_I18N = {
   "Xarajat va daromad": "Gider ve gelir",
   "Qarzlar va kartalar": "Borçlar ve kartlar",
   "Sozlamalar": "Ayarlar",
+  "Instagram'da kuzating": "Instagram'da takip edin",
   "months": [
    "Ocak",
    "Şubat",
