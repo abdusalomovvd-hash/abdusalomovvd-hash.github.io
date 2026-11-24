@@ -407,6 +407,45 @@
   .toast { bottom: calc(168px + env(safe-area-inset-bottom, 0px)); }
   @media (prefers-reduced-motion: reduce) { .navcap, .navin button { transition: none; } }
 
+  /* Yangi imkoniyatlar: karta suzilishi, shablonlar, chek, ovoz */
+  .hcar { display: flex; gap: 12px; overflow-x: auto; scroll-snap-type: x mandatory; scrollbar-width: none; -webkit-overflow-scrolling: touch; padding-bottom: 16px; margin-bottom: -14px; overscroll-behavior-x: contain; }
+  .hcar::-webkit-scrollbar { display: none; }
+  .hcar > .hero { flex: 0 0 100%; min-width: 0; scroll-snap-align: center; }
+  .hdots { display: flex; gap: 6px; justify-content: center; margin: 2px 0 0; }
+  .hdots i { width: 6px; height: 6px; border-radius: 3px; background: var(--line); transition: width .25s, background .25s; }
+  .hdots i.on { width: 18px; background: var(--gold); }
+  .hsl { display: grid; gap: 16px; margin-top: 14px; }
+  .hsl b { display: block; font: 600 24px/1.2 var(--font-num); margin-top: 3px; letter-spacing: -0.02em; }
+  .t3 { margin-top: 12px; display: grid; gap: 12px; }
+  .t3 .tl { display: flex; justify-content: space-between; font-size: 14px; gap: 10px; } .t3 .tl b { font: 600 14px var(--font-num); }
+  .t3 .tb { height: 6px; border-radius: 3px; background: rgba(255, 255, 255, .14); margin-top: 6px; overflow: hidden; } .t3 .tb i { display: block; height: 100%; border-radius: 3px; background: var(--gold); }
+  .qlbl { font-size: 12px; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; color: var(--muted); margin: 2px 2px -4px; }
+  .fq { display: flex; gap: 8px; overflow-x: auto; scrollbar-width: none; margin: 0 -2px; padding: 2px; } .fq::-webkit-scrollbar { display: none; }
+  .fq .chipbtn { flex: none; padding: 6px 10px; font-size: 13px; }
+  .miniact { display: flex; gap: 8px; }
+  .miniact button { flex: 1; display: flex; align-items: center; justify-content: center; gap: 8px; padding: 11px 8px; border: 1px solid var(--line); border-radius: 12px; background: var(--surface); color: var(--ink); font-size: 14px; font-weight: 600; }
+  .miniact button svg { width: 18px; height: 18px; stroke: currentColor; fill: none; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
+  .miniact button.on { border-color: var(--gold); color: var(--gold); }
+  .rcprev { display: flex; align-items: center; gap: 12px; padding: 8px 10px; border: 1px solid var(--line); border-radius: 12px; background: var(--soft); }
+  .rcprev img { width: 44px; height: 44px; object-fit: cover; border-radius: 8px; } .rcprev span { flex: 1; font-size: 13px; color: var(--muted); } .rcprev b { display: block; color: var(--ink); font-size: 14px; }
+  .rcprev button { border: 0; background: none; color: var(--exp); font-size: 20px; padding: 4px 8px; }
+  .vcmsg { font-size: 13px; color: var(--gold); min-height: 0; } .vcmsg:empty { display: none; }
+  .ncbox { display: flex; gap: 8px; } .ncbox input { flex: 1; min-width: 0; } .ncbox button { flex: none; }
+  .catbtn.newc { border-style: dashed; }
+  .rcdot { display: inline-grid; place-items: center; width: 30px; height: 30px; border-radius: 9px; background: var(--soft); color: var(--muted); margin-left: 2px; flex: none; }
+  .rcdot svg { width: 16px; height: 16px; stroke: currentColor; fill: none; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; pointer-events: none; }
+  .rcgrid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; margin: 8px 0 14px; }
+  .rcc { position: relative; padding: 0; border: 0; border-radius: 10px; overflow: hidden; aspect-ratio: 3 / 4; background: var(--soft); }
+  .rcc img { width: 100%; height: 100%; object-fit: cover; display: block; }
+  .rcc em { position: absolute; left: 0; right: 0; bottom: 0; padding: 14px 6px 5px; font: 700 11px var(--font-num); font-style: normal; color: #fff; text-align: right; background: linear-gradient(transparent, rgba(0, 0, 0, .7)); }
+  .rcmon { display: flex; justify-content: space-between; font-weight: 700; font-size: 14px; margin-top: 10px; } .rcmon span:last-child { color: var(--muted); font-weight: 500; font-size: 13px; }
+  .rcv { position: fixed; inset: 0; z-index: 70; background: rgba(0, 0, 0, .94); display: flex; flex-direction: column; padding: calc(14px + env(safe-area-inset-top, 0px)) 14px calc(14px + env(safe-area-inset-bottom, 0px)); }
+  .rcv[hidden] { display: none; }
+  .rcv img { flex: 1; min-height: 0; width: 100%; object-fit: contain; }
+  .rcv .cap { color: #fff; text-align: center; padding: 10px 0; font-size: 15px; font-weight: 600; }
+  .rcv .acts { display: flex; gap: 10px; } .rcv .acts button { flex: 1; padding: 13px; border-radius: 12px; border: 1px solid rgba(255, 255, 255, .25); background: rgba(255, 255, 255, .08); color: #fff; font-weight: 600; font-size: 15px; } .rcv .acts .dng { color: #f5a583; }
+  .cplist .kv { display: flex; justify-content: space-between; align-items: center; padding: 8px 0; border-bottom: 1px solid var(--line); }
+
   @media (prefers-reduced-motion: no-preference) {
     button, .catbtn, .nkeys button { transition: transform .12s ease, background-color .15s ease, box-shadow .15s ease; }
     button:active:not(:disabled) { transform: scale(0.97); }
@@ -815,6 +854,7 @@
 
     <!-- Bosh -->
     <div class="tab" id="tab-home">
+      <div class="hcar" id="hcar">
       <section class="hero" aria-live="polite">
         <div class="hgreet" id="hgreet" hidden></div>
         <span class="hlabel">Oy balansi</span>
@@ -827,6 +867,10 @@
         <div class="cmp" id="cmp"></div>
         <div class="note" id="rateNote" hidden>Dollarli amallar bor, lekin kurs kiritilmagan. Profil bo'limida kursni kiriting, shunda ular so'mga hisoblanadi.</div>
       </section>
+      <section class="hero hs" id="hs2" aria-live="polite"></section>
+      <section class="hero hs" id="hs3" aria-live="polite"></section>
+      </div>
+      <div class="hdots" id="hdots" aria-hidden="true"><i class="on"></i><i></i><i></i></div>
 
       <section class="panel remind" id="remPanel" hidden aria-live="polite">
         <h2>Eslatmalar</h2>
@@ -835,6 +879,7 @@
 
       <section class="panel" id="acctPanelHome"></section>
 
+      <div class="qlbl" id="quickLbl" hidden>Shablonlar</div>
       <div class="quick" id="quick" hidden></div>
 
       <section class="panel">
@@ -1057,6 +1102,16 @@
           <span class="mt">Zaxira va eksport</span>
           <span class="mv" id="vBack"></span><svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 6l6 6-6 6"/></svg>
         </button>
+        <button type="button" class="mrow" data-go="cats" id="row_cats">
+          <span class="mico" style="--c:#7a8f3a"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3.5" y="3.5" width="7" height="7" rx="2" stroke="#fff" stroke-width="1.8" fill="#fff" fill-opacity=".30"/><rect x="13.5" y="3.5" width="7" height="7" rx="2" stroke="#fff" stroke-width="1.8" fill="none"/><rect x="3.5" y="13.5" width="7" height="7" rx="2" stroke="#fff" stroke-width="1.8" fill="none"/><path d="M17 13.5v7M13.5 17h7" stroke="#fff" stroke-width="1.8" stroke-linecap="round"/></svg></span>
+          <span class="mt">Kategoriyalar</span>
+          <span class="mv" id="vCats"></span><svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 6l6 6-6 6"/></svg>
+        </button>
+        <button type="button" class="mrow" data-go="rc" id="row_rc">
+          <span class="mico" style="--c:#4f69b5"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 3.5h12v17l-2.500-1.600L13 20.500l-2.500-1.600L8 20.500 6 19.200z" stroke="#fff" stroke-width="1.8" stroke-linejoin="round" fill="#fff" fill-opacity=".30"/><path d="M9 8.500h6M9 12h6" stroke="#fff" stroke-width="1.8" stroke-linecap="round"/></svg></span>
+          <span class="mt">Cheklar</span>
+          <span class="mv" id="vRc"></span><svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 6l6 6-6 6"/></svg>
+        </button>
         <button type="button" class="mrow" data-go="fb" id="row_fb">
           <span class="mico" style="--c:#c9812b"><svg viewBox="0 0 24 24" aria-hidden="true"><path stroke="#fff" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" fill="none" fill="#fff" fill-opacity=".30" d="M4.5 5.5h15a1.5 1.5 0 0 1 1.5 1.5v8.5a1.5 1.5 0 0 1-1.5 1.5H10l-4.5 3.500V17H4.500A1.500 1.500 0 0 1 3 15.500V7a1.500 1.500 0 0 1 1.500-1.500z"/><path stroke="#fff" stroke-width="1.8" stroke-linecap="round" d="M8 10.500h8M8 13.500h5"/></svg></span>
           <span class="mt">Fikr qoldirish</span>
@@ -1178,7 +1233,7 @@
             <div id="rateHist"></div>
           </div>
           <div>
-            <div class="label">Tez tugmalar</div>
+            <div class="label">Shablonlar</div>
             <div id="quickList"></div>
           </div>
         </div>
@@ -1237,6 +1292,28 @@
           <p class="menunote" id="fbMsg" style="margin:10px 2px 0"></p>
         </div>
       </section>
+      <section class="panel subpg" data-pg="cats">
+        <h2>Kategoriyalar</h2>
+        <div class="body">
+          <p>O'zingizga kerakli kategoriya qo'shing. U amal qo'shishda ko'rinadi.</p>
+          <div class="ncbox" style="margin:10px 0 6px;flex-wrap:wrap">
+            <select id="cpType" aria-label="Turi" style="flex:1 1 100%"><option value="exp">Xarajat</option><option value="inc">Daromad</option></select>
+            <input id="cpName" type="text" maxlength="20" placeholder="Yangi kategoriya nomi" aria-label="Yangi kategoriya nomi">
+            <button class="ghost act" type="button" id="cpAdd">Qo'shish</button>
+          </div>
+          <div class="err" id="cpErr" role="alert"></div>
+          <div class="cplist" id="cpList"></div>
+        </div>
+      </section>
+
+      <section class="panel subpg" data-pg="rc">
+        <h2>Cheklar</h2>
+        <div class="body">
+          <p class="abnote">Rasmlar faqat shu telefonda saqlanadi va zaxira nusxaga kirmaydi.</p>
+          <div id="rcGal"></div>
+        </div>
+      </section>
+
       <section class="panel subpg" data-pg="about">
         <h2>Ilova haqida</h2>
         <div class="abt"><div class="coin2">T</div><b>Tejamkor</b><small>v1.0</small></div>
@@ -1255,6 +1332,7 @@
   <svg viewBox="0 0 24 24" width="26" height="26" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" aria-hidden="true"><path d="M12 5v14M5 12h14"/></svg>
 </button>
 
+<div class="rcv" id="rcv" hidden><img id="rcvImg" alt=""><div class="cap" id="rcvCap"></div><div class="acts"><button type="button" id="rcvDel" class="dng">Rasmni o'chirish</button><button type="button" id="rcvClose">Yopish</button></div></div>
 <div class="scrim" id="scrim" hidden></div>
 <div class="acov" id="acctOv" hidden><div class="acsheet" id="acctSheet"></div></div>
 <form class="composer" id="form" hidden autocomplete="off" aria-label="Yangi amal">
@@ -1263,14 +1341,23 @@
     <button type="button" id="tExp" aria-pressed="true">Xarajat</button>
     <button type="button" id="tInc" aria-pressed="false">Daromad</button>
   </div>
+  <div class="fq" id="fq" hidden></div>
   <div class="amtbox">
     <input class="amount money-in" id="amount" inputmode="none" readonly placeholder="0" aria-label="Summa">
     <select id="cur" aria-label="Valyuta"><option value="UZS">so'm</option><option value="USD">$</option></select>
   </div>
   <div class="catscroll" id="catRow" role="group" aria-label="Kategoriya"></div>
+  <div class="ncbox" id="ncBox" hidden><input id="ncName" type="text" maxlength="20" placeholder="Yangi kategoriya nomi" aria-label="Yangi kategoriya nomi"><button class="ghost act" type="button" id="ncAdd">Qo'shish</button></div>
   <select id="cat" hidden aria-hidden="true" tabindex="-1"></select>
   <div class="accrow" id="accRow" hidden></div>
   <input id="note" type="text" maxlength="60" placeholder="Izoh (ixtiyoriy)" aria-label="Izoh">
+  <div class="miniact">
+    <button type="button" id="vcBtn" hidden><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="9" y="3" width="6" height="11" rx="3"/><path d="M5.500 11a6.500 6.500 0 0 0 13 0M12 17.500V21"/></svg><span>Ovoz bilan</span></button>
+    <button type="button" id="rcBtn" hidden><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 8.500A2 2 0 0 1 6 6.500h1.600l1.200-2h6.400l1.200 2H18a2 2 0 0 1 2 2V17a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2z"/><circle cx="12" cy="12.500" r="3.200"/></svg><span>Chek surati</span></button>
+    <input type="file" id="rcFile" accept="image/*" hidden>
+  </div>
+  <div class="vcmsg" id="vcMsg" role="status"></div>
+  <div class="rcprev" id="rcPrev" hidden><img id="rcImg" alt=""><span><b>Chek biriktirildi</b>Faqat shu telefonda saqlanadi</span><button type="button" id="rcX" aria-label="O'chirish">&times;</button></div>
   <div class="nkeys" id="nkeys">
     <button type="button" data-n="1">1</button><button type="button" data-n="2">2</button><button type="button" data-n="3">3</button>
     <button type="button" data-n="4">4</button><button type="button" data-n="5">5</button><button type="button" data-n="6">6</button>
@@ -1287,7 +1374,7 @@
       </div>
     </div>
     <label class="check" style="margin-top:10px"><input type="checkbox" id="recur"> Har oy shu kuni takrorlansin</label>
-    <label class="check" style="margin-top:8px"><input type="checkbox" id="quickSave"> Tez tugma sifatida saqlash</label>
+    <label class="check" style="margin-top:8px"><input type="checkbox" id="quickSave"> Shablon sifatida saqlash</label>
   </details>
   <div class="err" id="err" role="alert"></div>
   <div class="actions sticky">
@@ -1464,7 +1551,7 @@
   const validAcct = (a) => a && typeof a.id === "string" && a.id && a.id !== "cash" && typeof a.name === "string";
   const cleanXfer = (x) => ({ id: x.id || uid(), from: String(x.from), to: String(x.to), amount: x.amount, date: x.date });
   const validXfer = (x) => x && typeof x.from === "string" && typeof x.to === "string" && x.from !== x.to && typeof x.amount === "number" && x.amount > 0 && isoRe.test(x.date || "");
-  const emptyState = () => ({ tx: [], debts: [], goals: [], recurring: [], limits: {}, quick: [], rate: 0, u: 0, accts: [], xfers: [], cashStart: 0 });
+  const emptyState = () => ({ tx: [], debts: [], goals: [], recurring: [], limits: {}, quick: [], cats: { exp: [], inc: [] }, rate: 0, u: 0, accts: [], xfers: [], cashStart: 0 });
   function normalize(o) {
     const s = emptyState();
     if (!o || typeof o !== "object") return s;
@@ -1478,12 +1565,13 @@
     s.xfers = arr("xfers", validXfer, cleanXfer).filter((x) => (x.from === "cash" || s.accts.some((a) => a.id === x.from)) && (x.to === "cash" || s.accts.some((a) => a.id === x.to)));
     s.cashStart = typeof o.cashStart === "number" && isFinite(o.cashStart) ? o.cashStart : 0;
     if (o.limits && typeof o.limits === "object") Object.keys(o.limits).forEach((k) => { if (typeof o.limits[k] === "number" && o.limits[k] > 0) s.limits[k.slice(0, 40)] = o.limits[k]; });
+    if (o.cats && typeof o.cats === "object") ["exp", "inc"].forEach((t) => { if (Array.isArray(o.cats[t])) { const seen = {}; o.cats[t].forEach((n) => { n = String(n || "").trim().slice(0, 20); if (n && !seen[n.toLowerCase()] && CATS[t].indexOf(n) < 0 && s.cats[t].length < 12) { seen[n.toLowerCase()] = 1; s.cats[t].push(n); } }); } });
     s.rate = typeof o.rate === "number" && o.rate > 0 ? o.rate : 0;
     s.u = typeof o.u === "number" ? o.u : 0;
     return s;
   }
-  const hasData = (s) => !!(s.accts.length || s.tx.length || s.debts.length || s.goals.length || s.recurring.length || s.quick.length || Object.keys(s.limits).length);
-  const stateForSync = () => ({ tx: S.tx, debts: S.debts, goals: S.goals, recurring: S.recurring, limits: S.limits, quick: S.quick, rate: S.rate, accts: S.accts, xfers: S.xfers, cashStart: S.cashStart });
+  const hasData = (s) => !!(s.accts.length || s.tx.length || s.debts.length || s.goals.length || s.recurring.length || s.quick.length || s.cats.exp.length || s.cats.inc.length || Object.keys(s.limits).length);
+  const stateForSync = () => ({ tx: S.tx, debts: S.debts, goals: S.goals, recurring: S.recurring, limits: S.limits, quick: S.quick, cats: S.cats, rate: S.rate, accts: S.accts, xfers: S.xfers, cashStart: S.cashStart });
 
   let S = emptyState();
   (function load() {
@@ -1622,7 +1710,7 @@
       }
       return row;
     }).join("");
-    $("limCat").innerHTML = CATS.exp.map((c) => '<option value="' + esc(c) + '">' + esc(_t(c)) + "</option>").join("");
+    $("limCat").innerHTML = allCats("exp").map((c) => '<option value="' + esc(c) + '">' + esc(_t(c)) + "</option>").join("");
     const lk = Object.keys(S.limits);
     $("limList").innerHTML = lk.map((k) => '<div class="kv"><span>' + esc(_t(k)) + '</span><b>' + fmt(S.limits[k]) + ' <button type="button" class="del" data-lim="' + esc(k) + '">' + _t("O'chirish") + '</button></b></div>').join("");
   }
@@ -1680,6 +1768,7 @@
     if (S.accts.length) { const ac = x.acc && acctById(x.acc); parts.push(ac ? esc(ac.name) + (ac.last4 ? " \u2022\u2022" + esc(ac.last4) : "") : _t("Naqd")); }
     if (x.cur === "USD" && x.rate > 0) parts.push(_t("kurs") + " " + fmt(x.rate));
     return '<div class="tx">' + cico(x.cat) + '<div class="mid"><b>' + esc(_t(x.cat)) + "</b>" + (parts.length ? "<small>" + parts.join(" · ") + "</small>" : "") + "</div>" +
+      (rcHas(x.id) ? '<span class="rcdot" role="button" data-rc="' + esc(x.id) + '" aria-label="' + esc(_t("Chek surati")) + '">' + RCDOT + "</span>" : "") +
       '<span class="amt ' + x.type + '">' + (x.type === "inc" ? "+" : "−") + money(x.amount, x.cur) + "</span>" +
       (del ? '<button class="del' + (on ? " arm" : "") + '" data-id="' + x.id + '">' + (on ? _t("Aniq o'chirilsinmi?") : _t("O'chirish")) + "</button>" : "") + "</div>";
   }
@@ -1720,7 +1809,9 @@
   }
 
   function renderQuick() {
-    $("quick").hidden = !S.quick.length;
+    $("quick").hidden = !S.quick.length; $("quickLbl").hidden = !S.quick.length;
+    $("fq").hidden = !S.quick.length;
+    $("fq").innerHTML = S.quick.map((q) => '<button type="button" class="chipbtn" data-fq="' + q.id + '">' + esc(q.note || _t(q.cat)) + ' <b class="num">' + money(q.amount, q.cur) + "</b></button>").join("");
     $("quick").innerHTML = S.quick.map((q) => '<button type="button" class="chipbtn" data-q="' + q.id + '">' + esc(q.note || _t(q.cat)) + " <b class=\"num\">" + money(q.amount, q.cur) + "</b></button>").join("");
     $("quickList").innerHTML = S.quick.length
       ? S.quick.map((q) => '<div class="kv"><span>' + esc(q.note || _t(q.cat)) + " · " + money(q.amount, q.cur) + '</span><b><button type="button" class="del" data-qdel="' + q.id + '">' + _t("O'chirish") + '</button></b></div>').join("")
@@ -2236,15 +2327,16 @@
   $("accRow").addEventListener("click", (e) => { const b = e.target.closest ? e.target.closest("button[data-v]") : null; if (!b) return; $("accRow").setAttribute("data-v", b.getAttribute("data-v")); lsSet("hisobchi_lastacc_v1", b.getAttribute("data-v")); renderAccRow(); });
 
   function renderAll() {
-    renderAccts(); renderAccRow(); renderBalance(); renderReminders(); renderQuick(); renderChart(); renderCats(); renderRecent();
+    renderAccts(); renderAccRow(); renderBalance(); renderHeroExtra(); renderReminders(); renderQuick(); renderChart(); renderCats(); renderRecent();
     renderLedger(); renderRecurring(); renderDebts(); renderGoals(); renderSettings(); renderBadges();
   }
 
   /* ---------- Amal qo'shish ---------- */
   function fillCats() {
-    $("cat").innerHTML = CATS[type].map((c) => '<option value="' + esc(c) + '">' + esc(_t(c)) + "</option>").join("");
-    pickCat(CATS[type][0]);
-    $("catRow").innerHTML = CATS[type].map((c) => '<button type="button" class="catbtn" data-cat="' + esc(c) + '" aria-pressed="' + (c === $("cat").value) + '">' + cico(c) + '<span class="t">' + esc(_t(c)) + "</span></button>").join("");
+    $("cat").innerHTML = allCats(type).map((c) => '<option value="' + esc(c) + '">' + esc(_t(c)) + "</option>").join("");
+    pickCat(allCats(type)[0]);
+    $("catRow").innerHTML = allCats(type).map((c) => '<button type="button" class="catbtn" data-cat="' + esc(c) + '" aria-pressed="' + (c === $("cat").value) + '">' + cico(c) + '<span class="t">' + esc(_t(c)) + "</span></button>").join("") +
+      '<button type="button" class="catbtn newc" id="catNew"><span class="cico sm" style="--c:#8a97a0"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 5v14M5 12h14" stroke="#fff" stroke-width="2" stroke-linecap="round"/></svg></span><span class="t">' + esc(_t("Yangi")) + "</span></button>";
     $("catRow").scrollLeft = 0;
   }
   function pickCat(c) {
@@ -2252,7 +2344,7 @@
     const row = $("catRow"), bs = row.querySelectorAll ? row.querySelectorAll(".catbtn") : [];
     for (let i = 0; i < bs.length; i++) bs[i].setAttribute("aria-pressed", bs[i].getAttribute("data-cat") === c ? "true" : "false");
   }
-  $("catRow").addEventListener("click", (e) => { const b = e.target.closest ? e.target.closest(".catbtn") : null; if (b) pickCat(b.getAttribute("data-cat")); });
+  $("catRow").addEventListener("click", (e) => { const b = e.target.closest ? e.target.closest(".catbtn") : null; if (!b) return; if (b.id === "catNew") { $("ncBox").hidden = !$("ncBox").hidden; if (!$("ncBox").hidden) $("ncName").focus(); return; } pickCat(b.getAttribute("data-cat")); });
   function numKey(k) {
     let d = $("amount").value.replace(/\D/g, "");
     if (k === "del") d = d.slice(0, -1);
@@ -2285,6 +2377,7 @@
     $("form").hidden = true; $("scrim").hidden = true; updateChrome();
     $("amount").value = ""; $("note").value = "";
     $("recur").checked = false; $("quickSave").checked = false;
+    rcReset(); vcStop(); $("ncBox").hidden = true; $("ncName").value = ""; $("vcMsg").textContent = "";
     const dt = $("form").querySelector("details"); if (dt) dt.open = false;
   }
   $("tExp").onclick = () => setType("exp");
@@ -2318,6 +2411,7 @@
     if ($("quickSave").checked && S.quick.length < 8) S.quick.push({ id: uid(), type: x.type, amount: x.amount, cur: x.cur, cat: x.cat, note: x.note });
     S.tx.push(x);
     save();
+    rcCommit(x.id);
     view = new Date(parseISO(date).getFullYear(), parseISO(date).getMonth(), 1);
     closeForm();
     runRecurring();
@@ -2341,7 +2435,7 @@
     if (!id) return;
     if (!isArmed("tx:" + id)) { arm("tx:" + id, renderLedger); return; }
     disarm();
-    S.tx = S.tx.filter((x) => x.id !== id); save(); renderAll();
+    S.tx = S.tx.filter((x) => x.id !== id); rcDel(id); save(); renderAll();
   });
   ["q", "fType", "fScope"].forEach((id) => { $(id).addEventListener("input", renderLedger); $(id).addEventListener("change", renderLedger); });
 
@@ -2587,7 +2681,7 @@
       checks.forEach((c) => { if (c[0] in obj && !(Array.isArray(obj[c[0]]) && obj[c[0]].every(c[1]))) throw new Error("format"); });
       if (!checks.some((c) => c[0] in obj) && !("limits" in obj)) throw new Error("format");
       const n = normalize(obj);
-      ["tx", "debts", "goals", "recurring", "limits", "quick", "rate"].forEach((k) => { if (k in obj) S[k] = n[k]; });
+      ["tx", "debts", "goals", "recurring", "limits", "quick", "cats", "rate"].forEach((k) => { if (k in obj) S[k] = n[k]; });
       save(); runRecurring(); renderAll();
       say(_t("Tiklandi: {a} ta amal, {b} ta qarz/kredit.", { a: S.tx.length, b: S.debts.length }));
     } catch (err) { say(_t("Matn noto'g'ri. Zaxira nusxadan olingan matnni to'liq qo'ying.")); }
@@ -2626,7 +2720,7 @@
   }
 
   /* ---------- Profil menyusi ---------- */
-  const PAGES = { look: "Ko'rinish", security: "Xavfsizlik", calc: "Hisob-kitob", sync: "Sinxronlash", backup: "Zaxira va eksport", fb: "Fikr qoldirish", about: "Ilova haqida" };
+  const PAGES = { look: "Ko'rinish", security: "Xavfsizlik", calc: "Hisob-kitob", sync: "Sinxronlash", backup: "Zaxira va eksport", fb: "Fikr qoldirish", cats: "Kategoriyalar", rc: "Cheklar", about: "Ilova haqida" };
   let curPg = null;
   function setVal(id, text, pill) { const e = $(id); e.textContent = text; e.classList.toggle("pill", !!pill); }
   function renderMenu() {
@@ -2648,6 +2742,8 @@
     Array.prototype.forEach.call(document.querySelectorAll(".subpg"), (s) => s.classList.toggle("on", s.getAttribute("data-pg") === name));
     if (name === "fb") { $("fbMsg").textContent = ""; fbLabel(); }
     if (name === "look" && typeof renderLook === "function") renderLook();
+    if (name === "cats") renderCatsPg();
+    if (name === "rc") renderRcPg();
     if (typeof renderPg56 === "function") renderPg56();
     try { window.scrollTo(0, 0); } catch (e) {}
   }
@@ -2661,6 +2757,229 @@
   $("row_admin").addEventListener("click", () => { location.href = "admin.html"; });
   $("menuWrap").addEventListener("click", (e) => { const b = e.target.closest ? e.target.closest("button[data-go]") : null; if (b) { const g = b.getAttribute("data-go"); if (g === "ledger") showTab("ledger"); else openPg(g); } });
   $("subBack").onclick = closePg;
+
+
+  /* ---------- Yangi imkoniyatlar: o'z kategoriya, chek, ovoz, karta ---------- */
+  function allCats(t) { return CATS[t].concat((S.cats && S.cats[t]) || []); }
+  function addCat(t, name) {
+    name = String(name || "").trim().slice(0, 20);
+    if (!name) return "";
+    if (allCats(t).some((c) => c.toLowerCase() === name.toLowerCase())) return _t("Bunday kategoriya bor.");
+    if (S.cats[t].length >= 12) return _t("Kategoriyalar soni to'ldi (12 tagacha).");
+    S.cats[t].push(name); save(); return "";
+  }
+  $("ncAdd").onclick = () => {
+    const name = $("ncName").value, er = addCat(type, name);
+    if (er) { $("err").textContent = er; return; }
+    if (!name.trim()) return;
+    const nm = name.trim().slice(0, 20); fillCats(); pickCat(nm); $("ncName").value = ""; $("ncBox").hidden = true; $("err").textContent = ""; renderCats();
+  };
+  $("ncName").addEventListener("keydown", (e) => { if (e.key === "Enter") { e.preventDefault(); $("ncAdd").click(); } });
+  function renderCatsPg() {
+    const rows = [];
+    [["exp", "Xarajat"], ["inc", "Daromad"]].forEach((p) => S.cats[p[0]].forEach((n) => rows.push('<div class="kv"><span>' + cico(n, true) + " " + esc(n) + ' <small style="color:var(--muted)">· ' + _t(p[1]) + '</small></span><button type="button" class="del" data-cdel="' + p[0] + "|" + esc(n) + '">' + (isArmed("cat:" + p[0] + n) ? _t("Aniq o'chirilsinmi?") : _t("O'chirish")) + "</button></div>")));
+    $("cpList").innerHTML = rows.length ? rows.join("") : '<div class="empty">' + _t("O'z kategoriyalaringiz yo'q.") + "</div>";
+    $("vCats").textContent = (S.cats.exp.length + S.cats.inc.length) ? String(S.cats.exp.length + S.cats.inc.length) : "";
+  }
+  $("cpAdd").onclick = () => { const er = addCat($("cpType").value, $("cpName").value); $("cpErr").textContent = er; if (!er) { $("cpName").value = ""; renderCatsPg(); fillCats(); renderCats(); } };
+  $("cpName").addEventListener("keydown", (e) => { if (e.key === "Enter") { e.preventDefault(); $("cpAdd").click(); } });
+  $("cpList").addEventListener("click", (e) => {
+    const b = e.target.closest ? e.target.closest("button[data-cdel]") : null; if (!b) return;
+    const pr = b.getAttribute("data-cdel").split("|"), t = pr[0], n = pr.slice(1).join("|");
+    if (!isArmed("cat:" + t + n)) { arm("cat:" + t + n, renderCatsPg); return; }
+    disarm(); S.cats[t] = S.cats[t].filter((c) => c !== n); save(); renderCatsPg(); fillCats(); renderCats();
+  });
+
+  /* Shablonni forma ichida tanlash */
+  $("fq").addEventListener("click", (e) => {
+    const b = e.target.closest ? e.target.closest("button[data-fq]") : null; if (!b) return;
+    const q = S.quick.filter((z) => z.id === b.getAttribute("data-fq"))[0]; if (!q) return;
+    setType(q.type); $("cur").value = q.cur; if (allCats(q.type).indexOf(q.cat) >= 0) pickCat(q.cat);
+    $("amount").value = fmt(q.amount); $("note").value = q.note || ""; $("err").textContent = "";
+  });
+
+  /* Chek rasmi: IndexedDB (faqat shu telefonda) */
+  const RCDOT = '<svg viewBox="0 0 24 24"><path d="M6 3.500h12v17l-2.500-1.600L13 20.500l-2.500-1.600L8 20.500 6 19.200z"/><path d="M9 8.500h6M9 12h6"/></svg>';
+  window.__rc = new Set();
+  let rcDb = null, rcPending = null, rcPrevUrl = "";
+  function rcHas(id) { return !!(window.__rc && window.__rc.has(id)); }
+  function rcOpen() {
+    return new Promise((res, rej) => {
+      if (rcDb) return res(rcDb);
+      try {
+        const r = indexedDB.open("hisobchi_rc", 1);
+        r.onupgradeneeded = () => { r.result.createObjectStore("r", { keyPath: "id" }); };
+        r.onsuccess = () => { rcDb = r.result; res(rcDb); };
+        r.onerror = () => rej(r.error);
+      } catch (e) { rej(e); }
+    });
+  }
+  function rcTx(mode, fn) {
+    return rcOpen().then((db) => new Promise((res, rej) => {
+      const t = db.transaction("r", mode), rq = fn(t.objectStore("r"));
+      t.oncomplete = () => res(rq && rq.result); t.onerror = () => rej(t.error); t.onabort = () => rej(t.error);
+    }));
+  }
+  const rcPut = (id, blob) => rcTx("readwrite", (st) => st.put({ id: id, t: Date.now(), blob: blob }));
+  const rcGet = (id) => rcTx("readonly", (st) => st.get(id));
+  const rcAll = () => rcTx("readonly", (st) => st.getAll());
+  function rcDel(id) { window.__rc.delete(id); return rcTx("readwrite", (st) => st.delete(id)).catch(() => {}); }
+  function rcShrink(file) {
+    return new Promise((res, rej) => {
+      const u = URL.createObjectURL(file), im = new Image();
+      im.onload = () => {
+        const sc = Math.min(1, 1200 / Math.max(im.width, im.height)), c = document.createElement("canvas");
+        c.width = Math.max(1, Math.round(im.width * sc)); c.height = Math.max(1, Math.round(im.height * sc));
+        c.getContext("2d").drawImage(im, 0, 0, c.width, c.height); URL.revokeObjectURL(u);
+        c.toBlob((b) => (b ? res(b) : rej(new Error("blob"))), "image/jpeg", 0.72);
+      };
+      im.onerror = () => { URL.revokeObjectURL(u); rej(new Error("img")); };
+      im.src = u;
+    });
+  }
+  function rcReset() { rcPending = null; if (rcPrevUrl) { try { URL.revokeObjectURL(rcPrevUrl); } catch (e) {} rcPrevUrl = ""; } $("rcPrev").hidden = true; $("rcFile").value = ""; }
+  function rcCommit(id) {
+    if (!rcPending) return;
+    const b = rcPending; rcPending = null;
+    rcPut(id, b).then(() => { window.__rc.add(id); renderRecent(); renderLedger(); try { if (navigator.storage && navigator.storage.persist) navigator.storage.persist(); } catch (e) {} })
+      .catch(() => toast(_t("Chekni saqlab bo'lmadi.")));
+  }
+  if (window.indexedDB) {
+    $("rcBtn").hidden = false;
+    rcAll().then((all) => { all.forEach((r) => window.__rc.add(r.id)); $("vRc").textContent = window.__rc.size ? String(window.__rc.size) : ""; renderRecent(); renderLedger(); }).catch(() => { $("rcBtn").hidden = true; });
+  }
+  $("rcBtn").onclick = () => $("rcFile").click();
+  $("rcFile").addEventListener("change", () => {
+    const f = $("rcFile").files && $("rcFile").files[0]; if (!f) return;
+    rcShrink(f).then((b) => { rcReset(); rcPending = b; rcPrevUrl = URL.createObjectURL(b); $("rcImg").src = rcPrevUrl; $("rcPrev").hidden = false; })
+      .catch(() => { $("err").textContent = _t("Chekni saqlab bo'lmadi."); });
+  });
+  $("rcX").onclick = rcReset;
+  let rcCur = "", rcUrls = [];
+  function rcView(id) {
+    rcGet(id).then((rec) => {
+      if (!rec || !rec.blob) return;
+      rcCur = id; if ($("rcvImg").src) { try { URL.revokeObjectURL($("rcvImg").src); } catch (e) {} }
+      $("rcvImg").src = URL.createObjectURL(rec.blob);
+      const x = S.tx.filter((z) => z.id === id)[0];
+      $("rcvCap").textContent = x ? _t(x.cat) + " · " + (x.type === "inc" ? "+" : "−") + money(x.amount, x.cur) + " · " + dlabel(parseISO(x.date), true) : "";
+      $("rcv").hidden = false;
+    }).catch(() => {});
+  }
+  function rcClose() { $("rcv").hidden = true; const u = $("rcvImg").src; $("rcvImg").removeAttribute("src"); if (u) { try { URL.revokeObjectURL(u); } catch (e) {} } rcCur = ""; }
+  $("rcvClose").onclick = rcClose;
+  $("rcvDel").onclick = () => {
+    if (!isArmed("rcv")) { arm("rcv", () => { $("rcvDel").textContent = isArmed("rcv") ? _t("Aniq o'chirilsinmi?") : _t("Rasmni o'chirish"); }); return; }
+    disarm(); $("rcvDel").textContent = _t("Rasmni o'chirish"); const id = rcCur; rcClose(); rcDel(id).then(() => { renderRecent(); renderLedger(); renderRcPg(); });
+  };
+  document.addEventListener("keydown", (e) => { if (e.key === "Escape" && !$("rcv").hidden) rcClose(); });
+  document.addEventListener("click", (e) => { const d = e.target.closest ? e.target.closest("[data-rc]") : null; if (d) rcView(d.getAttribute("data-rc")); });
+  function renderRcPg() {
+    rcUrls.forEach((u) => { try { URL.revokeObjectURL(u); } catch (e) {} }); rcUrls = [];
+    if (!window.indexedDB) { $("rcGal").innerHTML = ""; return; }
+    rcAll().then((all) => {
+      const byId = {}; S.tx.forEach((x) => { byId[x.id] = x; });
+      const list = all.filter((r) => byId[r.id]).sort((a, b) => (byId[a.id].date < byId[b.id].date ? 1 : -1));
+      window.__rc = new Set(all.map((r) => r.id)); $("vRc").textContent = list.length ? String(list.length) : "";
+      if (!list.length) { $("rcGal").innerHTML = '<div class="empty">' + _t("Hali chek yo'q. Amal qo'shayotganda Chek surati tugmasini bosing.") + "</div>"; return; }
+      const groups = {}, order = [];
+      list.forEach((r) => { const k = byId[r.id].date.slice(0, 7); if (!groups[k]) { groups[k] = []; order.push(k); } groups[k].push(r); });
+      $("rcGal").innerHTML = order.map((k) => '<div class="rcmon"><span>' + mName(+k.slice(5, 7) - 1) + " " + k.slice(0, 4) + "</span><span>" + _t("{n} ta chek", { n: groups[k].length }) + '</span></div><div class="rcgrid">' +
+        groups[k].map((r) => { const u = URL.createObjectURL(r.blob); rcUrls.push(u); const x = byId[r.id]; return '<button type="button" class="rcc" data-rc="' + esc(r.id) + '"><img src="' + u + '" alt=""><em>' + money(x.amount, x.cur) + "</em></button>"; }).join("") + "</div>").join("");
+    }).catch(() => { $("rcGal").innerHTML = ""; });
+  }
+
+  /* Ovozli kiritish */
+  const SRC = window.SpeechRecognition || window.webkitSpeechRecognition;
+  let vcRec = null;
+  const NUMW = { bir: 1, ikki: 2, uch: 3, "to'rt": 4, besh: 5, olti: 6, yetti: 7, sakkiz: 8, "to'qqiz": 9, "o'n": 10, yigirma: 20, "o'ttiz": 30, qirq: 40, ellik: 50, oltmish: 60, yetmish: 70, sakson: 80, "to'qson": 90,
+    "один": 1, "одна": 1, "два": 2, "две": 2, "три": 3, "четыре": 4, "пять": 5, "шесть": 6, "семь": 7, "восемь": 8, "девять": 9, "десять": 10, "двадцать": 20, "тридцать": 30, "сорок": 40, "пятьдесят": 50, "шестьдесят": 60, "семьдесят": 70, "восемьдесят": 80, "девяносто": 90,
+    "одиннадцать": 11, "двенадцать": 12, "тринадцать": 13, "четырнадцать": 14, "пятнадцать": 15, "шестнадцать": 16, "семнадцать": 17, "восемнадцать": 18, "девятнадцать": 19,
+    "двести": 200, "триста": 300, "четыреста": 400, "пятьсот": 500, "шестьсот": 600, "семьсот": 700, "восемьсот": 800, "девятьсот": 900,
+    eleven: 11, twelve: 12, thirteen: 13, fourteen: 14, fifteen: 15, sixteen: 16, seventeen: 17, eighteen: 18, nineteen: 19,
+    one: 1, two: 2, three: 3, four: 4, five: 5, six: 6, seven: 7, eight: 8, nine: 9, ten: 10, twenty: 20, thirty: 30, forty: 40, fifty: 50, sixty: 60, seventy: 70, eighty: 80, ninety: 90 };
+  function vcAmount(txt) {
+    let s = String(txt || "").toLowerCase().replace(/[’ʻʼ`‘]/g, "'");
+    s = s.replace(/(\d)[\s ](?=\d{3}(\D|$))/g, "$1");
+    const m = s.match(/(\d+(?:[.,]\d+)?)\s*(ming|тыс\S*|thousand|мың|mln|млн|million|миллион\S*|k)?(?![\p{L}\d])/u);
+    if (m) {
+      let n = parseFloat(m[1].replace(",", ".")); const u = m[2] || "";
+      if (/^(ming|тыс|thousand|мың|k)/.test(u)) n *= 1e3; else if (/^(mln|млн|million|миллион)/.test(u)) n *= 1e6;
+      return Math.round(n);
+    }
+    let total = 0, cur = 0, any = false;
+    s.split(/[^a-zа-яё']+/).forEach((w) => {
+      if (!w) return;
+      if (NUMW[w] != null) { cur += NUMW[w]; any = true; }
+      else if (/^(yuz|сто|hundred)$/.test(w)) { cur = (cur || 1) * 100; any = true; }
+      else if (/^(ming|тысяч\S*|тысяча|thousand)$/.test(w)) { total += (cur || 1) * 1e3; cur = 0; any = true; }
+      else if (/^(million|миллион\S*|mln|млн)$/.test(w)) { total += (cur || 1) * 1e6; cur = 0; any = true; }
+    });
+    return any ? total + cur : 0;
+  }
+  const VCK = [
+    ["Oziq-ovqat", /tushlik|nonushta|kechki ovqat|ovqat|non\b|qahva|choy|bozor|go'sht|sut\b|kafe|restoran|oziq|evos|korzinka|обед|завтрак|ужин|еда|продукт|хлеб|кофе|чай|lunch|dinner|food|coffee|grocer/],
+    ["Transport", /taksi|yo'l|benzin|avtobus|metro|yandex|zapravka|такси|бензин|автобус|метро|taxi|fuel|bus\b|gas\b/],
+    ["Uy-joy", /ijara|kvartira|kommunal|svet|elektr|gaz\b|suv\b|аренда|квартир|коммунал|rent\b|utilit/],
+    ["Aloqa", /telefon|internet|aloqa|tarif|интернет|телефон|связь|phone|mobile/],
+    ["Xaridlar", /kiyim|xarid|ko'ylak|poyabzal|одежда|покупк|обувь|clothes|shopping/],
+    ["Salomatlik", /dori|apteka|shifokor|vrach|klinika|аптека|лекарств|врач|pharmacy|doctor|medicine/],
+    ["Ta'lim", /kurs\b|kitob|maktab|o'qish|ta'lim|курс|книг|школ|обучение|book|school|course/],
+    ["Ko'ngilochar", /kino|o'yin|konsert|dam olish|кино|игра|концерт|movie|game|concert/]
+  ];
+  function vcType(t) { return /\b(maosh|oylik|daromad|зарплат\S*|получил\S*|salary|income|bonus)\b/.test(t) ? "inc" : "exp"; }
+  function vcCat(t, ty) {
+    if (ty === "inc") return /bonus|premiya|премия/.test(t) ? "Qo'shimcha daromad" : /sovg'a|подарок|gift/.test(t) ? "Sovg'a" : "Maosh";
+    for (let i = 0; i < VCK.length; i++) if (VCK[i][1].test(t)) return VCK[i][0];
+    return "";
+  }
+  function vcLang() { return { uz: "uz-UZ", ru: "ru-RU", en: "en-US", ar: "ar-SA", tr: "tr-TR" }[LANG] || "uz-UZ"; }
+  function vcStop() { try { if (vcRec) vcRec.stop(); } catch (e) {} vcRec = null; $("vcBtn").classList.remove("on"); }
+  function vcApply(text) {
+    const low = String(text).toLowerCase().replace(/[’ʻʼ`‘]/g, "'"), amt = vcAmount(low);
+    if (!amt) { $("vcMsg").textContent = _t("Summa tanib olinmadi. Qaytadan ayting."); return; }
+    const ty = vcType(low), c = vcCat(low, ty);
+    setType(ty); if (c) pickCat(c);
+    $("amount").value = fmt(Math.min(amt, 999999999999)); $("note").value = String(text).trim().slice(0, 60); $("err").textContent = "";
+    $("vcMsg").textContent = _t("Tanib olindi. Tekshirib saqlang.");
+  }
+  if (SRC) {
+    $("vcBtn").hidden = false;
+    $("vcBtn").onclick = () => {
+      if (vcRec) { vcStop(); $("vcMsg").textContent = ""; return; }
+      let r;
+      try { r = new SRC(); } catch (e) { $("vcMsg").textContent = _t("Ovozli kiritish bu qurilmada ishlamadi."); return; }
+      vcRec = r; r.lang = vcLang(); r.interimResults = false; r.maxAlternatives = 1; r.continuous = false;
+      r.onstart = () => { $("vcBtn").classList.add("on"); $("vcMsg").textContent = _t("Tinglayapman…"); };
+      r.onresult = (ev) => { try { vcApply(ev.results[0][0].transcript); } catch (e) {} };
+      r.onerror = (ev) => { const er = ev && ev.error; $("vcMsg").textContent = er === "not-allowed" || er === "service-not-allowed" ? _t("Mikrofonga ruxsat berilmadi.") : er === "no-speech" || er === "aborted" ? _t("Ovoz eshitilmadi.") : _t("Ovozli kiritish bu qurilmada ishlamadi."); };
+      r.onend = () => { vcRec = null; $("vcBtn").classList.remove("on"); };
+      try { r.start(); } catch (e) { vcRec = null; $("vcMsg").textContent = _t("Ovozli kiritish bu qurilmada ishlamadi."); }
+    };
+  }
+
+  /* Surilma balans kartasi */
+  function renderHeroExtra() {
+    const a = $("hs2"), b = $("hs3"); if (!a || !b) return;
+    const t = today0(), td = iso(t), d7 = iso(new Date(t.getFullYear(), t.getMonth(), t.getDate() - 6));
+    const sum = (arr) => arr.reduce((z, x) => z + toUZS(x.amount, x.cur, x.rate), 0);
+    const ex = S.tx.filter((x) => x.type === "exp");
+    const today = sum(ex.filter((x) => x.date === td)), week = sum(ex.filter((x) => x.date >= d7 && x.date <= td));
+    const items = monthItems(monthKey()).filter((x) => x.type === "exp"), mt = sum(items);
+    const isCur = t.getFullYear() === view.getFullYear() && t.getMonth() === view.getMonth();
+    const days = isCur ? t.getDate() : new Date(view.getFullYear(), view.getMonth() + 1, 0).getDate();
+    a.innerHTML = '<span class="hlabel">' + _t("Qisqacha") + '</span><div class="hsl">' +
+      '<div><span class="hlabel">' + _t("Bugun") + '</span><b class="exp">−' + fmt(today) + "</b></div>" +
+      '<div><span class="hlabel">' + _t("Oxirgi 7 kun") + '</span><b class="exp">−' + fmt(week) + "</b></div>" +
+      '<div><span class="hlabel">' + _t("Kuniga o'rtacha") + "</span><b>" + fmt(Math.round(mt / Math.max(1, days))) + "</b></div></div>";
+    const by = {}; items.forEach((x) => { by[x.cat] = (by[x.cat] || 0) + toUZS(x.amount, x.cur, x.rate); });
+    const top = Object.keys(by).sort((p, q) => by[q] - by[p]).slice(0, 4), mx = top.length ? by[top[0]] : 1;
+    b.innerHTML = '<span class="hlabel">' + _t("Eng ko'p xarajat") + "</span>" + (top.length ? '<div class="t3">' + top.map((k) => '<div><div class="tl"><span>' + esc(_t(k)) + "</span><b>" + fmt(by[k]) + '</b></div><div class="tb"><i style="width:' + Math.max(4, Math.round(by[k] / mx * 100)) + '%"></i></div></div>').join("") + "</div>" : '<div class="cmp">' + _t("Hali xarajat yo'q.") + "</div>");
+  }
+  (function () {
+    const car = $("hcar"), dots = $("hdots").children;
+    car.addEventListener("scroll", () => { const i = Math.round(car.scrollLeft / Math.max(1, car.clientWidth)); const rtl = document.documentElement.dir === "rtl"; const k = Math.min(2, Math.max(0, Math.abs(i))); for (let j = 0; j < dots.length; j++) dots[j].classList.toggle("on", j === k); }, { passive: true });
+  })();
 
   /* ---------- Fikr qoldirish ---------- */
   const FB_Q = "hisobchi_fb_q", FB_DAY = "hisobchi_fb_day", APP_VER = "1.1";
