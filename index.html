@@ -880,6 +880,19 @@
     .keys button { width: 58px; height: 58px; font-size: 24px; }
   }
   body:has(#lockCard:not([hidden])) { padding-bottom: calc(8px + env(safe-area-inset-bottom, 0px)); }
+
+  .lockcard.recovering > :not(.lockmark):not(#recov) { display: none !important; }
+  .recov { width: 100%; max-width: 320px; display: flex; flex-direction: column; gap: 10px; text-align: center; }
+  .recov h2 { margin: 6px 0 0; } .recov .lockp { margin: 0 auto 6px; font-size: 13px; line-height: 1.5; }
+  .rbtn { --nc: var(--accent); display: flex; align-items: center; gap: 12px; width: 100%; text-align: start; padding: 11px 14px; border-radius: 16px; color: var(--ink);
+    background: linear-gradient(180deg, color-mix(in srgb, var(--surface) 92%, #fff), var(--surface)); border: 1px solid color-mix(in srgb, var(--nc) 38%, var(--line));
+    box-shadow: inset 0 -2px 0 var(--nc), 0 6px 14px -6px color-mix(in srgb, var(--nc) var(--ng), transparent); }
+  .rbtn .ri { width: 36px; height: 36px; border-radius: 11px; display: grid; place-items: center; flex: none; color: color-mix(in srgb, var(--nc) 62%, var(--ink)); background: color-mix(in srgb, var(--nc) 20%, transparent); border: 1px solid color-mix(in srgb, var(--nc) 45%, transparent); }
+  .rbtn .ri svg { width: 20px; height: 20px; }
+  .rbtn .rt b { display: block; font-size: 14.5px; font-weight: 700; } .rbtn .rt small { display: block; color: var(--muted); font-size: 12px; font-weight: 500; margin-top: 1px; overflow-wrap: anywhere; }
+  .rnew { display: flex; flex-direction: column; gap: 10px; }
+  .rwipe { background: none; border: 0; color: var(--exp); font-size: 12.5px; text-decoration: underline; text-underline-offset: 3px; padding: 8px; margin-top: 6px; }
+  .recov .ghost { border: 0; color: var(--muted); font-size: 13px; }
 </style>
 </head>
 <body>
@@ -930,6 +943,20 @@
       <span class="ring"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 10a2 2 0 0 0-2 2c0 1.02-.1 2.51-.26 4"/><path d="M14 13.12c0 2.38 0 6.38-1 8.88"/><path d="M17.29 21.02c.12-.6.43-2.3.5-3.02"/><path d="M2 12a10 10 0 0 1 18-6"/><path d="M2 16h.01"/><path d="M21.8 16c.2-2 .131-5.354 0-6"/><path d="M5 19.5C5.5 18 6 15 6 12a6 6 0 0 1 .34-2"/><path d="M8.65 22c.21-.66.45-1.32.57-2"/><path d="M9 6.8a6 6 0 0 1 9 5.2v2"/></svg></span>
       Barmoq izi bilan ochish
     </button>
+    <div class="recov" id="recov" hidden>
+      <h2 id="rcvT">Shaxsingizni tasdiqlang</h2>
+      <p class="lockp" id="rcvS">PIN kodni yangilashdan oldin telefon egasi ekanligingizni tekshiramiz. Ma'lumotlaringiz o'chmaydi.</p>
+      <button type="button" class="rbtn" id="rcvPhone" style="--nc:#2fae6b"><span class="ri" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M7 11V8a5 5 0 0110 0v3M5 11h14v9H5z"/></svg></span><span class="rt"><b>Telefon ekran qulfi bilan</b><small>Barmoq izi, yuz yoki telefon PINi</small></span></button>
+      <button type="button" class="rbtn" id="rcvGoogle" hidden style="--nc:#3d8bff"><span class="ri" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="4"/><path d="M4 20c1.5-4 4.500-6 8-6s6.500 2 8 6"/></svg></span><span class="rt"><b>Google hisobi bilan</b><small id="rcvGmail"></small></span></button>
+      <div class="rnew" id="rcvNew" hidden>
+        <input id="rcvPin1" type="password" inputmode="numeric" pattern="[0-9]*" maxlength="6" autocomplete="off" placeholder="Yangi PIN kod (4–6 raqam)" aria-label="Yangi PIN kod (4–6 raqam)">
+        <input id="rcvPin2" type="password" inputmode="numeric" pattern="[0-9]*" maxlength="6" autocomplete="off" placeholder="PIN kodni takrorlang" aria-label="PIN kodni takrorlang">
+        <button type="button" class="primary" id="rcvSave">Saqlash</button>
+      </div>
+      <div class="err" id="rcvErr" role="alert"></div>
+      <button type="button" class="ghost" id="rcvBack">Orqaga</button>
+      <button type="button" class="rwipe" id="rcvWipe">Hamma ma'lumotni o'chirib tiklash</button>
+    </div>
   </section>
 
   <div id="secret" hidden>
@@ -3726,6 +3753,7 @@
     clearTimeout(idleT);
     updateChrome();
     if (on) {
+      $("lockCard").classList.remove("recovering"); $("recov").hidden = true;
       closeAllForms(); showTab("home");
       $("lockPw").value = ""; $("lockErr").textContent = "";
       const pad = pinMode();
@@ -3757,11 +3785,59 @@
     });
   });
   $("lockBtn").onclick = () => setLocked(true);
-  $("forgot").onclick = () => {
-    if (!forgotArmed) { forgotArmed = true; $("forgot").textContent = _t("PIN kod va barcha ma'lumotlar o'chadi. Davom etilsinmi?"); return; }
+  /* ---------- PIN kodni unutdim: shaxsni tasdiqlab, ma'lumotni o'chirmasdan yangilash ---------- */
+  let rcvWipeArmed = false;
+  const rcvErr = (m) => { $("rcvErr").textContent = m ? _t(m) : ""; };
+  function rcvStage(newPin) {
+    $("rcvNew").hidden = !newPin; $("rcvPhone").hidden = newPin; $("rcvWipe").hidden = newPin;
+    $("rcvGoogle").hidden = newPin || !(acctEmail && FB_CONFIG);
+    $("rcvT").textContent = _t(newPin ? "Yangi PIN kod qo'ying" : "Shaxsingizni tasdiqlang");
+    $("rcvS").textContent = _t(newPin ? "Ma'lumotlaringiz joyida qoladi." : "PIN kodni yangilashdan oldin telefon egasi ekanligingizni tekshiramiz. Ma'lumotlaringiz o'chmaydi.");
+  }
+  function openRecov() {
+    $("lockCard").classList.add("recovering"); $("recov").hidden = false;
+    $("rcvGmail").textContent = acctEmail; $("rcvPin1").value = ""; $("rcvPin2").value = "";
+    rcvWipeArmed = false; $("rcvWipe").textContent = _t("Hamma ma'lumotni o'chirib tiklash"); rcvErr(""); rcvStage(false);
+  }
+  function closeRecov() { $("lockCard").classList.remove("recovering"); $("recov").hidden = true; lockTexts(); }
+  $("forgot").onclick = openRecov;
+  $("rcvBack").onclick = closeRecov;
+  $("rcvPhone").onclick = async () => {
+    rcvErr("");
+    if (!(await bioSupported())) { rcvErr("Telefonda ekran qulfi topilmadi. Google yoki o'chirib tiklashdan foydalaning."); return; }
+    try {
+      await navigator.credentials.create({ publicKey: { challenge: rnd(32), rp: { name: "Tejamkor" }, user: { id: rnd(16), name: "tejamkor", displayName: "Tejamkor" },
+        pubKeyCredParams: [{ type: "public-key", alg: -7 }, { type: "public-key", alg: -257 }],
+        authenticatorSelection: { authenticatorAttachment: "platform", userVerification: "required", residentKey: "discouraged" }, timeout: 60000 } });
+      rcvStage(true);
+    } catch (e) { rcvErr("Telefon ekran qulfi tasdiqlanmadi."); }
+  };
+  $("rcvGoogle").onclick = async () => {
+    rcvErr("");
+    try {
+      const fb = await loadFirebase(), prov = new fb.auth.GoogleAuthProvider(), au = fb.auth();
+      prov.setCustomParameters({ prompt: "select_account", login_hint: acctEmail });
+      let u = au.currentUser;
+      if (u) await u.reauthenticateWithPopup(prov); else u = (await au.signInWithPopup(prov)).user;
+      if ((u.email || "").toLowerCase() === acctEmail.toLowerCase()) rcvStage(true); else rcvErr("Google hisobi mos kelmadi.");
+    } catch (e) { rcvErr("Google bilan tasdiqlab bo'lmadi."); }
+  };
+  $("rcvSave").onclick = () => {
+    const a = $("rcvPin1").value;
+    if (!/^[0-9]{4,6}$/.test(a)) { rcvErr("PIN kod 4 dan 6 gacha raqamdan iborat bo'lsin."); return; }
+    if (a !== $("rcvPin2").value) { rcvErr("PIN kodlar bir xil emas."); return; }
+    const salt = uid();
+    hashPw(a, salt).then((h) => {
+      lockInfo = { salt: salt, hash: h, len: a.length }; lsSet(LOCK_KEY, JSON.stringify(lockInfo));
+      lfOk(); closeRecov(); setLocked(false); renderPg56(); renderBioUI();
+      toast(_t("PIN kod yangilandi. Ma'lumotlaringiz saqlandi."));
+    });
+  };
+  $("rcvWipe").onclick = () => {
+    if (!rcvWipeArmed) { rcvWipeArmed = true; $("rcvWipe").textContent = _t("PIN kod va barcha ma'lumotlar o'chadi. Davom etilsinmi?"); return; }
     S = emptyState(); save(); lfOk();
     lsDel(LOCK_KEY); lockInfo = null; bioDisable();
-    renderAll(); setLocked(true);
+    closeRecov(); renderAll(); setLocked(true);
   };
   $("savePw").onclick = async () => {
     const pw = $("newPw").value;

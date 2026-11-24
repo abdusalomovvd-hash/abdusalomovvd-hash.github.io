@@ -1,6 +1,6 @@
 // Tez ochilish: ilova fayllari darhol saqlangan nusxadan beriladi, yangisi orqada yuklanadi (keyingi ochilishda ishlaydi).
 // Shriftlar (Google Fonts) birinchi yuklanganda saqlanadi va keyin internetsiz ham ishlaydi.
-const CACHE = "hisobchi-v36";
+const CACHE = "hisobchi-v37";
 const FONTS = "hisobchi-fonts-v1";
 const CORE = ["./", "index.html", "firebase-config.js", "i18n.js", "manifest.webmanifest", "icons/icon-192.png", "icons/icon-512.png", "icons/apple-touch-icon.png", "icons/favicon.svg"];
 self.addEventListener("install", (e) => {
