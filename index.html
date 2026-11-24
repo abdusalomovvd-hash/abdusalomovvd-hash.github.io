@@ -794,6 +794,40 @@
   [dir="rtl"] .nav .badge { left: auto; right: calc(50% + 6px); }
   [dir="rtl"] * { letter-spacing: 0 !important; }
   [dir="rtl"] .nkeys, [dir="rtl"] .keys, [dir="rtl"] .pindots { direction: ltr; }
+
+  /* ---------- Neon + shisha ikonkalar (B uslubi) ---------- */
+  :root { --ng: 24%; --nl: 40%; }
+  @media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) { --ng: 72%; --nl: 60%; } }
+  :root[data-theme="dark"] { --ng: 72%; --nl: 60%; }
+  .mrow .mico, .gbtn .mico { background: color-mix(in srgb, var(--c, #66788a) 20%, transparent); color: color-mix(in srgb, var(--c, #66788a) 62%, var(--ink)); border: 1px solid color-mix(in srgb, var(--c, #66788a) 45%, transparent); box-shadow: inset 0 1px 0 rgba(255, 255, 255, .16); }
+  .mrow .mico::after, .gbtn .mico::after { display: none; }
+  .mrow .mico svg, .gbtn .mico svg { filter: none; }
+  .mrow .mico svg [stroke="#fff"], .gbtn .mico svg [stroke="#fff"] { stroke: currentColor; }
+  .mrow .mico svg [fill="#fff"], .gbtn .mico svg [fill="#fff"] { fill: currentColor; }
+  .gbtn.ig .mico { border-color: rgba(238, 42, 123, .5); }
+  .gtop { display: flex; flex-direction: column; gap: 10px; margin-bottom: 12px; }
+  #menuTop:not(:has(#row_admin:not([hidden]))) { display: none; }
+  #menuTop { margin-bottom: 12px; }
+  #menuWrap .grp { margin-bottom: 12px; }
+  .gbtn { --nc: var(--accent); display: flex; align-items: center; gap: 14px; width: 100%; text-align: start; text-decoration: none; color: var(--ink); padding: 13px 16px; border-radius: 20px; }
+  .gbtn .mico { width: 44px; height: 44px; border-radius: 14px; display: grid; place-items: center; flex: none; position: relative; }
+  .gbtn .mico svg { width: 25px; height: 25px; }
+  .gbtn .gt { flex: 1; min-width: 0; } .gbtn .gt b { display: block; font-size: 17px; font-weight: 700; } .gbtn .gt small { display: block; color: var(--muted); font-size: 12.5px; font-weight: 500; margin-top: 2px; }
+  .gbtn .chev { width: 18px; height: 18px; color: var(--muted); flex: none; }
+  [dir="rtl"] .gbtn .gt { text-align: right; }
+  .gbtn, .primary, .chipbtn, .dbtn, .fab, .gcard, .seg button[aria-pressed="true"], .catbtn[aria-pressed="true"] {
+    --nc: var(--accent);
+    border: 1px solid color-mix(in srgb, var(--nc) 38%, var(--line));
+    box-shadow: inset 0 -2px 0 var(--nc), 0 6px 14px -6px color-mix(in srgb, var(--nc) var(--ng), transparent), 0 1px 0 rgba(255, 255, 255, .05) inset;
+  }
+  .gbtn, .primary, .chipbtn, .dbtn, .gcard { background: linear-gradient(180deg, color-mix(in srgb, var(--surface) 92%, #fff), var(--surface)); color: var(--ink); }
+  .primary, .chipbtn, .fab, .gcard.daily { --nc: var(--gold); }
+  .gcard.daily { background: var(--gold-soft); }
+  .fab { background: var(--surface); color: var(--gold); }
+  .dbtn { color: var(--ink); } .dbtn.pay { --nc: var(--inc); background: var(--surface); color: var(--ink); border-color: color-mix(in srgb, var(--inc) 38%, var(--line)); } .dbtn.arm { --nc: var(--exp); color: var(--exp); }
+  .chipbtn b { color: var(--muted); }
+  .seg button[aria-pressed="true"] { background: var(--surface); }
+  .primary:disabled, .dbtn:disabled { box-shadow: none; opacity: .6; }
 </style>
 </head>
 <body>
@@ -1066,69 +1100,36 @@
       </div>
 
       <div id="menuGroup">
-      <section class="panel menu" id="menuWrap">
+      <div id="menuTopW">
+      <section class="panel menu" id="menuTop">
         <button type="button" class="mrow" id="row_admin" hidden style="outline:1.5px solid #f2b632;outline-offset:-1.5px">
           <span class="mico" style="--c:#c98f12"><svg viewBox="0 0 24 24" aria-hidden="true"><path stroke="#fff" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" fill="none" d="M12 3l7 3v5c0 4.500-3 8-7 10-4-2-7-5.500-7-10V6z"/><path stroke="#fff" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" fill="none" d="M9 12l2 2 4-4"/></svg></span>
           <span class="mt">Admin panel</span>
           <span class="mv"></span><svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 6l6 6-6 6"/></svg>
         </button>
-        <button type="button" class="mrow" data-go="ledger" id="row_ledger">
-          <span class="mico" style="--c:#8a6a2b"><svg viewBox="0 0 24 24" aria-hidden="true"><rect stroke="#fff" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" fill="none" x="4.5" y="3.5" width="15" height="17" rx="2.5"/><path stroke="#fff" stroke-width="1.8" stroke-linecap="round" d="M8.5 8.5h7M8.5 12h7M8.5 15.5h4"/></svg></span>
-          <span class="mt">Barcha amallar</span>
-          <span class="mv"></span><svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 6l6 6-6 6"/></svg>
-        </button>
-        <button type="button" class="mrow" data-go="look" id="row_look">
-          <span class="mico" style="--c:#6a56b8"><svg viewBox="0 0 24 24" aria-hidden="true"><path stroke="#fff" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" fill="none" fill="#fff" fill-opacity=".30" d="M20.5 14.2A8.5 8.5 0 1 1 9.8 3.5a6.7 6.7 0 0 0 10.7 10.7z"/><path stroke="#fff" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" fill="none" d="M17.5 3.8v3M16 5.3h3"/></svg></span>
-          <span class="mt">Ko'rinish</span>
-          <span class="mv" id="vLook"></span><svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 6l6 6-6 6"/></svg>
-        </button>
-        <button type="button" class="mrow" data-go="security" id="row_security">
-          <span class="mico" style="--c:#2d8a82"><svg viewBox="0 0 24 24" aria-hidden="true"><path stroke="#fff" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" fill="none" fill="#fff" fill-opacity=".30" d="M12 3l7.5 2.8v5.6c0 4.4-3.1 8-7.5 9.6-4.4-1.6-7.5-5.2-7.5-9.6V5.8L12 3z"/><rect x="9.2" y="11" width="5.6" height="4.6" rx="1.3" fill="#fff"/><path stroke="#fff" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" fill="none" d="M10.4 11V9.9a1.6 1.6 0 0 1 3.2 0V11"/></svg></span>
-          <span class="mt">Xavfsizlik</span>
-          <span class="mv" id="vSec"></span><svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 6l6 6-6 6"/></svg>
-        </button>
-        <button type="button" class="mrow" data-go="calc" id="row_calc">
-          <span class="mico" style="--c:#b9822c"><svg viewBox="0 0 24 24" aria-hidden="true"><rect stroke="#fff" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" fill="none" fill="#fff" fill-opacity=".30" x="5" y="3" width="14" height="18" rx="3.2"/><rect x="8" y="6" width="8" height="3.2" rx="1.1" fill="#fff"/><g fill="#fff"><circle cx="9" cy="13" r="1.05"/><circle cx="12" cy="13" r="1.05"/><circle cx="15" cy="13" r="1.05"/><circle cx="9" cy="17" r="1.05"/><circle cx="12" cy="17" r="1.05"/><circle cx="15" cy="17" r="1.05"/></g></svg></span>
-          <span class="mt">Hisob-kitob</span>
-          <span class="mv" id="vCalc"></span><svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 6l6 6-6 6"/></svg>
-        </button>
-        <button type="button" class="mrow" data-go="sync" id="row_sync">
-          <span class="mico" style="--c:#4a78c0"><svg viewBox="0 0 24 24" aria-hidden="true"><path stroke="#fff" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" fill="none" fill="#fff" fill-opacity=".30" d="M7 18.5a4.2 4.2 0 0 1-.6-8.3A6 6 0 0 1 18 9.6a4.5 4.5 0 0 1-.5 8.9H7z"/><path stroke="#fff" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" fill="none" d="M12 16.5v-5M9.8 13.4L12 11.2l2.2 2.2"/></svg></span>
-          <span class="mt">Sinxronlash</span>
-          <span class="mv" id="vSync"></span><svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 6l6 6-6 6"/></svg>
-        </button>
-        <button type="button" class="mrow" data-go="backup" id="row_backup">
-          <span class="mico" style="--c:#3d8f62"><svg viewBox="0 0 24 24" aria-hidden="true"><rect stroke="#fff" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" fill="none" fill="#fff" fill-opacity=".30" x="3.5" y="4" width="17" height="5" rx="1.6"/><path stroke="#fff" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" fill="none" d="M5 9v8.5A2.5 2.5 0 0 0 7.5 20h9a2.5 2.5 0 0 0 2.5-2.5V9M10 13h4"/></svg></span>
-          <span class="mt">Zaxira va eksport</span>
-          <span class="mv" id="vBack"></span><svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 6l6 6-6 6"/></svg>
-        </button>
-        <button type="button" class="mrow" data-go="cats" id="row_cats">
-          <span class="mico" style="--c:#7a8f3a"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3.5" y="3.5" width="7" height="7" rx="2" stroke="#fff" stroke-width="1.8" fill="#fff" fill-opacity=".30"/><rect x="13.5" y="3.5" width="7" height="7" rx="2" stroke="#fff" stroke-width="1.8" fill="none"/><rect x="3.5" y="13.5" width="7" height="7" rx="2" stroke="#fff" stroke-width="1.8" fill="none"/><path d="M17 13.5v7M13.5 17h7" stroke="#fff" stroke-width="1.8" stroke-linecap="round"/></svg></span>
-          <span class="mt">Kategoriyalar</span>
-          <span class="mv" id="vCats"></span><svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 6l6 6-6 6"/></svg>
-        </button>
-        <button type="button" class="mrow" data-go="rc" id="row_rc">
-          <span class="mico" style="--c:#4f69b5"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 3.5h12v17l-2.500-1.600L13 20.500l-2.500-1.600L8 20.500 6 19.200z" stroke="#fff" stroke-width="1.8" stroke-linejoin="round" fill="#fff" fill-opacity=".30"/><path d="M9 8.500h6M9 12h6" stroke="#fff" stroke-width="1.8" stroke-linecap="round"/></svg></span>
-          <span class="mt">Cheklar</span>
-          <span class="mv" id="vRc"></span><svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 6l6 6-6 6"/></svg>
-        </button>
-        <button type="button" class="mrow" data-go="fb" id="row_fb">
-          <span class="mico" style="--c:#c9812b"><svg viewBox="0 0 24 24" aria-hidden="true"><path stroke="#fff" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" fill="none" fill="#fff" fill-opacity=".30" d="M4.5 5.5h15a1.5 1.5 0 0 1 1.5 1.5v8.5a1.5 1.5 0 0 1-1.5 1.5H10l-4.5 3.500V17H4.500A1.500 1.500 0 0 1 3 15.500V7a1.500 1.500 0 0 1 1.500-1.500z"/><path stroke="#fff" stroke-width="1.8" stroke-linecap="round" d="M8 10.500h8M8 13.500h5"/></svg></span>
-          <span class="mt">Fikr qoldirish</span>
-          <span class="mv"></span><svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 6l6 6-6 6"/></svg>
-        </button>
-        <a class="mrow" id="row_ig" href="https://www.instagram.com/tejamkor.app/" target="_blank" rel="noopener">
-          <span class="mico" style="background:linear-gradient(45deg,#f9ce34,#ee2a7b 55%,#6228d7)"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3.5" y="3.5" width="17" height="17" rx="5" stroke="#fff" stroke-width="1.8" fill="none"/><circle cx="12" cy="12" r="4" stroke="#fff" stroke-width="1.8" fill="none"/><circle cx="17.2" cy="6.8" r="1.1" fill="#fff"/></svg></span>
-          <span class="mt" style="display:flex;flex-direction:column;gap:1px"><span>Instagram'da kuzating</span><small style="font-size:12.5px;color:var(--muted);font-weight:500">@tejamkor.app</small></span>
-          <svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17L17 7M9 7h8v8"/></svg>
-        </a>
-        <button type="button" class="mrow" data-go="about" id="row_about">
-          <span class="mico" style="--c:#66788a"><svg viewBox="0 0 24 24" aria-hidden="true"><circle stroke="#fff" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" fill="none" fill="#fff" fill-opacity=".30" cx="12" cy="12" r="9"/><path stroke="#fff" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" fill="none" d="M12 11v5.2"/><circle cx="12" cy="7.9" r="1.15" fill="#fff"/></svg></span>
-          <span class="mt">Ilova haqida</span>
-          <span class="mv" id="vAbout"></span><svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 6l6 6-6 6"/></svg>
-        </button>
       </section>
-
+      <div class="gtop">
+        <button type="button" class="gbtn" data-grp="fin" style="--nc:#2fae6b">
+          <span class="mico" style="--c:#2fae6b"><svg viewBox="0 0 24 24" aria-hidden="true"><path stroke="#fff" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" fill="none" d="M4 8a3 3 0 0 1 3-3h9.5A1.5 1.5 0 0 1 18 6.5V8"/><rect stroke="#fff" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" fill="none" x="4" y="8" width="16.5" height="11.5" rx="3"/><circle cx="16" cy="13.8" r="1.1" fill="#fff"/></svg></span>
+          <span class="gt"><b>Moliya</b><small>Amallar, kategoriyalar, cheklar, kurs</small></span><svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 6l6 6-6 6"/></svg>
+        </button>
+        <button type="button" class="gbtn" data-grp="set" style="--nc:#8a5cc0">
+          <span class="mico" style="--c:#8a5cc0"><svg viewBox="0 0 24 24" aria-hidden="true"><path stroke="#fff" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" fill="none" d="M4 7h9M17 7h3M4 17h3M11 17h9"/><circle stroke="#fff" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" fill="none" cx="15" cy="7" r="2"/><circle stroke="#fff" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" fill="none" cx="9" cy="17" r="2"/></svg></span>
+          <span class="gt"><b>Sozlamalar</b><small>Ko'rinish, xavfsizlik</small></span><svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 6l6 6-6 6"/></svg>
+        </button>
+        <button type="button" class="gbtn" data-grp="dat" style="--nc:#3f7fd6">
+          <span class="mico" style="--c:#3f7fd6"><svg viewBox="0 0 24 24" aria-hidden="true"><path stroke="#fff" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" fill="none" d="M7.5 18.5a4 4 0 0 1-.7-7.9A5.5 5.5 0 0 1 17.2 9.6a4.5 4.5 0 0 1-.2 8.9z"/><path stroke="#fff" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" fill="none" d="M12 11v6.5M9.2 14.7L12 17.5l2.8-2.8"/></svg></span>
+          <span class="gt"><b>Ma'lumotlar</b><small>Sinxronlash, zaxira va eksport</small></span><svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 6l6 6-6 6"/></svg>
+        </button>
+        <button type="button" class="gbtn" data-grp="help" style="--nc:#f08a24">
+          <span class="mico" style="--c:#f08a24"><svg viewBox="0 0 24 24" aria-hidden="true"><circle stroke="#fff" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" fill="none" cx="12" cy="12" r="8.5"/><circle stroke="#fff" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" fill="none" cx="12" cy="12" r="3.4"/><path stroke="#fff" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" fill="none" d="M6 6l3.6 3.6M14.4 14.4L18 18M18 6l-3.6 3.6M9.6 14.4L6 18"/></svg></span>
+          <span class="gt"><b>Yordam</b><small>Fikr qoldirish, ilova haqida</small></span><svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 6l6 6-6 6"/></svg>
+        </button>
+        <a class="gbtn ig" id="row_ig" href="https://www.instagram.com/tejamkor.app/" target="_blank" rel="noopener" style="--nc:#ee2a7b">
+          <span class="mico" style="background:linear-gradient(45deg,#f9ce34,#ee2a7b 55%,#6228d7)"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3.5" y="3.5" width="17" height="17" rx="5" stroke="#fff" stroke-width="1.8" fill="none"/><circle cx="12" cy="12" r="4" stroke="#fff" stroke-width="1.8" fill="none"/><circle cx="17.2" cy="6.8" r="1.1" fill="#fff"/></svg></span>
+          <span class="gt"><b>Instagram'da kuzating</b><small>@tejamkor.app</small></span><svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17L17 7M9 7h8v8"/></svg>
+        </a>
+      </div>
       <section class="panel menu" id="acctPanel" hidden>
         <button type="button" class="mrow" id="acctIn">
           <span class="mico" style="--c:#4a78c0"><svg viewBox="0 0 24 24" aria-hidden="true"><path stroke="#fff" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" fill="none" fill="#fff" fill-opacity=".30" d="M14 4h3a3 3 0 0 1 3 3v10a3 3 0 0 1-3 3h-3z"/><path stroke="#fff" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" fill="none" d="M4 12h9M10 8.5l3.5 3.5-3.5 3.5"/></svg></span>
@@ -1144,6 +1145,67 @@
         </button>
       </section>
       <p class="menunote" id="acctInfo"></p>
+      </div>
+      <div id="menuWrap" hidden>
+      <section class="panel menu grp" data-grp="fin" hidden>
+        <button type="button" class="mrow" data-go="ledger" id="row_ledger">
+          <span class="mico" style="--c:#8a6a2b"><svg viewBox="0 0 24 24" aria-hidden="true"><rect stroke="#fff" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" fill="none" x="4.5" y="3.5" width="15" height="17" rx="2.5"/><path stroke="#fff" stroke-width="1.8" stroke-linecap="round" d="M8.5 8.5h7M8.5 12h7M8.5 15.5h4"/></svg></span>
+          <span class="mt">Barcha amallar</span>
+          <span class="mv"></span><svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 6l6 6-6 6"/></svg>
+        </button>
+        <button type="button" class="mrow" data-go="cats" id="row_cats">
+          <span class="mico" style="--c:#7a8f3a"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3.5" y="3.5" width="7" height="7" rx="2" stroke="#fff" stroke-width="1.8" fill="#fff" fill-opacity=".30"/><rect x="13.5" y="3.5" width="7" height="7" rx="2" stroke="#fff" stroke-width="1.8" fill="none"/><rect x="3.5" y="13.5" width="7" height="7" rx="2" stroke="#fff" stroke-width="1.8" fill="none"/><path d="M17 13.5v7M13.5 17h7" stroke="#fff" stroke-width="1.8" stroke-linecap="round"/></svg></span>
+          <span class="mt">Kategoriyalar</span>
+          <span class="mv" id="vCats"></span><svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 6l6 6-6 6"/></svg>
+        </button>
+        <button type="button" class="mrow" data-go="rc" id="row_rc">
+          <span class="mico" style="--c:#4f69b5"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 3.5h12v17l-2.500-1.600L13 20.500l-2.500-1.600L8 20.500 6 19.200z" stroke="#fff" stroke-width="1.8" stroke-linejoin="round" fill="#fff" fill-opacity=".30"/><path d="M9 8.500h6M9 12h6" stroke="#fff" stroke-width="1.8" stroke-linecap="round"/></svg></span>
+          <span class="mt">Cheklar</span>
+          <span class="mv" id="vRc"></span><svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 6l6 6-6 6"/></svg>
+        </button>
+        <button type="button" class="mrow" data-go="calc" id="row_calc">
+          <span class="mico" style="--c:#b9822c"><svg viewBox="0 0 24 24" aria-hidden="true"><rect stroke="#fff" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" fill="none" fill="#fff" fill-opacity=".30" x="5" y="3" width="14" height="18" rx="3.2"/><rect x="8" y="6" width="8" height="3.2" rx="1.1" fill="#fff"/><g fill="#fff"><circle cx="9" cy="13" r="1.05"/><circle cx="12" cy="13" r="1.05"/><circle cx="15" cy="13" r="1.05"/><circle cx="9" cy="17" r="1.05"/><circle cx="12" cy="17" r="1.05"/><circle cx="15" cy="17" r="1.05"/></g></svg></span>
+          <span class="mt">Hisob-kitob</span>
+          <span class="mv" id="vCalc"></span><svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 6l6 6-6 6"/></svg>
+        </button>
+      </section>
+      <section class="panel menu grp" data-grp="set" hidden>
+        <button type="button" class="mrow" data-go="look" id="row_look">
+          <span class="mico" style="--c:#6a56b8"><svg viewBox="0 0 24 24" aria-hidden="true"><path stroke="#fff" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" fill="none" fill="#fff" fill-opacity=".30" d="M20.5 14.2A8.5 8.5 0 1 1 9.8 3.5a6.7 6.7 0 0 0 10.7 10.7z"/><path stroke="#fff" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" fill="none" d="M17.5 3.8v3M16 5.3h3"/></svg></span>
+          <span class="mt">Ko'rinish</span>
+          <span class="mv" id="vLook"></span><svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 6l6 6-6 6"/></svg>
+        </button>
+        <button type="button" class="mrow" data-go="security" id="row_security">
+          <span class="mico" style="--c:#2d8a82"><svg viewBox="0 0 24 24" aria-hidden="true"><path stroke="#fff" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" fill="none" fill="#fff" fill-opacity=".30" d="M12 3l7.5 2.8v5.6c0 4.4-3.1 8-7.5 9.6-4.4-1.6-7.5-5.2-7.5-9.6V5.8L12 3z"/><rect x="9.2" y="11" width="5.6" height="4.6" rx="1.3" fill="#fff"/><path stroke="#fff" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" fill="none" d="M10.4 11V9.9a1.6 1.6 0 0 1 3.2 0V11"/></svg></span>
+          <span class="mt">Xavfsizlik</span>
+          <span class="mv" id="vSec"></span><svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 6l6 6-6 6"/></svg>
+        </button>
+      </section>
+      <section class="panel menu grp" data-grp="dat" hidden>
+        <button type="button" class="mrow" data-go="sync" id="row_sync">
+          <span class="mico" style="--c:#4a78c0"><svg viewBox="0 0 24 24" aria-hidden="true"><path stroke="#fff" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" fill="none" fill="#fff" fill-opacity=".30" d="M7 18.5a4.2 4.2 0 0 1-.6-8.3A6 6 0 0 1 18 9.6a4.5 4.5 0 0 1-.5 8.9H7z"/><path stroke="#fff" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" fill="none" d="M12 16.5v-5M9.8 13.4L12 11.2l2.2 2.2"/></svg></span>
+          <span class="mt">Sinxronlash</span>
+          <span class="mv" id="vSync"></span><svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 6l6 6-6 6"/></svg>
+        </button>
+        <button type="button" class="mrow" data-go="backup" id="row_backup">
+          <span class="mico" style="--c:#3d8f62"><svg viewBox="0 0 24 24" aria-hidden="true"><rect stroke="#fff" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" fill="none" fill="#fff" fill-opacity=".30" x="3.5" y="4" width="17" height="5" rx="1.6"/><path stroke="#fff" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" fill="none" d="M5 9v8.5A2.5 2.5 0 0 0 7.5 20h9a2.5 2.5 0 0 0 2.5-2.5V9M10 13h4"/></svg></span>
+          <span class="mt">Zaxira va eksport</span>
+          <span class="mv" id="vBack"></span><svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 6l6 6-6 6"/></svg>
+        </button>
+      </section>
+      <section class="panel menu grp" data-grp="help" hidden>
+        <button type="button" class="mrow" data-go="fb" id="row_fb">
+          <span class="mico" style="--c:#c9812b"><svg viewBox="0 0 24 24" aria-hidden="true"><path stroke="#fff" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" fill="none" fill="#fff" fill-opacity=".30" d="M4.5 5.5h15a1.5 1.5 0 0 1 1.5 1.5v8.5a1.5 1.5 0 0 1-1.5 1.5H10l-4.5 3.500V17H4.500A1.500 1.500 0 0 1 3 15.500V7a1.500 1.500 0 0 1 1.500-1.500z"/><path stroke="#fff" stroke-width="1.8" stroke-linecap="round" d="M8 10.500h8M8 13.500h5"/></svg></span>
+          <span class="mt">Fikr qoldirish</span>
+          <span class="mv"></span><svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 6l6 6-6 6"/></svg>
+        </button>
+        <button type="button" class="mrow" data-go="about" id="row_about">
+          <span class="mico" style="--c:#66788a"><svg viewBox="0 0 24 24" aria-hidden="true"><circle stroke="#fff" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" fill="none" fill="#fff" fill-opacity=".30" cx="12" cy="12" r="9"/><path stroke="#fff" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" fill="none" d="M12 11v5.2"/><circle cx="12" cy="7.9" r="1.15" fill="#fff"/></svg></span>
+          <span class="mt">Ilova haqida</span>
+          <span class="mv" id="vAbout"></span><svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 6l6 6-6 6"/></svg>
+        </button>
+      </section>
+      </div>
       </div>
 
       <section class="panel subpg" data-pg="look">
@@ -2721,7 +2783,20 @@
 
   /* ---------- Profil menyusi ---------- */
   const PAGES = { look: "Ko'rinish", security: "Xavfsizlik", calc: "Hisob-kitob", sync: "Sinxronlash", backup: "Zaxira va eksport", fb: "Fikr qoldirish", cats: "Kategoriyalar", rc: "Cheklar", about: "Ilova haqida" };
-  let curPg = null;
+  const GRPS = { fin: "Moliya", set: "Sozlamalar", dat: "Ma'lumotlar", help: "Yordam" };
+  const PG_GRP = { ledger: "fin", cats: "fin", rc: "fin", calc: "fin", look: "set", security: "set", sync: "dat", backup: "dat", fb: "help", about: "help" };
+  let curPg = null, curGrp = null;
+  function subTitleNow() { $("subTitle").textContent = curPg ? _t(PAGES[curPg]) : curGrp ? _t(GRPS[curGrp]) : ""; }
+  function showGrp(g) {
+    curGrp = g; curPg = null;
+    $("profCard").hidden = true; $("menuGroup").hidden = false; $("subHead").hidden = false;
+    $("menuTopW").hidden = true; $("menuWrap").hidden = false;
+    Array.prototype.forEach.call(document.querySelectorAll(".subpg"), (x) => x.classList.remove("on"));
+    Array.prototype.forEach.call(document.querySelectorAll("#menuWrap .grp"), (x) => { x.hidden = x.getAttribute("data-grp") !== g; });
+    subTitleNow(); renderMenu();
+    try { window.scrollTo(0, 0); } catch (e) {}
+  }
+  function backOne() { if (curPg && curGrp) showGrp(curGrp); else closePg(); }
   function setVal(id, text, pill) { const e = $(id); e.textContent = text; e.classList.toggle("pill", !!pill); }
   function renderMenu() {
     const th = lsGet(THEME_KEY) || "";
@@ -2736,9 +2811,9 @@
   }
   function openPg(name) {
     if (!PAGES[name]) return;
-    curPg = name;
+    curPg = name; curGrp = PG_GRP[name] || curGrp;
     $("profCard").hidden = true; $("menuGroup").hidden = true; $("subHead").hidden = false;
-    $("subTitle").textContent = _t(PAGES[name]);
+    subTitleNow();
     Array.prototype.forEach.call(document.querySelectorAll(".subpg"), (s) => s.classList.toggle("on", s.getAttribute("data-pg") === name));
     if (name === "fb") { $("fbMsg").textContent = ""; fbLabel(); }
     if (name === "look" && typeof renderLook === "function") renderLook();
@@ -2748,15 +2823,17 @@
     try { window.scrollTo(0, 0); } catch (e) {}
   }
   function closePg() {
-    curPg = null;
+    curPg = null; curGrp = null;
     $("profCard").hidden = false; $("menuGroup").hidden = false; $("subHead").hidden = true;
+    $("menuTopW").hidden = false; $("menuWrap").hidden = true;
     Array.prototype.forEach.call(document.querySelectorAll(".subpg"), (s) => s.classList.remove("on"));
     renderMenu();
     try { window.scrollTo(0, 0); } catch (e) {}
   }
   $("row_admin").addEventListener("click", () => { location.href = "admin.html"; });
   $("menuWrap").addEventListener("click", (e) => { const b = e.target.closest ? e.target.closest("button[data-go]") : null; if (b) { const g = b.getAttribute("data-go"); if (g === "ledger") showTab("ledger"); else openPg(g); } });
-  $("subBack").onclick = closePg;
+  document.querySelector(".gtop").addEventListener("click", (e) => { const b = e.target.closest ? e.target.closest("button[data-grp]") : null; if (b) showGrp(b.getAttribute("data-grp")); });
+  $("subBack").onclick = backOne;
 
 
   /* ---------- Yangi imkoniyatlar: o'z kategoriya, chek, ovoz, karta ---------- */
@@ -3532,7 +3609,7 @@
     $("langSel").value = LANG;
     setDK(dk); fillCats(); renderAll(); renderBioUI(); renderSyncUI(); renderRateInfo();
     if (!$("lockCard").hidden) lockTexts();
-    if (curPg) $("subTitle").textContent = _t(PAGES[curPg]);
+    if (curPg || curGrp) subTitleNow();
     if (!outArmed) $("acctOutT").textContent = _t("Akkauntdan chiqish");
     if (!wipeArmed) $("syncWipe").textContent = _t("Serverdagi nusxani o'chirish");
     $("toastUndo").textContent = _t("Bekor qilish");
@@ -3767,7 +3844,7 @@
     if (!$("limForm").hidden) { $("limClose").onclick(); return true; }
     if (!$("profForm").hidden) { $("profCancel").onclick(); return true; }
     if (payOpen) { payOpen = null; renderDebts(); return true; }
-    if (tab === "settings" && curPg) { closePg(); return true; }
+    if (tab === "settings" && (curPg || curGrp)) { backOne(); return true; }
     if (tab !== "home") { showTab("home"); return true; }
     return false;
   }
